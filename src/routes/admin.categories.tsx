@@ -206,7 +206,7 @@ function AdminCategoriesPage() {
     const payload = {
       name: form.name,
       type: typeSlug,
-      type_id: typeId === "__other" ? null : typeId || null,
+      type_id: (typeId && typeId !== "__other") ? typeId : null,
       slug: form.slug || null,
       description: form.description || null,
       icon: form.icon || null,
