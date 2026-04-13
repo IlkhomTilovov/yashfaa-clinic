@@ -5,11 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2, Loader2, Layers, FlaskConical, Microscope, Sparkles, Heart, Package, FolderOpen, Stethoscope } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Layers } from "lucide-react";
+import { DynamicIcon } from "@/components/DynamicIcon";
+import { IconPicker } from "@/components/IconPicker";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/category-types")({
