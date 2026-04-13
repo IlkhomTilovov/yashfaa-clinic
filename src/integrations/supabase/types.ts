@@ -307,6 +307,7 @@ export type Database = {
           preparation_requirements: string | null
           price: number
           result_time: string | null
+          slug: string | null
         }
         Insert: {
           biomaterial_type?: string | null
@@ -321,6 +322,7 @@ export type Database = {
           preparation_requirements?: string | null
           price?: number
           result_time?: string | null
+          slug?: string | null
         }
         Update: {
           biomaterial_type?: string | null
@@ -335,6 +337,7 @@ export type Database = {
           preparation_requirements?: string | null
           price?: number
           result_time?: string | null
+          slug?: string | null
         }
         Relationships: [
           {
