@@ -512,7 +512,7 @@ function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full border-primary-foreground/30 px-8 text-primary-foreground hover:bg-primary-foreground/10"
+              className="rounded-full border-primary-foreground/40 bg-primary-foreground/10 px-8 text-primary-foreground"
               asChild
             >
               <a href="tel:+998711234567">
