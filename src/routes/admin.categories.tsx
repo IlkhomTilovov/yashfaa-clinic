@@ -330,7 +330,10 @@ function AdminCategoriesPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label className="text-sm">Turi <span className="text-destructive">*</span></Label>
-                  <Select value={form.type_id || ""} onValueChange={(v) => setForm({ ...form, type_id: v, custom_type: "" })}>
+                  <Select value={form.type_id || ""} onValueChange={(v) => {
+                    const selectedType = categoryTypes.find(ct => ct.id === v);
+                    setForm({ ...form, type_id: v, custom_type: "", icon: (v !== "__other" && selectedType?.icon) ? selectedType.icon : form.icon });
+                  }}>
                     <SelectTrigger className={errors.type_id ? "border-destructive" : ""}>
                       <SelectValue placeholder="Turni tanlang" />
                     </SelectTrigger>
