@@ -32,6 +32,7 @@ const sidebarLinks = [
   { to: "/admin/doctors" as const, label: "Shifokorlar", icon: Stethoscope },
   { to: "/admin/tests" as const, label: "Tahlillar", icon: FlaskConical },
   { to: "/admin/categories" as const, label: "Kategoriyalar", icon: FolderOpen },
+  { to: "/admin/category-types" as const, label: "Kategoriya turlari", icon: Layers },
   { to: "/admin/services" as const, label: "Xizmatlar", icon: Briefcase },
   { to: "/admin/appointments" as const, label: "Uchrashuvlar", icon: CalendarCheck },
   { to: "/admin/settings" as const, label: "Sozlamalar", icon: Settings },

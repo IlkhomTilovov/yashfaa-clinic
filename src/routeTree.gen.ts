@@ -27,6 +27,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
+import { Route as AdminCategoryTypesRouteImport } from './routes/admin.category-types'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminAppointmentsRouteImport } from './routes/admin.appointments'
 
@@ -120,6 +121,11 @@ const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
   path: '/doctors',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCategoryTypesRoute = AdminCategoryTypesRouteImport.update({
+  id: '/category-types',
+  path: '/category-types',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/tests': typeof TestsRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/category-types': typeof AdminCategoryTypesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/tests': typeof TestsRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/category-types': typeof AdminCategoryTypesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/tests': typeof TestsRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/category-types': typeof AdminCategoryTypesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
@@ -210,6 +219,7 @@ export interface FileRouteTypes {
     | '/tests'
     | '/admin/appointments'
     | '/admin/categories'
+    | '/admin/category-types'
     | '/admin/doctors'
     | '/admin/login'
     | '/admin/services'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/tests'
     | '/admin/appointments'
     | '/admin/categories'
+    | '/admin/category-types'
     | '/admin/doctors'
     | '/admin/login'
     | '/admin/services'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/tests'
     | '/admin/appointments'
     | '/admin/categories'
+    | '/admin/category-types'
     | '/admin/doctors'
     | '/admin/login'
     | '/admin/services'
@@ -407,6 +419,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDoctorsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/category-types': {
+      id: '/admin/category-types'
+      path: '/category-types'
+      fullPath: '/admin/category-types'
+      preLoaderRoute: typeof AdminCategoryTypesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/categories'
@@ -427,6 +446,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminAppointmentsRoute: typeof AdminAppointmentsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminCategoryTypesRoute: typeof AdminCategoryTypesRoute
   AdminDoctorsRoute: typeof AdminDoctorsRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminServicesRoute: typeof AdminServicesRoute
@@ -439,6 +459,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAppointmentsRoute: AdminAppointmentsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminCategoryTypesRoute: AdminCategoryTypesRoute,
   AdminDoctorsRoute: AdminDoctorsRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminServicesRoute: AdminServicesRoute,
