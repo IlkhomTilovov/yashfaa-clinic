@@ -64,23 +64,52 @@ export type Database = {
       categories: {
         Row: {
           created_at: string
+          description: string | null
+          icon: string | null
           id: string
+          is_active: boolean
+          is_featured: boolean
           name: string
+          parent_id: string | null
+          slug: string | null
+          sort_order: number
           type: string
         }
         Insert: {
           created_at?: string
+          description?: string | null
+          icon?: string | null
           id?: string
+          is_active?: boolean
+          is_featured?: boolean
           name: string
+          parent_id?: string | null
+          slug?: string | null
+          sort_order?: number
           type?: string
         }
         Update: {
           created_at?: string
+          description?: string | null
+          icon?: string | null
           id?: string
+          is_active?: boolean
+          is_featured?: boolean
           name?: string
+          parent_id?: string | null
+          slug?: string | null
+          sort_order?: number
           type?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       clinic_settings: {
         Row: {
