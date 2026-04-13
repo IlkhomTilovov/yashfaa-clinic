@@ -31,10 +31,9 @@ export const Route = createFileRoute("/services/$slug")({
       { title: "Xizmat — Yashfaa Clinic" },
       { name: "description", content: "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot." },
       { property: "og:title", content: "Xizmat — Yashfaa Clinic" },
-        { property: "og:description", content: svc?.description ?? "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot." },
-      ],
-    };
-  },
+      { property: "og:description", content: "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot." },
+    ],
+  }),
   loader: async ({ params }) => {
     const [service, doctors] = await Promise.all([
       getServiceBySlug({ data: { slug: params.slug } }),
