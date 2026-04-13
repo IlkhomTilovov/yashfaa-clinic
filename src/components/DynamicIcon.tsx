@@ -9,7 +9,7 @@ function toPascalCase(str: string): string {
     .join("");
 }
 
-interface DynamicIconProps extends LucideProps {
+interface DynamicIconProps extends Omit<LucideProps, "name"> {
   name: string | null | undefined;
   fallback?: keyof typeof icons;
 }
