@@ -44,10 +44,13 @@ export const Route = createFileRoute("/")({
     ],
   }),
   loader: async () => {
-    const [doctors, tests] = await Promise.all([getDoctors(), getTests()]);
+    const [doctors, tests, services] = await Promise.all([getDoctors(), getTests(), getServices()]);
     return {
       doctors: (doctors ?? []).filter((d) => d.is_active).slice(0, 4),
       tests: (tests ?? []).filter((t) => t.is_active).slice(0, 6),
+      allDoctors: (doctors ?? []).filter((d) => d.is_active),
+      allServices: (services ?? []).filter((s: any) => s.is_active),
+      allTests: (tests ?? []).filter((t) => t.is_active),
     };
   },
   component: HomePage,
