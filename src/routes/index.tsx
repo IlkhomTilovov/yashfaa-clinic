@@ -22,7 +22,8 @@ import {
   Sparkles,
   Quote,
 } from "lucide-react";
-import { getDoctors, getTests } from "@/lib/server-functions";
+import { getDoctors, getTests, getServices } from "@/lib/server-functions";
+import { HeroSearch } from "@/components/HeroSearch";
 import heroDoctor from "@/assets/hero-doctor.png";
 
 export const Route = createFileRoute("/")({
