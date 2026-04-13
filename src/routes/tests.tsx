@@ -3,17 +3,18 @@ import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Search, Clock, FlaskConical, Star, Zap, Phone } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTests, getCategories } from "@/lib/server-functions";
 
 export const Route = createFileRoute("/tests")({
   head: () => ({
     meta: [
-      { title: "Tahlillar va narxlar — MedClinic" },
-      { name: "description", content: "MedClinic laboratoriya tahlillari, diagnostika va kosmetologiya xizmatlari narxlari." },
-      { property: "og:title", content: "Tahlillar va narxlar — MedClinic" },
-      { property: "og:description", content: "Laboratoriya tahlillari, diagnostika va kosmetologiya narxlari." },
+      { title: "Tahlillar — Yashfaa Clinic" },
+      { name: "description", content: "Yashfaa Clinic laboratoriya tahlillari ro'yxati. Batafsil ma'lumot uchun murojaat qiling." },
+      { property: "og:title", content: "Tahlillar — Yashfaa Clinic" },
+      { property: "og:description", content: "Laboratoriya tahlillari. Narx va batafsil ma'lumot uchun bog'laning." },
     ],
   }),
   loader: async () => {
@@ -38,17 +39,13 @@ export const Route = createFileRoute("/tests")({
         <Skeleton className="h-10 w-full" />
         <div className="space-y-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full rounded-xl" />
+            <Skeleton key={i} className="h-20 w-full rounded-xl" />
           ))}
         </div>
       </div>
     </section>
   ),
 });
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("uz-UZ").format(price) + " so'm";
-}
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -65,19 +62,19 @@ function TestsPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const debouncedSearch = useDebounce(search, 300);
 
-  const filtered = useMemo(() => tests.filter((t) => {
+  const filtered = useMemo(() => tests.filter((t: any) => {
     const matchesSearch = t.name.toLowerCase().includes(debouncedSearch.toLowerCase());
     const matchesCategory = !activeCategory || t.category_id === activeCategory;
-    return matchesSearch && matchesCategory;
+    return matchesSearch && matchesCategory && t.is_active;
   }), [tests, debouncedSearch, activeCategory]);
 
   return (
     <section className="px-4 py-16">
       <div className="mx-auto max-w-5xl">
         <div className="text-center">
-          <h1 className="text-3xl font-bold md:text-4xl">Tahlillar va narxlar</h1>
+          <h1 className="text-3xl font-bold md:text-4xl">Tahlillar</h1>
           <p className="mt-3 text-muted-foreground">
-            Barcha tahlil va diagnostika xizmatlari narxlari
+            Laboratoriya tahlillari ro'yxati. Narx va batafsil ma'lumot uchun murojaat qiling.
           </p>
         </div>
 
@@ -100,7 +97,7 @@ function TestsPage() {
             >
               Barchasi
             </Button>
-            {categories.map((cat) => (
+            {categories.map((cat: any) => (
               <Button
                 key={cat.id}
                 variant={activeCategory === cat.id ? "default" : "outline"}
@@ -116,26 +113,74 @@ function TestsPage() {
         {/* Tests list */}
         <div className="mt-8 space-y-3">
           {filtered.length === 0 ? (
-            <p className="py-8 text-center text-muted-foreground">
-              Hech narsa topilmadi
-            </p>
+            <div className="rounded-xl border-2 border-dashed py-16 text-center">
+              <FlaskConical className="mx-auto h-12 w-12 text-muted-foreground/30" />
+              <p className="mt-4 text-muted-foreground">Hech narsa topilmadi</p>
+            </div>
           ) : (
-            filtered.map((test) => (
-              <Card key={test.id}>
-                <CardContent className="flex items-center justify-between px-5 py-4">
-                  <div>
-                    <h3 className="font-medium">{test.name}</h3>
-                    <p className="text-xs text-muted-foreground">
-                      {(test as any).categories?.name}
-                    </p>
+            filtered.map((test: any) => (
+              <Card key={test.id} className="transition-shadow hover:shadow-md">
+                <CardContent className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-medium">{test.name}</h3>
+                      {test.is_recommended && (
+                        <Badge variant="secondary" className="gap-1 text-[10px]">
+                          <Star className="h-3 w-3 fill-current" /> Tavsiya
+                        </Badge>
+                      )}
+                      {test.is_urgent && (
+                        <Badge variant="outline" className="gap-1 text-[10px]">
+                          <Zap className="h-3 w-3" /> Tezkor
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                      {test.categories?.name && <Badge variant="outline" className="text-[10px]">{test.categories.name}</Badge>}
+                      {test.biomaterial_type && <span>{test.biomaterial_type}</span>}
+                      {test.result_time && (
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" /> {test.result_time}
+                        </span>
+                      )}
+                    </div>
+                    {test.description && (
+                      <p className="mt-1.5 text-sm text-muted-foreground">{test.description}</p>
+                    )}
+                    {test.preparation_requirements && (
+                      <p className="mt-1 text-xs text-muted-foreground/70 italic">
+                        📋 {test.preparation_requirements}
+                      </p>
+                    )}
                   </div>
-                  <span className="whitespace-nowrap font-semibold text-primary">
-                    {formatPrice(test.price)}
-                  </span>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <a
+                      href="tel:+998711234567"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                    >
+                      <Phone className="h-4 w-4" />
+                      Murojaat qiling
+                    </a>
+                  </div>
                 </CardContent>
               </Card>
             ))
           )}
+        </div>
+
+        {/* CTA */}
+        <div className="mt-12 rounded-xl bg-muted/50 p-6 text-center">
+          <h3 className="text-lg font-semibold">Narx va batafsil ma'lumot uchun</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Mutaxassis bilan bog'lanib, tahlil narxlari va tayyorgarlik haqida ma'lumot oling
+          </p>
+          <a
+            href="tel:+998711234567"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            <Phone className="h-5 w-5" />
+            +998 71 123 45 67
+          </a>
         </div>
       </div>
     </section>
