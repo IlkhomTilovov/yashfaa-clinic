@@ -258,7 +258,7 @@ function HomePage() {
       </section>
 
       {/* ─── STATS ─── */}
-      <section className="relative -mt-10 z-20 px-4">
+      <section className="relative -mt-10 z-10 px-4">
         <div className="mx-auto max-w-5xl">
           <div className="grid grid-cols-2 gap-4 rounded-2xl border bg-card/80 p-6 shadow-xl backdrop-blur-sm md:grid-cols-4 md:gap-8 md:p-8">
             {stats.map((s) => (
