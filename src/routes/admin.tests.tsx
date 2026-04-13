@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2, Loader2, Search, FlaskConical } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Search, FlaskConical, Star, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/tests")({
@@ -27,14 +27,44 @@ interface Test {
   category_id: string | null;
   is_active: boolean;
   created_at: string;
+  preparation_requirements: string | null;
+  result_time: string | null;
+  biomaterial_type: string | null;
+  is_recommended: boolean;
+  is_urgent: boolean;
   categories?: { name: string } | null;
 }
 
 interface Category { id: string; name: string; }
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("uz-UZ").format(price) + " so'm";
+const RESULT_TIMES = ["1 kun", "2–3 kun", "3–5 kun", "5–7 kun", "1 hafta", "10 kun"];
+const BIOMATERIALS = ["Qon", "Siydik", "So'lak", "Najas", "Surtma", "Tish nurash"];
+
+interface FormData {
+  name: string;
+  category_id: string;
+  description: string;
+  preparation_requirements: string;
+  result_time: string;
+  biomaterial_type: string;
+  is_recommended: boolean;
+  is_urgent: boolean;
+  is_active: boolean;
+  price: string;
 }
+
+const emptyForm: FormData = {
+  name: "",
+  category_id: "",
+  description: "",
+  preparation_requirements: "",
+  result_time: "",
+  biomaterial_type: "",
+  is_recommended: false,
+  is_urgent: false,
+  is_active: true,
+  price: "",
+};
 
 function AdminTestsPage() {
   const [tests, setTests] = useState<Test[]>([]);
@@ -46,7 +76,8 @@ function AdminTestsPage() {
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", price: "", description: "", category_id: "", is_active: true });
+  const [form, setForm] = useState<FormData>({ ...emptyForm });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -75,7 +106,8 @@ function AdminTestsPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: "", price: "", description: "", category_id: "", is_active: true });
+    setForm({ ...emptyForm });
+    setErrors({});
     setDialogOpen(true);
   };
 
@@ -83,21 +115,41 @@ function AdminTestsPage() {
     setEditing(test);
     setForm({
       name: test.name,
-      price: String(test.price),
-      description: test.description ?? "",
       category_id: test.category_id ?? "",
+      description: test.description ?? "",
+      preparation_requirements: test.preparation_requirements ?? "",
+      result_time: test.result_time ?? "",
+      biomaterial_type: test.biomaterial_type ?? "",
+      is_recommended: test.is_recommended,
+      is_urgent: test.is_urgent,
       is_active: test.is_active,
+      price: test.price ? String(test.price) : "",
     });
+    setErrors({});
     setDialogOpen(true);
   };
 
+  const validate = (): boolean => {
+    const e: Record<string, string> = {};
+    if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
+    if (!form.category_id) e.category_id = "Kategoriya tanlanishi shart";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
   const handleSave = async () => {
+    if (!validate()) return;
     setSaving(true);
     const payload = {
       name: form.name,
-      price: Number(form.price),
+      price: form.price ? Number(form.price) : 0,
       description: form.description || null,
       category_id: form.category_id || null,
+      preparation_requirements: form.preparation_requirements || null,
+      result_time: form.result_time || null,
+      biomaterial_type: form.biomaterial_type || null,
+      is_recommended: form.is_recommended,
+      is_urgent: form.is_urgent,
       is_active: form.is_active,
     };
     const { error } = editing
@@ -121,6 +173,8 @@ function AdminTestsPage() {
     else { toast.success("Tahlil o'chirildi"); fetchData(); }
     setDeleteId(null);
   };
+
+  const isValid = form.name.trim() && form.category_id;
 
   return (
     <div className="space-y-6">
@@ -176,13 +230,15 @@ function AdminTestsPage() {
                     <div className="flex items-center gap-2">
                       <p className="truncate font-medium">{test.name}</p>
                       {!test.is_active && <Badge variant="secondary" className="text-[10px]">Nofaol</Badge>}
+                      {test.is_recommended && <Star className="h-3.5 w-3.5 text-primary fill-primary" />}
+                      {test.is_urgent && <Zap className="h-3.5 w-3.5 text-primary" />}
                     </div>
                     <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
                       {test.categories?.name && <Badge variant="outline" className="text-[10px]">{test.categories.name}</Badge>}
-                      {test.description && <span className="hidden truncate sm:block">{test.description}</span>}
+                      {test.biomaterial_type && <span>{test.biomaterial_type}</span>}
+                      {test.result_time && <span>• {test.result_time}</span>}
                     </div>
                   </div>
-                  <span className="whitespace-nowrap font-semibold text-primary">{formatPrice(test.price)}</span>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(test)}>
                       <Pencil className="h-3.5 w-3.5" />
@@ -198,43 +254,144 @@ function AdminTestsPage() {
         </Card>
       )}
 
-      {/* Dialog */}
+      {/* Form Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{editing ? "Tahlilni tahrirlash" : "Yangi tahlil"}</DialogTitle>
+            <DialogTitle>{editing ? "Tahlilni tahrirlash" : "Yangi tahlil qo'shish"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 pt-2">
-            <div className="space-y-2">
-              <Label>Nomi *</Label>
-              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Umumiy qon tahlili" />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Narxi (so'm) *</Label>
-                <Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="50000" />
+          <div className="space-y-6 pt-2">
+            {/* Asosiy ma'lumotlar */}
+            <fieldset className="space-y-4 rounded-lg border border-border/50 p-4">
+              <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Asosiy ma'lumotlar
+              </legend>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Nomi <span className="text-destructive">*</span></Label>
+                <Input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="Umumiy qon tahlili"
+                  className={errors.name ? "border-destructive" : ""}
+                />
+                {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
               </div>
-              <div className="space-y-2">
-                <Label>Kategoriya</Label>
-                <Select value={form.category_id} onValueChange={(v) => setForm({ ...form, category_id: v })}>
-                  <SelectTrigger><SelectValue placeholder="Tanlang" /></SelectTrigger>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Kategoriya <span className="text-destructive">*</span></Label>
+                  <Select value={form.category_id} onValueChange={(v) => setForm({ ...form, category_id: v })}>
+                    <SelectTrigger className={errors.category_id ? "border-destructive" : ""}>
+                      <SelectValue placeholder="Tanlang..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.category_id && <p className="text-xs text-destructive">{errors.category_id}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Biomaterial turi</Label>
+                  <Select value={form.biomaterial_type} onValueChange={(v) => setForm({ ...form, biomaterial_type: v })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Tanlang..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {BIOMATERIALS.map((b) => (
+                        <SelectItem key={b} value={b}>{b}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Natija tayyor bo'lish vaqti</Label>
+                <Select value={form.result_time} onValueChange={(v) => setForm({ ...form, result_time: v })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Tanlang..." />
+                  </SelectTrigger>
                   <SelectContent>
-                    {categories.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                    {RESULT_TIMES.map((t) => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Tavsif</Label>
-              <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} placeholder="Tahlil haqida qisqa ma'lumot..." />
-            </div>
-            <div className="flex items-center gap-3">
-              <Switch checked={form.is_active} onCheckedChange={(v) => setForm({ ...form, is_active: v })} />
-              <Label>Faol</Label>
-            </div>
-            <Button onClick={handleSave} disabled={saving || !form.name || !form.price} className="w-full">
+            </fieldset>
+
+            {/* Qo'shimcha */}
+            <fieldset className="space-y-4 rounded-lg border border-border/50 p-4">
+              <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Qo'shimcha ma'lumotlar
+              </legend>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Tavsif</Label>
+                <Textarea
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  rows={2}
+                  placeholder="Tahlil haqida qisqa ma'lumot..."
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Tayyorgarlik talablari</Label>
+                <Textarea
+                  value={form.preparation_requirements}
+                  onChange={(e) => setForm({ ...form, preparation_requirements: e.target.value })}
+                  rows={2}
+                  placeholder="Och qoringa topshiriladi, 8 soat ovqat yemaslik..."
+                />
+              </div>
+            </fieldset>
+
+            {/* Sozlamalar */}
+            <fieldset className="space-y-3 rounded-lg border border-border/50 p-4">
+              <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Sozlamalar
+              </legend>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm">Tavsiya etiladi</Label>
+                  <p className="text-xs text-muted-foreground">Top tahlil sifatida ko'rsatiladi</p>
+                </div>
+                <Switch checked={form.is_recommended} onCheckedChange={(v) => setForm({ ...form, is_recommended: v })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm">Tezkor (ekspress)</Label>
+                  <p className="text-xs text-muted-foreground">Urgent tahlil sifatida belgilanadi</p>
+                </div>
+                <Switch checked={form.is_urgent} onCheckedChange={(v) => setForm({ ...form, is_urgent: v })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm">Faol</Label>
+                  <p className="text-xs text-muted-foreground">Saytda ko'rinadi</p>
+                </div>
+                <Switch checked={form.is_active} onCheckedChange={(v) => setForm({ ...form, is_active: v })} />
+              </div>
+            </fieldset>
+
+            {/* Ichki (admin) */}
+            <fieldset className="space-y-3 rounded-lg border border-dashed border-muted-foreground/20 bg-muted/20 p-4">
+              <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Ichki (faqat admin uchun)
+              </legend>
+              <div className="space-y-1.5">
+                <Label className="text-sm text-muted-foreground">Narx (so'm)</Label>
+                <Input
+                  type="number"
+                  value={form.price}
+                  onChange={(e) => setForm({ ...form, price: e.target.value })}
+                  placeholder="Frontendda ko'rinmaydi"
+                  className="max-w-xs"
+                />
+                <p className="text-xs text-muted-foreground">⚠️ Bu narx faqat ichki hisob-kitob uchun. Saytda ko'rsatilmaydi.</p>
+              </div>
+            </fieldset>
+
+            <Button onClick={handleSave} disabled={saving || !isValid} className="w-full">
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editing ? "Saqlash" : "Qo'shish"}
             </Button>
