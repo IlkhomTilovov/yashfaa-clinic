@@ -10,8 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Search, CalendarCheck, Phone, Calendar, Clock, Eye, User, Stethoscope, FileText, CheckCircle2, XCircle, AlertCircle, CircleDot, Filter, RotateCcw } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Trash2, Search, CalendarCheck, Phone, Calendar, Clock, Eye, User, Stethoscope, FileText, CheckCircle2, XCircle, AlertCircle, CircleDot, Filter, RotateCcw, CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { uz } from "date-fns/locale";
 
 export const Route = createFileRoute("/admin/appointments")({
   component: AdminAppointmentsPage,
@@ -43,7 +47,8 @@ function AdminAppointmentsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [filterDate, setFilterDate] = useState("");
+  const [filterDate, setFilterDate] = useState<Date | undefined>(undefined);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [viewItem, setViewItem] = useState<Appointment | null>(null);
 
@@ -75,7 +80,8 @@ function AdminAppointmentsPage() {
       result = result.filter(a => a.status === filterStatus);
     }
     if (filterDate) {
-      result = result.filter(a => a.date === filterDate);
+      const dateStr = format(filterDate, "yyyy-MM-dd");
+      result = result.filter(a => a.date === dateStr);
     }
     return result;
   }, [appointments, search, filterStatus, filterDate]);
@@ -162,9 +168,24 @@ function AdminAppointmentsPage() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Ism yoki telefon qidirish..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
-            <Input type="date" value={filterDate} onChange={(e) => setFilterDate(e.target.value)} className="w-44" />
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-48 justify-start gap-2 text-left font-normal">
+                  <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                  {filterDate ? format(filterDate, "dd MMM yyyy", { locale: uz }) : <span className="text-muted-foreground">Sanani tanlang</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={filterDate}
+                  onSelect={(date) => { setFilterDate(date); setCalendarOpen(false); }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
             {hasFilters && (
-              <Button variant="ghost" size="sm" onClick={() => { setSearch(""); setFilterStatus("all"); setFilterDate(""); }} className="gap-1.5 text-muted-foreground">
+              <Button variant="ghost" size="sm" onClick={() => { setSearch(""); setFilterStatus("all"); setFilterDate(undefined); }} className="gap-1.5 text-muted-foreground">
                 <XCircle className="h-3.5 w-3.5" />
                 Tozalash
               </Button>
@@ -192,7 +213,7 @@ function AdminAppointmentsPage() {
               {hasFilters ? "Filtr natijasi topilmadi. Filtrni o'zgartiring." : "Hali uchrashuvlar yo'q"}
             </p>
             {hasFilters && (
-              <Button variant="outline" size="sm" className="mt-4" onClick={() => { setSearch(""); setFilterStatus("all"); setFilterDate(""); }}>
+              <Button variant="outline" size="sm" className="mt-4" onClick={() => { setSearch(""); setFilterStatus("all"); setFilterDate(undefined); }}>
                 Filtrni tozalash
               </Button>
             )}
