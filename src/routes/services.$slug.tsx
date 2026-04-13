@@ -25,18 +25,14 @@ const LOCATION_LABELS: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/services/$slug")({
-  head: ({ loaderData }) => {
-    const name = loaderData?.service?.name ?? "Xizmat";
-    const desc = loaderData?.service?.description ?? "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot.";
-    return {
-      meta: [
-        { title: `${name} — Yashfaa Clinic` },
-        { name: "description", content: desc.slice(0, 160) },
-        { property: "og:title", content: `${name} — Yashfaa Clinic` },
-        { property: "og:description", content: desc.slice(0, 160) },
-      ],
-    };
-  },
+  head: () => ({
+    meta: [
+      { title: "Xizmat — Yashfaa Clinic" },
+      { name: "description", content: "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot." },
+      { property: "og:title", content: "Xizmat — Yashfaa Clinic" },
+      { property: "og:description", content: "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot." },
+    ],
+  }),
   loader: async ({ params }) => {
     const [service, doctors] = await Promise.all([
       getServiceBySlug({ data: { slug: params.slug } }),
