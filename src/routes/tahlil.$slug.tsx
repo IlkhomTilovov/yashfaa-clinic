@@ -41,7 +41,7 @@ export const Route = createFileRoute("/tahlil/$slug")({
       ],
     };
   },
-  loader: async ({ params }) => {
+  loader: async ({ params }: any) => {
     return getTestBySlug({ data: { slug: params.slug } });
   },
   component: TestDetailPage,
