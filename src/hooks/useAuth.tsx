@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
@@ -16,35 +16,55 @@ export function useAuth() {
     isAdmin: false,
     loading: true,
   });
+  const requestIdRef = useRef(0);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        const user = session?.user ?? null;
-        let isAdmin = false;
+    let isMounted = true;
 
-        if (user) {
-          // Check admin role using has_role function via RPC
-          const { data } = await supabase.rpc("has_role", {
-            _user_id: user.id,
-            _role: "admin",
-          });
+    const resolveAuthState = async (session: Session | null) => {
+      const requestId = ++requestIdRef.current;
+      const user = session?.user ?? null;
+      let isAdmin = false;
+
+      if (user) {
+        const { data, error } = await supabase.rpc("has_role", {
+          _user_id: user.id,
+          _role: "admin",
+        });
+
+        if (error) {
+          console.error("Failed to resolve admin role", error);
+        } else {
           isAdmin = !!data;
         }
-
-        setState({ user, session, isAdmin, loading: false });
       }
-    );
 
-    // Initial session check
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        setState({ user: null, session: null, isAdmin: false, loading: false });
+      if (!isMounted || requestId !== requestIdRef.current) {
+        return;
       }
-      // onAuthStateChange will handle the rest
+
+      setState({ user, session, isAdmin, loading: false });
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      void resolveAuthState(session);
     });
 
-    return () => subscription.unsubscribe();
+    void supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => resolveAuthState(session))
+      .catch(() => {
+        if (isMounted) {
+          setState({ user: null, session: null, isAdmin: false, loading: false });
+        }
+      });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
@@ -53,7 +73,8 @@ export function useAuth() {
   }, []);
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
   }, []);
 
   return { ...state, signIn, signOut };
