@@ -153,8 +153,8 @@ function HomePage() {
             alt="Yashfaa Clinic laboratoriya"
             className="h-full w-full object-cover"
           />
-          {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/60 to-transparent" />
+          {/* Light overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/30" />
         </div>
 
         {/* Decorative background elements */}
