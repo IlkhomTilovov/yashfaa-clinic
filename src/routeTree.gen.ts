@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestsRouteImport } from './routes/tests'
+import { Route as SetupRouteImport } from './routes/setup'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AppointmentRouteImport } from './routes/appointment'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -30,9 +32,19 @@ const TestsRoute = TestsRouteImport.update({
   path: '/tests',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SetupRoute = SetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -106,7 +118,9 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/appointment': typeof AppointmentRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
+  '/setup': typeof SetupRoute
   '/tests': typeof TestsRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -122,7 +136,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/appointment': typeof AppointmentRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
+  '/setup': typeof SetupRoute
   '/tests': typeof TestsRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -140,7 +156,9 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/appointment': typeof AppointmentRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
+  '/setup': typeof SetupRoute
   '/tests': typeof TestsRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -159,7 +177,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/appointment'
     | '/contact'
+    | '/login'
     | '/services'
+    | '/setup'
     | '/tests'
     | '/admin/appointments'
     | '/admin/categories'
@@ -175,7 +195,9 @@ export interface FileRouteTypes {
     | '/'
     | '/appointment'
     | '/contact'
+    | '/login'
     | '/services'
+    | '/setup'
     | '/tests'
     | '/admin/appointments'
     | '/admin/categories'
@@ -192,7 +214,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/appointment'
     | '/contact'
+    | '/login'
     | '/services'
+    | '/setup'
     | '/tests'
     | '/admin/appointments'
     | '/admin/categories'
@@ -210,7 +234,9 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AppointmentRoute: typeof AppointmentRoute
   ContactRoute: typeof ContactRoute
+  LoginRoute: typeof LoginRoute
   ServicesRoute: typeof ServicesRoute
+  SetupRoute: typeof SetupRoute
   TestsRoute: typeof TestsRoute
   DoctorsDoctorIdRoute: typeof DoctorsDoctorIdRoute
   DoctorsIndexRoute: typeof DoctorsIndexRoute
@@ -225,11 +251,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -353,7 +393,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AppointmentRoute: AppointmentRoute,
   ContactRoute: ContactRoute,
+  LoginRoute: LoginRoute,
   ServicesRoute: ServicesRoute,
+  SetupRoute: SetupRoute,
   TestsRoute: TestsRoute,
   DoctorsDoctorIdRoute: DoctorsDoctorIdRoute,
   DoctorsIndexRoute: DoctorsIndexRoute,
