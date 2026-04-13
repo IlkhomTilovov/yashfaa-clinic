@@ -1,13 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, CheckCircle2, Loader2 } from "lucide-react";
-import { getDoctors } from "@/lib/server-functions";
-import { createAppointment } from "@/lib/server-functions";
+import { getDoctors, createAppointment } from "@/lib/server-functions";
 
 export const Route = createFileRoute("/appointment")({
   head: () => ({
@@ -20,6 +20,24 @@ export const Route = createFileRoute("/appointment")({
   }),
   loader: () => getDoctors(),
   component: AppointmentPage,
+  errorComponent: ({ error, reset }) => {
+    const router = useRouter();
+    return (
+      <div className="px-4 py-16 text-center">
+        <h2 className="text-2xl font-bold">Xatolik yuz berdi</h2>
+        <p className="mt-2 text-muted-foreground">{error.message}</p>
+        <Button className="mt-4" onClick={() => { router.invalidate(); reset(); }}>Qayta urinish</Button>
+      </div>
+    );
+  },
+  pendingComponent: () => (
+    <section className="px-4 py-16">
+      <div className="mx-auto max-w-2xl space-y-4">
+        <Skeleton className="mx-auto h-10 w-64" />
+        <Skeleton className="h-96 w-full rounded-xl" />
+      </div>
+    </section>
+  ),
 });
 
 const timeSlots = [
