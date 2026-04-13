@@ -301,13 +301,13 @@ function AdminCategoriesPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label className="text-sm">Turi <span className="text-destructive">*</span></Label>
-                  <Select value={form.type_id || "none"} onValueChange={(v) => setForm({ ...form, type_id: v === "none" ? "" : v })}>
+                  <Select value={form.type_id || ""} onValueChange={(v) => setForm({ ...form, type_id: v })}>
                     <SelectTrigger className={errors.type_id ? "border-destructive" : ""}>
                       <SelectValue placeholder="Turni tanlang" />
                     </SelectTrigger>
                     <SelectContent>
                       {categoryTypes.length === 0 ? (
-                        <SelectItem value="none" disabled>Turlar topilmadi</SelectItem>
+                        <SelectItem value="__empty" disabled>Turlar topilmadi</SelectItem>
                       ) : (
                         categoryTypes.map((ct) => (
                           <SelectItem key={ct.id} value={ct.id}>{ct.name}</SelectItem>
