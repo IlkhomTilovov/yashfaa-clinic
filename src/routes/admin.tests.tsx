@@ -140,7 +140,13 @@ function AdminTestsPage() {
   const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
-    const payload = {
+    const slug = form.name
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9\u0400-\u04FF\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+    const payload: any = {
       name: form.name,
       price: form.price ? Number(form.price) : 0,
       description: form.description || null,
@@ -151,6 +157,7 @@ function AdminTestsPage() {
       is_recommended: form.is_recommended,
       is_urgent: form.is_urgent,
       is_active: form.is_active,
+      slug,
     };
     const { error } = editing
       ? await supabase.from("tests").update(payload).eq("id", editing.id)

@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter, Link } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -119,51 +119,51 @@ function TestsPage() {
             </div>
           ) : (
             filtered.map((test: any) => (
-              <Card key={test.id} className="transition-shadow hover:shadow-md">
-                <CardContent className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium">{test.name}</h3>
-                      {test.is_recommended && (
-                        <Badge variant="secondary" className="gap-1 text-[10px]">
-                          <Star className="h-3 w-3 fill-current" /> Tavsiya
-                        </Badge>
-                      )}
-                      {test.is_urgent && (
-                        <Badge variant="outline" className="gap-1 text-[10px]">
-                          <Zap className="h-3 w-3" /> Tezkor
-                        </Badge>
-                      )}
+              <Link
+                key={test.id}
+                to="/tahlil/$slug"
+                params={{ slug: test.slug ?? test.id }}
+                className="block"
+              >
+                <Card className="transition-all hover:shadow-md hover:border-primary/30 cursor-pointer">
+                  <CardContent className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium">{test.name}</h3>
+                        {test.is_recommended && (
+                          <Badge variant="secondary" className="gap-1 text-[10px]">
+                            <Star className="h-3 w-3 fill-current" /> Tavsiya
+                          </Badge>
+                        )}
+                        {test.is_urgent && (
+                          <Badge variant="outline" className="gap-1 text-[10px]">
+                            <Zap className="h-3 w-3" /> Tezkor
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                        {test.categories?.name && <Badge variant="outline" className="text-[10px]">{test.categories.name}</Badge>}
+                        {test.biomaterial_type && <span>{test.biomaterial_type}</span>}
+                        {test.result_time && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" /> {test.result_time}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      {test.categories?.name && <Badge variant="outline" className="text-[10px]">{test.categories.name}</Badge>}
-                      {test.biomaterial_type && <span>{test.biomaterial_type}</span>}
-                      {test.result_time && (
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" /> {test.result_time}
-                        </span>
-                      )}
+                    <div className="flex shrink-0 items-center gap-2">
+                      <a
+                        href="tel:+998711234567"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                      >
+                        <Phone className="h-4 w-4" />
+                        Murojaat qiling
+                      </a>
                     </div>
-                    {test.description && (
-                      <p className="mt-1.5 text-sm text-muted-foreground">{test.description}</p>
-                    )}
-                    {test.preparation_requirements && (
-                      <p className="mt-1 text-xs text-muted-foreground/70 italic">
-                        📋 {test.preparation_requirements}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    <a
-                      href="tel:+998711234567"
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                    >
-                      <Phone className="h-4 w-4" />
-                      Murojaat qiling
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             ))
           )}
         </div>
