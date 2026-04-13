@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, Link, useNavigate, useMatches } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -37,12 +37,21 @@ function AdminLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  if (loading) {
+  const matches = useMatches();
+  const currentPath = matches[matches.length - 1]?.fullPath ?? "";
+  const isPublicAdminRoute = currentPath === "/admin/login" || currentPath === "/admin/setup";
+
+  if (loading && !isPublicAdminRoute) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Skeleton className="h-8 w-48" />
       </div>
     );
+  }
+
+  // Allow login/setup pages to render without auth
+  if (isPublicAdminRoute) {
+    return <Outlet />;
   }
 
   if (!user || !isAdmin) {
