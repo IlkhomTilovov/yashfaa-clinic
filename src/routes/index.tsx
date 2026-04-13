@@ -188,10 +188,10 @@ function HomePage() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-12 rounded-full border-primary/30 bg-background px-8 text-base text-foreground hover:bg-primary/5 hover:text-primary" asChild>
-                <Link to="/services">
-                  Xizmatlar
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+                <a href="tel:+998711234567">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Qo'ng'iroq qilish
+                </a>
               </Button>
             </div>
 
