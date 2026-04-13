@@ -26,14 +26,11 @@ const LOCATION_LABELS: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/services/$slug")({
-  // @ts-ignore
-  head: ({ loaderData }) => {
-    const svc = loaderData?.service;
-    return {
-      meta: [
-        { title: `${svc?.name ?? "Xizmat"} — Yashfaa Clinic` },
-        { name: "description", content: svc?.description ?? "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot." },
-        { property: "og:title", content: `${svc?.name ?? "Xizmat"} — Yashfaa Clinic` },
+  head: () => ({
+    meta: [
+      { title: "Xizmat — Yashfaa Clinic" },
+      { name: "description", content: "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot." },
+      { property: "og:title", content: "Xizmat — Yashfaa Clinic" },
         { property: "og:description", content: svc?.description ?? "Yashfaa Clinic tibbiy xizmati haqida batafsil ma'lumot." },
       ],
     };
