@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { getDoctors, getTests, getServices } from "@/lib/server-functions";
 import { HeroSearch } from "@/components/HeroSearch";
-import heroDoctor from "@/assets/hero-doctor.png";
+import heroLab from "@/assets/hero-lab.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -247,8 +247,8 @@ function HomePage() {
               </div>
             </div>
             <img
-              src={heroDoctor}
-              alt="Yashfaa Clinic shifokor"
+              src={heroLab}
+              alt="Yashfaa Clinic laboratoriya"
               width={480}
               height={560}
               className="relative z-10 h-auto max-h-[460px] w-auto object-contain drop-shadow-2xl md:max-h-[520px]"
