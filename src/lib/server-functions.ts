@@ -99,3 +99,21 @@ export const getServices = createServerFn({ method: "GET" }).handler(async () =>
   if (error) throw new Error(error.message);
   return data;
 });
+
+export const getServiceBySlug = createServerFn({ method: "GET" })
+  .inputValidator((input: { slug: string }) => {
+    const parsed = z.object({ slug: z.string().min(1) }).parse(input);
+    return parsed;
+  })
+  .handler(async ({ data }) => {
+    const supabase = await getSupabase();
+    const { data: service, error } = await supabase
+      .from("services")
+      .select("*, categories(name)")
+      .eq("slug", data.slug)
+      .eq("is_active", true)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!service) throw new Error("Service not found");
+    return service;
+  });
