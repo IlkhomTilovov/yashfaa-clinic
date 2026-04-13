@@ -327,21 +327,29 @@ function AdminCategoriesPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label className="text-sm">Turi <span className="text-destructive">*</span></Label>
-                  <Select value={form.type_id || ""} onValueChange={(v) => setForm({ ...form, type_id: v })}>
+                  <Select value={form.type_id || ""} onValueChange={(v) => setForm({ ...form, type_id: v, custom_type: "" })}>
                     <SelectTrigger className={errors.type_id ? "border-destructive" : ""}>
                       <SelectValue placeholder="Turni tanlang" />
                     </SelectTrigger>
                     <SelectContent>
-                      {categoryTypes.length === 0 ? (
-                        <SelectItem value="__empty" disabled>Turlar topilmadi</SelectItem>
-                      ) : (
-                        categoryTypes.map((ct) => (
-                          <SelectItem key={ct.id} value={ct.id}>{ct.name}</SelectItem>
-                        ))
-                      )}
+                      {categoryTypes.map((ct) => (
+                        <SelectItem key={ct.id} value={ct.id}>{ct.name}</SelectItem>
+                      ))}
+                      <SelectItem value="__other">➕ Boshqa (yangi tur)</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.type_id && <p className="text-xs text-destructive">{errors.type_id}</p>}
+                  {form.type_id === "__other" && (
+                    <div className="mt-2 space-y-1.5">
+                      <Input
+                        value={form.custom_type}
+                        onChange={(e) => setForm({ ...form, custom_type: e.target.value })}
+                        placeholder="Yangi tur nomini kiriting..."
+                        className={errors.custom_type ? "border-destructive" : ""}
+                      />
+                      {errors.custom_type && <p className="text-xs text-destructive">{errors.custom_type}</p>}
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-sm">Icon</Label>
