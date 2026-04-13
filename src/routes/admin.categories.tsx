@@ -12,10 +12,11 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2, Loader2, FolderOpen, Star, Heart, FlaskConical, Microscope, Sparkles, Package } from "lucide-react";
-import { toast } from "sonner";
+import { Plus, Pencil, Trash2, Loader2, FolderOpen, Star } from "lucide-react";
+import { DynamicIcon } from "@/components/DynamicIcon";
+import { IconPicker } from "@/components/IconPicker";
 
-export const Route = createFileRoute("/admin/categories")({
+import { toast } from "sonner";
   component: AdminCategoriesPage,
 });
 
