@@ -72,3 +72,13 @@ export const createAppointment = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { success: true };
   });
+
+export const getServices = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = await getSupabase();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*, categories(name)")
+    .order("name");
+  if (error) throw new Error(error.message);
+  return data;
+});
