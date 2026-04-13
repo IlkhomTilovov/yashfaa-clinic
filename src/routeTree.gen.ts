@@ -22,6 +22,8 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as DoctorsDoctorIdRouteImport } from './routes/doctors.$doctorId'
 import { Route as AdminTestsRouteImport } from './routes/admin.tests'
 import { Route as AdminSetupRouteImport } from './routes/admin.setup'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminServicesRouteImport } from './routes/admin.services'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
@@ -92,6 +94,16 @@ const AdminSetupRoute = AdminSetupRouteImport.update({
   path: '/setup',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminServicesRoute = AdminServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -126,6 +138,8 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/services': typeof AdminServicesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
@@ -144,6 +158,8 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/services': typeof AdminServicesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
@@ -164,6 +180,8 @@ export interface FileRoutesById {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/services': typeof AdminServicesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
@@ -185,6 +203,8 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/doctors'
     | '/admin/login'
+    | '/admin/services'
+    | '/admin/settings'
     | '/admin/setup'
     | '/admin/tests'
     | '/doctors/$doctorId'
@@ -203,6 +223,8 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/doctors'
     | '/admin/login'
+    | '/admin/services'
+    | '/admin/settings'
     | '/admin/setup'
     | '/admin/tests'
     | '/doctors/$doctorId'
@@ -222,6 +244,8 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/doctors'
     | '/admin/login'
+    | '/admin/services'
+    | '/admin/settings'
     | '/admin/setup'
     | '/admin/tests'
     | '/doctors/$doctorId'
@@ -335,6 +359,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSetupRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/services': {
+      id: '/admin/services'
+      path: '/services'
+      fullPath: '/admin/services'
+      preLoaderRoute: typeof AdminServicesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -371,6 +409,8 @@ interface AdminRouteChildren {
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDoctorsRoute: typeof AdminDoctorsRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminServicesRoute: typeof AdminServicesRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSetupRoute: typeof AdminSetupRoute
   AdminTestsRoute: typeof AdminTestsRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -381,6 +421,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDoctorsRoute: AdminDoctorsRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminServicesRoute: AdminServicesRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminSetupRoute: AdminSetupRoute,
   AdminTestsRoute: AdminTestsRoute,
   AdminIndexRoute: AdminIndexRoute,
