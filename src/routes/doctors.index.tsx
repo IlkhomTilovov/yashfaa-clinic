@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getDoctors } from "@/lib/server-functions";
 
 export const Route = createFileRoute("/doctors/")({
@@ -14,6 +15,32 @@ export const Route = createFileRoute("/doctors/")({
   }),
   loader: () => getDoctors(),
   component: DoctorsPage,
+  errorComponent: ({ error, reset }) => {
+    const router = useRouter();
+    return (
+      <div className="px-4 py-16 text-center">
+        <h2 className="text-2xl font-bold">Xatolik yuz berdi</h2>
+        <p className="mt-2 text-muted-foreground">{error.message}</p>
+        <Button className="mt-4" onClick={() => { router.invalidate(); reset(); }}>Qayta urinish</Button>
+      </div>
+    );
+  },
+  pendingComponent: () => (
+    <section className="px-4 py-16">
+      <div className="mx-auto max-w-7xl">
+        <Skeleton className="mx-auto h-10 w-48" />
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="space-y-3">
+              <Skeleton className="aspect-square w-full rounded-xl" />
+              <Skeleton className="h-5 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  ),
 });
 
 function DoctorsPage() {

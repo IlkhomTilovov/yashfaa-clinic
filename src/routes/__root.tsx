@@ -47,8 +47,6 @@ export const Route = createRootRoute({
       { name: "twitter:title", content: "MedClinic — Zamonaviy tibbiy xizmatlar" },
       { property: "og:description", content: "MedClinic — Toshkentdagi zamonaviy tibbiy klinika. Laboratoriya tahlillari, diagnostika, shifokorlar va onlayn qabulga yozilish." },
       { name: "twitter:description", content: "MedClinic — Toshkentdagi zamonaviy tibbiy klinika. Laboratoriya tahlillari, diagnostika, shifokorlar va onlayn qabulga yozilish." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/QQ1VGtThcIQIz0sGvAimaJVOwWU2/social-images/social-1776079209914-b7dde81d-1b42-4938-ab6f-df6ce4df355e.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/QQ1VGtThcIQIz0sGvAimaJVOwWU2/social-images/social-1776079209914-b7dde81d-1b42-4938-ab6f-df6ce4df355e.webp" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
