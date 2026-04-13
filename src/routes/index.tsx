@@ -174,17 +174,17 @@ function HomePage() {
         <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col-reverse items-center justify-center gap-6 px-4 py-12 md:flex-row md:gap-12 md:py-20 lg:py-24">
           {/* Left */}
           <div className="flex-1 text-center md:text-left">
-            <Badge variant="secondary" className="mb-5 gap-1.5 rounded-full border-primary-foreground/20 bg-primary-foreground/10 px-4 py-1.5 text-sm font-medium text-primary-foreground backdrop-blur-sm">
+            <Badge variant="secondary" className="mb-5 gap-1.5 rounded-full border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary backdrop-blur-sm">
               <ShieldCheck className="h-4 w-4" />
               Ishonchli tibbiy markaz
             </Badge>
-            <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-primary-foreground md:text-5xl lg:text-[3.5rem]">
+            <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-5xl lg:text-[3.5rem]">
               Sog'lom hayot —{" "}
-              <span className="text-primary-foreground/90">
+              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                 bizning maqsadimiz
               </span>
             </h1>
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-primary-foreground/80 md:text-lg">
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
               Zamonaviy tibbiy asbob-uskunalar va tajribali shifokorlar jamoasi
               bilan siz va oilangiz salomatligi uchun xizmat qilamiz.
             </p>
@@ -197,7 +197,7 @@ function HomePage() {
                   Qabulga yozilish
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 rounded-full border-primary-foreground/40 bg-primary-foreground/10 px-8 text-base text-primary-foreground backdrop-blur-sm" asChild>
+              <Button size="lg" variant="outline" className="h-12 rounded-full border-primary bg-background/80 px-8 text-base text-primary backdrop-blur-sm" asChild>
                 <a href="tel:+998711234567">
                   <Phone className="mr-2 h-5 w-5" />
                   Qo'ng'iroq qilish
@@ -206,16 +206,16 @@ function HomePage() {
             </div>
 
             {/* Quick contact */}
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-primary-foreground/70 md:justify-start">
-              <a href="tel:+998711234567" className="flex items-center gap-2 transition-colors hover:text-primary-foreground">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-foreground/10">
-                  <Phone className="h-3.5 w-3.5 text-primary-foreground" />
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-muted-foreground md:justify-start">
+              <a href="tel:+998711234567" className="flex items-center gap-2 transition-colors hover:text-primary">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
+                  <Phone className="h-3.5 w-3.5 text-primary" />
                 </div>
                 +998 71 123 45 67
               </a>
               <span className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-foreground/10">
-                  <Clock className="h-3.5 w-3.5 text-primary-foreground" />
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
+                  <Clock className="h-3.5 w-3.5 text-primary" />
                 </div>
                 Dush–Shan: 8:00–20:00
               </span>
