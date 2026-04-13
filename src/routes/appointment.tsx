@@ -70,7 +70,7 @@ function AppointmentPage() {
     return (
       <section className="px-4 py-16">
         <div className="mx-auto max-w-lg text-center">
-          <CheckCircle2 className="mx-auto h-16 w-16 text-green-500" />
+          <CheckCircle2 className="mx-auto h-16 w-16 text-primary" />
           <h2 className="mt-4 text-2xl font-bold">Muvaffaqiyatli yuborildi!</h2>
           <p className="mt-2 text-muted-foreground">
             Sizning so'rovingiz qabul qilindi. Tez orada siz bilan bog'lanamiz.
