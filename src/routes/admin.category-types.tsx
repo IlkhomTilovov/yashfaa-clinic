@@ -153,7 +153,7 @@ function AdminCategoryTypesPage() {
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {types.map((t) => {
-            const IconComp = getIconComponent(t.icon);
+            // dynamic icon
             return (
               <Card key={t.id} className="border-0 shadow-sm transition-all hover:shadow-md">
                 <CardContent className="p-5">
@@ -212,27 +212,7 @@ function AdminCategoryTypesPage() {
               {errors.slug && <p className="text-xs text-destructive">{errors.slug}</p>}
             </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-sm">Icon</Label>
-              <Select value={form.icon || "none"} onValueChange={(v) => setForm({ ...form, icon: v === "none" ? "" : v })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Tanlanmagan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Tanlanmagan</SelectItem>
-                  {ICON_OPTIONS.map((ic) => {
-                    const Ic = ic.icon;
-                    return (
-                      <SelectItem key={ic.value} value={ic.value}>
-                        <span className="flex items-center gap-2">
-                          <Ic className="h-4 w-4" /> {ic.label}
-                        </span>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
+            <IconPicker value={form.icon} onChange={(v) => setForm({ ...form, icon: v })} />
 
             <Button onClick={handleSave} disabled={saving || !form.name.trim()} className="w-full">
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
