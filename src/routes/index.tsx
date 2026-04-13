@@ -187,7 +187,7 @@ function HomePage() {
                   Qabulga yozilish
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 rounded-full px-8 text-base" asChild>
+              <Button size="lg" variant="outline" className="h-12 rounded-full border-primary/30 bg-background px-8 text-base text-foreground hover:bg-primary/5 hover:text-primary" asChild>
                 <Link to="/services">
                   Xizmatlar
                   <ArrowRight className="ml-2 h-5 w-5" />
