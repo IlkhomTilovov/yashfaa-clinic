@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getTests, getCategories } from "@/lib/server-functions";
 
 export const Route = createFileRoute("/tests")({
@@ -20,22 +21,55 @@ export const Route = createFileRoute("/tests")({
     return { tests, categories };
   },
   component: TestsPage,
+  errorComponent: ({ error, reset }) => {
+    const router = useRouter();
+    return (
+      <div className="px-4 py-16 text-center">
+        <h2 className="text-2xl font-bold">Xatolik yuz berdi</h2>
+        <p className="mt-2 text-muted-foreground">{error.message}</p>
+        <Button className="mt-4" onClick={() => { router.invalidate(); reset(); }}>Qayta urinish</Button>
+      </div>
+    );
+  },
+  pendingComponent: () => (
+    <section className="px-4 py-16">
+      <div className="mx-auto max-w-5xl space-y-4">
+        <Skeleton className="mx-auto h-10 w-64" />
+        <Skeleton className="h-10 w-full" />
+        <div className="space-y-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-xl" />
+          ))}
+        </div>
+      </div>
+    </section>
+  ),
 });
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("uz-UZ").format(price) + " so'm";
 }
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounced;
+}
+
 function TestsPage() {
   const { tests, categories } = Route.useLoaderData();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const debouncedSearch = useDebounce(search, 300);
 
-  const filtered = tests.filter((t) => {
-    const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase());
+  const filtered = useMemo(() => tests.filter((t) => {
+    const matchesSearch = t.name.toLowerCase().includes(debouncedSearch.toLowerCase());
     const matchesCategory = !activeCategory || t.category_id === activeCategory;
     return matchesSearch && matchesCategory;
-  });
+  }), [tests, debouncedSearch, activeCategory]);
 
   return (
     <section className="px-4 py-16">

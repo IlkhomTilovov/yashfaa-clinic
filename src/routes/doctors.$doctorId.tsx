@@ -1,6 +1,7 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { getDoctorById } from "@/lib/server-functions";
 
@@ -19,6 +20,16 @@ export const Route = createFileRoute("/doctors/$doctorId")({
     }
   },
   component: DoctorProfilePage,
+  errorComponent: ({ error, reset }) => {
+    const router = useRouter();
+    return (
+      <div className="px-4 py-16 text-center">
+        <h2 className="text-2xl font-bold">Xatolik yuz berdi</h2>
+        <p className="mt-2 text-muted-foreground">{error.message}</p>
+        <Button className="mt-4" onClick={() => { router.invalidate(); reset(); }}>Qayta urinish</Button>
+      </div>
+    );
+  },
   notFoundComponent: () => (
     <div className="px-4 py-16 text-center">
       <h2 className="text-2xl font-bold">Shifokor topilmadi</h2>
@@ -26,6 +37,24 @@ export const Route = createFileRoute("/doctors/$doctorId")({
         Shifokorlarga qaytish
       </Link>
     </div>
+  ),
+  pendingComponent: () => (
+    <section className="px-4 py-16">
+      <div className="mx-auto max-w-4xl">
+        <Card>
+          <CardContent className="p-6 md:p-8">
+            <div className="flex flex-col gap-8 md:flex-row">
+              <Skeleton className="h-64 w-64 rounded-xl" />
+              <div className="flex-1 space-y-4">
+                <Skeleton className="h-8 w-3/4" />
+                <Skeleton className="h-5 w-1/2" />
+                <Skeleton className="h-20 w-full" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </section>
   ),
 });
 
