@@ -145,7 +145,7 @@ function HomePage() {
   return (
     <>
       {/* ─── HERO ─── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/8">
+      <section className="relative bg-gradient-to-br from-primary/5 via-background to-primary/8">
         {/* Decorative background elements */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
