@@ -257,7 +257,7 @@ function AdminCategoriesPage() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => {
             const typeLabel = categoryTypes.find(ct => ct.id === cat.type_id)?.name ?? cat.type;
-            const IconComp = getIconComponent(cat.icon);
+            // icon rendered dynamically below
             const parent = cat.parent_id ? categories.find((c) => c.id === cat.parent_id) : null;
             return (
               <Card key={cat.id} className={`border-0 shadow-sm transition-all hover:shadow-md ${!cat.is_active ? "opacity-60" : ""}`}>
@@ -355,26 +355,8 @@ function AdminCategoriesPage() {
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-sm">Icon</Label>
-                  <Select value={form.icon} onValueChange={(v) => setForm({ ...form, icon: v })}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ICON_OPTIONS.map((ic) => {
-                        const Ic = ic.icon;
-                        return (
-                          <SelectItem key={ic.value} value={ic.value}>
-                            <span className="flex items-center gap-2">
-                              <Ic className="h-4 w-4" /> {ic.label}
-                            </span>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
+                  <IconPicker value={form.icon} onChange={(v) => setForm({ ...form, icon: v })} />
                 </div>
-              </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
