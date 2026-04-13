@@ -14,7 +14,7 @@ import {
   Briefcase,
   Settings,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -45,6 +45,12 @@ function AdminLayout() {
   const currentPath = matches[matches.length - 1]?.fullPath ?? "";
   const isPublicAdminRoute = currentPath === "/admin/login" || currentPath === "/admin/setup";
 
+  useEffect(() => {
+    if (!loading && !isPublicAdminRoute && (!user || !isAdmin)) {
+      navigate({ to: "/admin/login", replace: true });
+    }
+  }, [loading, isPublicAdminRoute, user, isAdmin, navigate]);
+
   if (loading && !isPublicAdminRoute) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -61,7 +67,6 @@ function AdminLayout() {
   }
 
   if (!user || !isAdmin) {
-    navigate({ to: "/admin/login" });
     return null;
   }
 

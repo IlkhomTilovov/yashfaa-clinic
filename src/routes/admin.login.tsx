@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,11 +25,11 @@ function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // If already admin, redirect
-  if (!authLoading && isAdmin) {
-    navigate({ to: "/admin" });
-    return null;
-  }
+  useEffect(() => {
+    if (!authLoading && isAdmin) {
+      navigate({ to: "/admin", replace: true });
+    }
+  }, [authLoading, isAdmin, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,8 +37,6 @@ function AdminLoginPage() {
     setLoading(true);
     try {
       await signIn(email, password);
-      // onAuthStateChange will update isAdmin, then we redirect
-      setTimeout(() => navigate({ to: "/admin" }), 500);
     } catch (err: any) {
       setError(err.message || "Kirish xatoligi");
     } finally {
