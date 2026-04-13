@@ -284,6 +284,7 @@ export type Database = {
           preparation_requirements: string | null
           price: number | null
           result_info: string | null
+          slug: string | null
         }
         Insert: {
           category_id?: string | null
@@ -300,6 +301,7 @@ export type Database = {
           preparation_requirements?: string | null
           price?: number | null
           result_info?: string | null
+          slug?: string | null
         }
         Update: {
           category_id?: string | null
@@ -316,6 +318,7 @@ export type Database = {
           preparation_requirements?: string | null
           price?: number | null
           result_info?: string | null
+          slug?: string | null
         }
         Relationships: [
           {

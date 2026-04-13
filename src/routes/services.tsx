@@ -67,68 +67,76 @@ function ServicesPage() {
     return doc?.name ?? null;
   };
 
-  const renderServiceCard = (svc: any) => (
-    <Card key={svc.id} className="h-full transition-shadow hover:shadow-md">
-      <CardContent className="flex h-full flex-col p-5">
-        <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <Briefcase className="h-5 w-5 text-primary" />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold">{svc.name}</h3>
-              {svc.is_online && <Globe className="h-3.5 w-3.5 text-primary" />}
+  const renderServiceCard = (svc: any) => {
+    const card = (
+      <Card className="h-full transition-shadow hover:shadow-md">
+        <CardContent className="flex h-full flex-col p-5">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <Briefcase className="h-5 w-5 text-primary" />
             </div>
-            {svc.categories?.name && (
-              <Badge variant="outline" className="mt-1 text-[10px]">{svc.categories.name}</Badge>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold">{svc.name}</h3>
+                {svc.is_online && <Globe className="h-3.5 w-3.5 text-primary" />}
+              </div>
+              {svc.categories?.name && (
+                <Badge variant="outline" className="mt-1 text-[10px]">{svc.categories.name}</Badge>
+              )}
+            </div>
+          </div>
+
+          {svc.description && (
+            <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{svc.description}</p>
+          )}
+
+          <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
+            {svc.duration && (
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" /> {svc.duration}
+              </span>
+            )}
+            {svc.location_type && (
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3 w-3" /> {LOCATION_LABELS[svc.location_type] ?? svc.location_type}
+              </span>
             )}
           </div>
-        </div>
 
-        {svc.description && (
-          <p className="mt-3 text-sm text-muted-foreground">{svc.description}</p>
-        )}
-
-        <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
-          {svc.duration && (
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" /> {svc.duration}
-            </span>
+          {svc.doctor_ids && svc.doctor_ids.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {svc.doctor_ids.map((id: string) => {
+                const name = getDoctorName(id);
+                return name ? (
+                  <Badge key={id} variant="secondary" className="text-[10px]">{name}</Badge>
+                ) : null;
+              })}
+            </div>
           )}
-          {svc.location_type && (
-            <span className="flex items-center gap-1">
-              <MapPin className="h-3 w-3" /> {LOCATION_LABELS[svc.location_type] ?? svc.location_type}
-            </span>
-          )}
-        </div>
 
-        {svc.doctor_ids && svc.doctor_ids.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {svc.doctor_ids.map((id: string) => {
-              const name = getDoctorName(id);
-              return name ? (
-                <Badge key={id} variant="secondary" className="text-[10px]">{name}</Badge>
-              ) : null;
-            })}
+          {svc.preparation_requirements && (
+            <p className="mt-2 text-xs text-muted-foreground/70 italic">📋 {svc.preparation_requirements}</p>
+          )}
+
+          <div className="mt-auto pt-4">
+            <span className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+              Batafsil ko'rish
+            </span>
           </div>
-        )}
+        </CardContent>
+      </Card>
+    );
 
-        {svc.preparation_requirements && (
-          <p className="mt-2 text-xs text-muted-foreground/70 italic">📋 {svc.preparation_requirements}</p>
-        )}
+    if (svc.slug) {
+      return (
+        <Link key={svc.id} to="/services/$slug" params={{ slug: svc.slug }} className="block">
+          {card}
+        </Link>
+      );
+    }
 
-        <div className="mt-auto pt-4">
-          <a
-            href="tel:+998711234567"
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            <Phone className="h-4 w-4" />
-            Murojaat qiling
-          </a>
-        </div>
-      </CardContent>
-    </Card>
-  );
+    return <div key={svc.id}>{card}</div>;
+  };
 
   return (
     <section className="px-4 py-16">
