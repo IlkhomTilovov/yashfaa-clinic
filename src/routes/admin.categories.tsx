@@ -164,7 +164,8 @@ function AdminCategoriesPage() {
   };
 
   const handleSave = async () => {
-    if (!validate()) return;
+    console.log("[categories] handleSave called, form:", JSON.stringify(form));
+    if (!validate()) { console.log("[categories] validation failed, errors:", errors); return; }
     setSaving(true);
     let typeId = form.type_id;
     let typeSlug = form.type;
