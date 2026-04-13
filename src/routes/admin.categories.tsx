@@ -23,6 +23,7 @@ interface Category {
   id: string;
   name: string;
   type: string;
+  type_id: string | null;
   created_at: string;
   slug: string | null;
   description: string | null;
@@ -33,12 +34,12 @@ interface Category {
   parent_id: string | null;
 }
 
-const typeOptions = [
-  { value: "laboratory", label: "Laboratoriya" },
-  { value: "diagnostics", label: "Diagnostika" },
-  { value: "cosmetology", label: "Kosmetologiya" },
-  { value: "others", label: "Boshqa" },
-];
+interface CategoryTypeItem {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string | null;
+}
 
 const ICON_OPTIONS = [
   { value: "flask", label: "Laboratoriya", icon: FlaskConical },
