@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Phone, Clock, MapPin, Star, Globe, Briefcase } from "lucide-react";
 import { getServices, getCategories, getDoctors } from "@/lib/server-functions";
 
-export const Route = createFileRoute("/services")({
+export const Route = createFileRoute("/services/")({
   head: () => ({
     meta: [
       { title: "Xizmatlar — Yashfaa Clinic" },
