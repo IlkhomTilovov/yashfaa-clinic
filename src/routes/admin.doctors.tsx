@@ -206,7 +206,7 @@ function AdminDoctorsPage() {
                       <h3 className="truncate font-semibold">{doc.name}</h3>
                       {!doc.is_active && <Badge variant="secondary" className="text-[10px]">Nofaol</Badge>}
                       {doc.online_available && (
-                        <Globe className="h-3.5 w-3.5 text-green-500" title="Online qabul" />
+                        <Globe className="h-3.5 w-3.5 text-primary" />
                       )}
                     </div>
                     <p className="mt-0.5 text-sm text-primary">{doc.specialization}</p>
