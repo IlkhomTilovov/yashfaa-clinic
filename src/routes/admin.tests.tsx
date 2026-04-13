@@ -230,7 +230,7 @@ function AdminTestsPage() {
                     <div className="flex items-center gap-2">
                       <p className="truncate font-medium">{test.name}</p>
                       {!test.is_active && <Badge variant="secondary" className="text-[10px]">Nofaol</Badge>}
-                      {test.is_recommended && <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />}
+                      {test.is_recommended && <Star className="h-3.5 w-3.5 text-primary fill-primary" />}
                       {test.is_urgent && <Zap className="h-3.5 w-3.5 text-primary" />}
                     </div>
                     <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
