@@ -186,6 +186,15 @@ function HomePage() {
                 Dush–Shan: 8:00–20:00
               </span>
             </div>
+
+            {/* Search bar */}
+            <div className="mt-8">
+              <HeroSearch
+                doctors={allDoctors as any}
+                services={allServices as any}
+                tests={allTests as any}
+              />
+            </div>
           </div>
 
           {/* Right — Doctor image */}
