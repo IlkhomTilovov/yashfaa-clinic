@@ -15,8 +15,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Plus, Pencil, Trash2, Loader2, FolderOpen, Star } from "lucide-react";
 import { DynamicIcon } from "@/components/DynamicIcon";
 import { IconPicker } from "@/components/IconPicker";
-
 import { toast } from "sonner";
+
+export const Route = createFileRoute("/admin/categories")({
   component: AdminCategoriesPage,
 });
 
