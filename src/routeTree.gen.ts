@@ -17,6 +17,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AppointmentRouteImport } from './routes/appointment'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as DoctorsIndexRouteImport } from './routes/doctors.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as TahlilSlugRouteImport } from './routes/tahlil.$slug'
@@ -71,6 +72,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ServicesRoute,
 } as any)
 const DoctorsIndexRoute = DoctorsIndexRouteImport.update({
   id: '/doctors/',
@@ -166,13 +172,13 @@ export interface FileRoutesByFullPath {
   '/tahlil/$slug': typeof TahlilSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/doctors/': typeof DoctorsIndexRoute
+  '/services/': typeof ServicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/appointment': typeof AppointmentRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
-  '/services': typeof ServicesRouteWithChildren
   '/setup': typeof SetupRoute
   '/tests': typeof TestsRoute
   '/admin/appointments': typeof AdminAppointmentsRoute
@@ -189,6 +195,7 @@ export interface FileRoutesByTo {
   '/tahlil/$slug': typeof TahlilSlugRoute
   '/admin': typeof AdminIndexRoute
   '/doctors': typeof DoctorsIndexRoute
+  '/services': typeof ServicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -214,6 +221,7 @@ export interface FileRoutesById {
   '/tahlil/$slug': typeof TahlilSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/doctors/': typeof DoctorsIndexRoute
+  '/services/': typeof ServicesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -240,13 +248,13 @@ export interface FileRouteTypes {
     | '/tahlil/$slug'
     | '/admin/'
     | '/doctors/'
+    | '/services/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/appointment'
     | '/contact'
     | '/login'
-    | '/services'
     | '/setup'
     | '/tests'
     | '/admin/appointments'
@@ -263,6 +271,7 @@ export interface FileRouteTypes {
     | '/tahlil/$slug'
     | '/admin'
     | '/doctors'
+    | '/services'
   id:
     | '__root__'
     | '/'
@@ -287,6 +296,7 @@ export interface FileRouteTypes {
     | '/tahlil/$slug'
     | '/admin/'
     | '/doctors/'
+    | '/services/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -360,6 +370,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/services/': {
+      id: '/services/'
+      path: '/'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof ServicesRoute
     }
     '/doctors/': {
       id: '/doctors/'
@@ -492,10 +509,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ServicesRouteChildren {
   ServicesSlugRoute: typeof ServicesSlugRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
 }
 
 const ServicesRouteChildren: ServicesRouteChildren = {
   ServicesSlugRoute: ServicesSlugRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
 }
 
 const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
