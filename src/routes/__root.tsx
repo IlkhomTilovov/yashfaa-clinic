@@ -4,6 +4,7 @@ import {
   createRootRoute,
   HeadContent,
   Scripts,
+  useMatches,
 } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import { Navbar } from "@/components/Navbar";
@@ -75,6 +76,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  const matches = useMatches();
+  const isAdminRoute = matches.some((m) => m.fullPath.startsWith("/admin"));
+
+  if (isAdminRoute) {
+    return <Outlet />;
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
