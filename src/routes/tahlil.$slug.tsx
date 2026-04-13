@@ -17,7 +17,7 @@ import {
 import { getTestBySlug } from "@/lib/server-functions";
 
 export const Route = createFileRoute("/tahlil/$slug")({
-  head: ({ loaderData }) => {
+  head: ({ loaderData }: { loaderData: any }) => {
     const test = loaderData;
     return {
       meta: [
@@ -89,7 +89,8 @@ export const Route = createFileRoute("/tahlil/$slug")({
 });
 
 function TestDetailPage() {
-  const test = Route.useLoaderData();
+  const test = Route.useLoaderData() as any;
+  if (!test) return null;
 
   return (
     <section className="px-4 py-8 md:py-12">
