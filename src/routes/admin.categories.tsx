@@ -69,6 +69,7 @@ interface FormData {
   name: string;
   type: string;
   type_id: string;
+  custom_type: string;
   slug: string;
   description: string;
   icon: string;
@@ -82,6 +83,7 @@ const emptyForm: FormData = {
   name: "",
   type: "others",
   type_id: "",
+  custom_type: "",
   slug: "",
   description: "",
   icon: "folder",
@@ -138,6 +140,7 @@ function AdminCategoriesPage() {
       name: cat.name,
       type: cat.type,
       type_id: cat.type_id ?? "",
+      custom_type: "",
       slug: cat.slug ?? "",
       description: cat.description ?? "",
       icon: cat.icon ?? "folder",
@@ -154,7 +157,8 @@ function AdminCategoriesPage() {
   const validate = (): boolean => {
     const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
-    if (!form.type_id) e.type_id = "Turi tanlanishi shart";
+    if (!form.type_id && form.type_id !== "__other") e.type_id = "Turi tanlanishi shart";
+    if (form.type_id === "__other" && !form.custom_type.trim()) e.custom_type = "Yangi tur nomini kiriting";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -162,11 +166,33 @@ function AdminCategoriesPage() {
   const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
-    const selectedType = categoryTypes.find(ct => ct.id === form.type_id);
+    let typeId = form.type_id;
+    let typeSlug = form.type;
+
+    // If "Boshqa" selected, create new type in DB first
+    if (form.type_id === "__other" && form.custom_type.trim()) {
+      const newSlug = generateSlug(form.custom_type.trim());
+      const { data: newType, error: typeError } = await supabase
+        .from("category_types")
+        .insert({ name: form.custom_type.trim(), slug: newSlug })
+        .select("id, slug")
+        .single();
+      if (typeError) {
+        toast.error("Yangi tur qo'shishda xatolik: " + typeError.message);
+        setSaving(false);
+        return;
+      }
+      typeId = newType.id;
+      typeSlug = newType.slug;
+    } else {
+      const selectedType = categoryTypes.find(ct => ct.id === form.type_id);
+      typeSlug = selectedType?.slug ?? form.type;
+    }
+
     const payload = {
       name: form.name,
-      type: selectedType?.slug ?? form.type,
-      type_id: form.type_id || null,
+      type: typeSlug,
+      type_id: typeId === "__other" ? null : typeId || null,
       slug: form.slug || null,
       description: form.description || null,
       icon: form.icon || null,
@@ -301,21 +327,29 @@ function AdminCategoriesPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label className="text-sm">Turi <span className="text-destructive">*</span></Label>
-                  <Select value={form.type_id || ""} onValueChange={(v) => setForm({ ...form, type_id: v })}>
+                  <Select value={form.type_id || ""} onValueChange={(v) => setForm({ ...form, type_id: v, custom_type: "" })}>
                     <SelectTrigger className={errors.type_id ? "border-destructive" : ""}>
                       <SelectValue placeholder="Turni tanlang" />
                     </SelectTrigger>
                     <SelectContent>
-                      {categoryTypes.length === 0 ? (
-                        <SelectItem value="__empty" disabled>Turlar topilmadi</SelectItem>
-                      ) : (
-                        categoryTypes.map((ct) => (
-                          <SelectItem key={ct.id} value={ct.id}>{ct.name}</SelectItem>
-                        ))
-                      )}
+                      {categoryTypes.map((ct) => (
+                        <SelectItem key={ct.id} value={ct.id}>{ct.name}</SelectItem>
+                      ))}
+                      <SelectItem value="__other">➕ Boshqa (yangi tur)</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.type_id && <p className="text-xs text-destructive">{errors.type_id}</p>}
+                  {form.type_id === "__other" && (
+                    <div className="mt-2 space-y-1.5">
+                      <Input
+                        value={form.custom_type}
+                        onChange={(e) => setForm({ ...form, custom_type: e.target.value })}
+                        placeholder="Yangi tur nomini kiriting..."
+                        className={errors.custom_type ? "border-destructive" : ""}
+                      />
+                      {errors.custom_type && <p className="text-xs text-destructive">{errors.custom_type}</p>}
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-sm">Icon</Label>
