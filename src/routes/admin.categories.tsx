@@ -166,24 +166,38 @@ function AdminCategoriesPage() {
   const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
-    let typeId = form.type_id;
+    let typeId: string = form.type_id;
     let typeSlug = form.type;
 
     // If "Boshqa" selected, create new type in DB first
     if (form.type_id === "__other" && form.custom_type.trim()) {
       const newSlug = generateSlug(form.custom_type.trim());
-      const { data: newType, error: typeError } = await supabase
+      
+      // Check if type with same slug already exists
+      const { data: existing } = await supabase
         .from("category_types")
-        .insert({ name: form.custom_type.trim(), slug: newSlug })
         .select("id, slug")
-        .single();
-      if (typeError) {
-        toast.error("Yangi tur qo'shishda xatolik: " + typeError.message);
-        setSaving(false);
-        return;
+        .eq("slug", newSlug)
+        .maybeSingle();
+      
+      if (existing) {
+        typeId = existing.id;
+        typeSlug = existing.slug;
+      } else {
+        const { data: newType, error: typeError } = await supabase
+          .from("category_types")
+          .insert({ name: form.custom_type.trim(), slug: newSlug })
+          .select("id, slug")
+          .single();
+        if (typeError) {
+          console.error("[categories] type insert error:", typeError);
+          toast.error("Yangi tur qo'shishda xatolik: " + typeError.message);
+          setSaving(false);
+          return;
+        }
+        typeId = newType.id;
+        typeSlug = newType.slug;
       }
-      typeId = newType.id;
-      typeSlug = newType.slug;
     } else {
       const selectedType = categoryTypes.find(ct => ct.id === form.type_id);
       typeSlug = selectedType?.slug ?? form.type;
@@ -192,7 +206,7 @@ function AdminCategoriesPage() {
     const payload = {
       name: form.name,
       type: typeSlug,
-      type_id: typeId === "__other" ? null : typeId || null,
+      type_id: (typeId && typeId !== "__other") ? typeId : null,
       slug: form.slug || null,
       description: form.description || null,
       icon: form.icon || null,
