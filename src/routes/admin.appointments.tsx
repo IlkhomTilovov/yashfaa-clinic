@@ -213,7 +213,7 @@ function AdminAppointmentsPage() {
               {hasFilters ? "Filtr natijasi topilmadi. Filtrni o'zgartiring." : "Hali uchrashuvlar yo'q"}
             </p>
             {hasFilters && (
-              <Button variant="outline" size="sm" className="mt-4" onClick={() => { setSearch(""); setFilterStatus("all"); setFilterDate(""); }}>
+              <Button variant="outline" size="sm" className="mt-4" onClick={() => { setSearch(""); setFilterStatus("all"); setFilterDate(undefined); }}>
                 Filtrni tozalash
               </Button>
             )}
