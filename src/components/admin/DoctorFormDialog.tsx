@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +8,8 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, X, User } from "lucide-react";
+import { Loader2, X, User, Upload, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 const SPECIALIZATIONS = [
   "Kardiolog",
@@ -116,6 +118,8 @@ interface Props {
 export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, saving, onSave }: Props) {
   const [slugManual, setSlugManual] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-generate slug from name
   useEffect(() => {
@@ -123,6 +127,53 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
       setForm({ ...form, slug: "dr-" + generateSlug(form.name) });
     }
   }, [form.name, slugManual]);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Faqat rasm fayllari yuklash mumkin");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Rasm hajmi 5MB dan oshmasligi kerak");
+      return;
+    }
+
+    setUploading(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const fileName = `${crypto.randomUUID()}.${ext}`;
+
+    const { error } = await supabase.storage
+      .from("doctor-images")
+      .upload(fileName, file, { cacheControl: "3600", upsert: false });
+
+    if (error) {
+      toast.error("Rasm yuklanmadi: " + error.message);
+      setUploading(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("doctor-images")
+      .getPublicUrl(fileName);
+
+    setForm({ ...form, image_url: urlData.publicUrl });
+    setUploading(false);
+    toast.success("Rasm yuklandi");
+  };
+
+  const handleRemoveImage = async () => {
+    if (form.image_url?.includes("doctor-images")) {
+      const path = form.image_url.split("/doctor-images/")[1];
+      if (path) {
+        await supabase.storage.from("doctor-images").remove([path]);
+      }
+    }
+    setForm({ ...form, image_url: "" });
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const toggleArrayItem = (field: "languages" | "services_offered", item: string) => {
     const arr = form[field];
@@ -155,30 +206,55 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
         </DialogHeader>
 
         <div className="space-y-6 pt-2">
-          {/* Image preview */}
+          {/* Image upload */}
           <div className="flex items-center gap-4">
-            <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-muted-foreground/20 bg-muted/30">
+            <div className="relative flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-muted-foreground/20 bg-muted/30">
               {form.image_url ? (
-                <img
-                  src={form.image_url}
-                  alt="Preview"
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
-                />
+                <>
+                  <img
+                    src={form.image_url}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </>
               ) : (
-                <User className="h-8 w-8 text-muted-foreground/40" />
+                <User className="h-10 w-10 text-muted-foreground/40" />
               )}
             </div>
-            <div className="flex-1 space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Rasm URL</Label>
-              <Input
-                value={form.image_url}
-                onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                placeholder="https://example.com/doctor.jpg"
-                className="h-9 text-sm"
+            <div className="space-y-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
               />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                disabled={uploading}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {uploading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}
+                {uploading ? "Yuklanmoqda..." : "Rasm yuklash"}
+              </Button>
+              <p className="text-xs text-muted-foreground">JPG, PNG. Maks 5MB</p>
             </div>
           </div>
 
