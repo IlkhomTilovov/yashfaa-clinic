@@ -4,15 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2, Loader2, Search, Stethoscope, User } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Stethoscope, User, Globe, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { DoctorFormDialog, emptyForm } from "@/components/admin/DoctorFormDialog";
+import type { DoctorFormData } from "@/components/admin/DoctorFormDialog";
 
 export const Route = createFileRoute("/admin/doctors")({
   component: AdminDoctorsPage,
@@ -28,6 +26,13 @@ interface Doctor {
   experience_years: number | null;
   is_active: boolean;
   created_at: string;
+  branch: string | null;
+  schedule: string | null;
+  consultation_price: number | null;
+  languages: string[] | null;
+  services_offered: string[] | null;
+  slug: string | null;
+  online_available: boolean;
 }
 
 function AdminDoctorsPage() {
@@ -38,10 +43,7 @@ function AdminDoctorsPage() {
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [form, setForm] = useState({
-    name: "", specialization: "", image_url: "", bio: "",
-    phone: "", experience_years: "", is_active: true,
-  });
+  const [form, setForm] = useState<DoctorFormData>({ ...emptyForm });
 
   const fetchDoctors = useCallback(async () => {
     setLoading(true);
@@ -62,7 +64,7 @@ function AdminDoctorsPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: "", specialization: "", image_url: "", bio: "", phone: "", experience_years: "", is_active: true });
+    setForm({ ...emptyForm });
     setDialogOpen(true);
   };
 
@@ -71,11 +73,18 @@ function AdminDoctorsPage() {
     setForm({
       name: doc.name,
       specialization: doc.specialization,
+      experience_years: doc.experience_years ? String(doc.experience_years) : "",
+      branch: doc.branch ?? "",
+      schedule: doc.schedule ?? "",
+      consultation_price: doc.consultation_price ? String(doc.consultation_price) : "",
+      languages: doc.languages ?? [],
+      services_offered: doc.services_offered ?? [],
       image_url: doc.image_url ?? "",
       bio: doc.bio ?? "",
-      phone: doc.phone ?? "",
-      experience_years: doc.experience_years ? String(doc.experience_years) : "",
+      slug: doc.slug ?? "",
+      online_available: doc.online_available ?? false,
       is_active: doc.is_active,
+      phone: doc.phone ?? "",
     });
     setDialogOpen(true);
   };
@@ -85,11 +94,18 @@ function AdminDoctorsPage() {
     const payload = {
       name: form.name,
       specialization: form.specialization,
+      experience_years: form.experience_years ? Number(form.experience_years) : null,
+      branch: form.branch || null,
+      schedule: form.schedule || null,
+      consultation_price: form.consultation_price ? Number(form.consultation_price) : null,
+      languages: form.languages.length > 0 ? form.languages : null,
+      services_offered: form.services_offered.length > 0 ? form.services_offered : null,
       image_url: form.image_url || null,
       bio: form.bio || null,
-      phone: form.phone || null,
-      experience_years: form.experience_years ? Number(form.experience_years) : null,
+      slug: form.slug || null,
+      online_available: form.online_available,
       is_active: form.is_active,
+      phone: form.phone || null,
     };
     const { error } = editing
       ? await supabase.from("doctors").update(payload).eq("id", editing.id)
@@ -115,6 +131,11 @@ function AdminDoctorsPage() {
       fetchDoctors();
     }
     setDeleteId(null);
+  };
+
+  const formatCurrency = (n: number | null) => {
+    if (!n) return null;
+    return Number(n).toLocaleString("uz-UZ") + " so'm";
   };
 
   return (
@@ -146,7 +167,7 @@ function AdminDoctorsPage() {
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-44 rounded-xl" />
+            <Skeleton key={i} className="h-52 rounded-xl" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
@@ -173,28 +194,43 @@ function AdminDoctorsPage() {
                       src={doc.image_url}
                       alt={doc.name}
                       className="h-14 w-14 rounded-xl object-cover"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden'); }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                     />
-                  ) : null}
-                  <div className={`${doc.image_url ? 'hidden' : ''} flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10`}>
-                    <User className="h-7 w-7 text-primary/60" />
-                  </div>
+                  ) : (
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                      <User className="h-7 w-7 text-primary/60" />
+                    </div>
+                  )}
                   <div className="flex-1 overflow-hidden">
                     <div className="flex items-center gap-2">
                       <h3 className="truncate font-semibold">{doc.name}</h3>
                       {!doc.is_active && <Badge variant="secondary" className="text-[10px]">Nofaol</Badge>}
+                      {doc.online_available && (
+                        <Globe className="h-3.5 w-3.5 text-green-500" title="Online qabul" />
+                      )}
                     </div>
                     <p className="mt-0.5 text-sm text-primary">{doc.specialization}</p>
-                    {doc.phone && (
-                      <p className="mt-1 text-xs text-muted-foreground">{doc.phone}</p>
-                    )}
                     {doc.experience_years && (
                       <p className="text-xs text-muted-foreground">{doc.experience_years} yil tajriba</p>
                     )}
+                    {doc.branch && (
+                      <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin className="h-3 w-3" /> {doc.branch}
+                      </p>
+                    )}
                   </div>
                 </div>
+                {/* Tags row */}
+                <div className="mt-3 flex flex-wrap gap-1">
+                  {doc.consultation_price ? (
+                    <Badge variant="outline" className="text-[10px]">{formatCurrency(doc.consultation_price)}</Badge>
+                  ) : null}
+                  {doc.languages?.map((l) => (
+                    <Badge key={l} variant="secondary" className="text-[10px]">{l}</Badge>
+                  ))}
+                </div>
                 {doc.bio && (
-                  <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{doc.bio}</p>
+                  <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{doc.bio}</p>
                 )}
                 <div className="mt-4 flex items-center justify-end gap-1 border-t pt-3">
                   <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => openEdit(doc)}>
@@ -210,52 +246,16 @@ function AdminDoctorsPage() {
         </div>
       )}
 
-      {/* Create/Edit Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{editing ? "Shifokorni tahrirlash" : "Yangi shifokor qo'shish"}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 pt-2">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>To'liq ism *</Label>
-                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Dr. Ism Familiya" />
-              </div>
-              <div className="space-y-2">
-                <Label>Mutaxassislik *</Label>
-                <Input value={form.specialization} onChange={(e) => setForm({ ...form, specialization: e.target.value })} placeholder="Kardiolog" />
-              </div>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Telefon</Label>
-                <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+998 90 123 45 67" />
-              </div>
-              <div className="space-y-2">
-                <Label>Tajriba (yil)</Label>
-                <Input type="number" value={form.experience_years} onChange={(e) => setForm({ ...form, experience_years: e.target.value })} placeholder="10" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Rasm URL</Label>
-              <Input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://..." />
-            </div>
-            <div className="space-y-2">
-              <Label>Biografiya</Label>
-              <Textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={3} placeholder="Shifokor haqida qisqa ma'lumot..." />
-            </div>
-            <div className="flex items-center gap-3">
-              <Switch checked={form.is_active} onCheckedChange={(v) => setForm({ ...form, is_active: v })} />
-              <Label>Faol</Label>
-            </div>
-            <Button onClick={handleSave} disabled={saving || !form.name || !form.specialization} className="w-full">
-              {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {editing ? "Saqlash" : "Qo'shish"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Form Dialog */}
+      <DoctorFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        form={form}
+        setForm={setForm}
+        editing={!!editing}
+        saving={saving}
+        onSave={handleSave}
+      />
 
       {/* Delete Confirmation */}
       <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
