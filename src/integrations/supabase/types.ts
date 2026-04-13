@@ -239,28 +239,49 @@ export type Database = {
           category_id: string | null
           created_at: string
           description: string | null
+          doctor_ids: string[] | null
+          duration: string | null
           id: string
           is_active: boolean
+          is_featured: boolean
+          is_online: boolean
+          location_type: string | null
           name: string
+          preparation_requirements: string | null
           price: number | null
+          result_info: string | null
         }
         Insert: {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          doctor_ids?: string[] | null
+          duration?: string | null
           id?: string
           is_active?: boolean
+          is_featured?: boolean
+          is_online?: boolean
+          location_type?: string | null
           name: string
+          preparation_requirements?: string | null
           price?: number | null
+          result_info?: string | null
         }
         Update: {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          doctor_ids?: string[] | null
+          duration?: string | null
           id?: string
           is_active?: boolean
+          is_featured?: boolean
+          is_online?: boolean
+          location_type?: string | null
           name?: string
+          preparation_requirements?: string | null
           price?: number | null
+          result_info?: string | null
         }
         Relationships: [
           {
