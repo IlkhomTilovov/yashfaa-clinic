@@ -13,6 +13,7 @@ import {
   X,
   Briefcase,
   Settings,
+  Layers,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
