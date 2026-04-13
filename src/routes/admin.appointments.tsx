@@ -80,7 +80,8 @@ function AdminAppointmentsPage() {
       result = result.filter(a => a.status === filterStatus);
     }
     if (filterDate) {
-      result = result.filter(a => a.date === filterDate);
+      const dateStr = format(filterDate, "yyyy-MM-dd");
+      result = result.filter(a => a.date === dateStr);
     }
     return result;
   }, [appointments, search, filterStatus, filterDate]);
