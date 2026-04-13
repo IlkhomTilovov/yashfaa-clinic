@@ -357,6 +357,7 @@ function AdminCategoriesPage() {
                 <div className="space-y-1.5">
                   <IconPicker value={form.icon} onChange={(v) => setForm({ ...form, icon: v })} />
                 </div>
+              </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
