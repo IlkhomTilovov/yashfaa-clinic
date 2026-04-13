@@ -43,19 +43,6 @@ interface CategoryTypeItem {
   icon: string | null;
 }
 
-const ICON_OPTIONS = [
-  { value: "flask", label: "Laboratoriya", icon: FlaskConical },
-  { value: "microscope", label: "Mikroskop", icon: Microscope },
-  { value: "heart", label: "Yurak", icon: Heart },
-  { value: "sparkles", label: "Kosmetologiya", icon: Sparkles },
-  { value: "package", label: "Paket", icon: Package },
-  { value: "folder", label: "Papka", icon: FolderOpen },
-];
-
-function getIconComponent(iconName: string | null) {
-  const found = ICON_OPTIONS.find((i) => i.value === iconName);
-  return found ? found.icon : FolderOpen;
-}
 
 function generateSlug(name: string): string {
   return name
