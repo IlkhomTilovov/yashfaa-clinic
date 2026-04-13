@@ -74,6 +74,7 @@ export type Database = {
           slug: string | null
           sort_order: number
           type: string
+          type_id: string | null
         }
         Insert: {
           created_at?: string
@@ -87,6 +88,7 @@ export type Database = {
           slug?: string | null
           sort_order?: number
           type?: string
+          type_id?: string | null
         }
         Update: {
           created_at?: string
@@ -100,6 +102,7 @@ export type Database = {
           slug?: string | null
           sort_order?: number
           type?: string
+          type_id?: string | null
         }
         Relationships: [
           {
@@ -109,7 +112,38 @@ export type Database = {
             referencedRelation: "categories"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "categories_type_id_fkey"
+            columns: ["type_id"]
+            isOneToOne: false
+            referencedRelation: "category_types"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      category_types: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
       }
       clinic_settings: {
         Row: {

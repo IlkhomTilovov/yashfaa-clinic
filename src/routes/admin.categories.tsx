@@ -23,6 +23,7 @@ interface Category {
   id: string;
   name: string;
   type: string;
+  type_id: string | null;
   created_at: string;
   slug: string | null;
   description: string | null;
@@ -33,12 +34,12 @@ interface Category {
   parent_id: string | null;
 }
 
-const typeOptions = [
-  { value: "laboratory", label: "Laboratoriya" },
-  { value: "diagnostics", label: "Diagnostika" },
-  { value: "cosmetology", label: "Kosmetologiya" },
-  { value: "others", label: "Boshqa" },
-];
+interface CategoryTypeItem {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string | null;
+}
 
 const ICON_OPTIONS = [
   { value: "flask", label: "Laboratoriya", icon: FlaskConical },
@@ -67,6 +68,7 @@ function generateSlug(name: string): string {
 interface FormData {
   name: string;
   type: string;
+  type_id: string;
   slug: string;
   description: string;
   icon: string;
@@ -79,6 +81,7 @@ interface FormData {
 const emptyForm: FormData = {
   name: "",
   type: "others",
+  type_id: "",
   slug: "",
   description: "",
   icon: "folder",
@@ -99,10 +102,16 @@ function AdminCategoriesPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [slugManual, setSlugManual] = useState(false);
 
+  const [categoryTypes, setCategoryTypes] = useState<CategoryTypeItem[]>([]);
+
   const fetchCategories = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("categories").select("*").order("sort_order").order("name");
-    setCategories((data ?? []) as Category[]);
+    const [catRes, typesRes] = await Promise.all([
+      supabase.from("categories").select("*").order("sort_order").order("name"),
+      supabase.from("category_types").select("*").order("created_at"),
+    ]);
+    setCategories((catRes.data ?? []) as Category[]);
+    setCategoryTypes((typesRes.data ?? []) as CategoryTypeItem[]);
     setLoading(false);
   }, []);
 
@@ -128,6 +137,7 @@ function AdminCategoriesPage() {
     setForm({
       name: cat.name,
       type: cat.type,
+      type_id: cat.type_id ?? "",
       slug: cat.slug ?? "",
       description: cat.description ?? "",
       icon: cat.icon ?? "folder",
@@ -144,7 +154,7 @@ function AdminCategoriesPage() {
   const validate = (): boolean => {
     const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
-    if (!form.type) e.type = "Turi tanlanishi shart";
+    if (!form.type_id) e.type_id = "Turi tanlanishi shart";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -152,9 +162,11 @@ function AdminCategoriesPage() {
   const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
+    const selectedType = categoryTypes.find(ct => ct.id === form.type_id);
     const payload = {
       name: form.name,
-      type: form.type,
+      type: selectedType?.slug ?? form.type,
+      type_id: form.type_id || null,
       slug: form.slug || null,
       description: form.description || null,
       icon: form.icon || null,
@@ -215,7 +227,7 @@ function AdminCategoriesPage() {
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => {
-            const typeLabel = typeOptions.find(t => t.value === cat.type)?.label ?? cat.type;
+            const typeLabel = categoryTypes.find(ct => ct.id === cat.type_id)?.name ?? cat.type;
             const IconComp = getIconComponent(cat.icon);
             const parent = cat.parent_id ? categories.find((c) => c.id === cat.parent_id) : null;
             return (
@@ -289,17 +301,21 @@ function AdminCategoriesPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label className="text-sm">Turi <span className="text-destructive">*</span></Label>
-                  <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
-                    <SelectTrigger className={errors.type ? "border-destructive" : ""}>
-                      <SelectValue />
+                  <Select value={form.type_id || "none"} onValueChange={(v) => setForm({ ...form, type_id: v === "none" ? "" : v })}>
+                    <SelectTrigger className={errors.type_id ? "border-destructive" : ""}>
+                      <SelectValue placeholder="Turni tanlang" />
                     </SelectTrigger>
                     <SelectContent>
-                      {typeOptions.map((t) => (
-                        <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                      ))}
+                      {categoryTypes.length === 0 ? (
+                        <SelectItem value="none" disabled>Turlar topilmadi</SelectItem>
+                      ) : (
+                        categoryTypes.map((ct) => (
+                          <SelectItem key={ct.id} value={ct.id}>{ct.name}</SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
-                  {errors.type && <p className="text-xs text-destructive">{errors.type}</p>}
+                  {errors.type_id && <p className="text-xs text-destructive">{errors.type_id}</p>}
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-sm">Icon</Label>
