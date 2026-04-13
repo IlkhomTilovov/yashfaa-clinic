@@ -69,6 +69,7 @@ interface FormData {
   name: string;
   type: string;
   type_id: string;
+  custom_type: string;
   slug: string;
   description: string;
   icon: string;
@@ -82,6 +83,7 @@ const emptyForm: FormData = {
   name: "",
   type: "others",
   type_id: "",
+  custom_type: "",
   slug: "",
   description: "",
   icon: "folder",
@@ -138,6 +140,7 @@ function AdminCategoriesPage() {
       name: cat.name,
       type: cat.type,
       type_id: cat.type_id ?? "",
+      custom_type: "",
       slug: cat.slug ?? "",
       description: cat.description ?? "",
       icon: cat.icon ?? "folder",
@@ -154,7 +157,8 @@ function AdminCategoriesPage() {
   const validate = (): boolean => {
     const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
-    if (!form.type_id) e.type_id = "Turi tanlanishi shart";
+    if (!form.type_id && form.type_id !== "__other") e.type_id = "Turi tanlanishi shart";
+    if (form.type_id === "__other" && !form.custom_type.trim()) e.custom_type = "Yangi tur nomini kiriting";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -162,11 +166,33 @@ function AdminCategoriesPage() {
   const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
-    const selectedType = categoryTypes.find(ct => ct.id === form.type_id);
+    let typeId = form.type_id;
+    let typeSlug = form.type;
+
+    // If "Boshqa" selected, create new type in DB first
+    if (form.type_id === "__other" && form.custom_type.trim()) {
+      const newSlug = generateSlug(form.custom_type.trim());
+      const { data: newType, error: typeError } = await supabase
+        .from("category_types")
+        .insert({ name: form.custom_type.trim(), slug: newSlug })
+        .select("id, slug")
+        .single();
+      if (typeError) {
+        toast.error("Yangi tur qo'shishda xatolik: " + typeError.message);
+        setSaving(false);
+        return;
+      }
+      typeId = newType.id;
+      typeSlug = newType.slug;
+    } else {
+      const selectedType = categoryTypes.find(ct => ct.id === form.type_id);
+      typeSlug = selectedType?.slug ?? form.type;
+    }
+
     const payload = {
       name: form.name,
-      type: selectedType?.slug ?? form.type,
-      type_id: form.type_id || null,
+      type: typeSlug,
+      type_id: typeId === "__other" ? null : typeId || null,
       slug: form.slug || null,
       description: form.description || null,
       icon: form.icon || null,
