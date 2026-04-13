@@ -17,7 +17,8 @@ import {
 import { getTestBySlug } from "@/lib/server-functions";
 
 export const Route = createFileRoute("/tahlil/$slug")({
-  head: ({ loaderData }: { loaderData: any }) => {
+  // @ts-ignore
+  head: ({ loaderData }) => {
     const test = loaderData;
     return {
       meta: [
