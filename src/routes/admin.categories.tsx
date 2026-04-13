@@ -265,7 +265,7 @@ function AdminCategoriesPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                        <IconComp className="h-5 w-5 text-primary" />
+                        <DynamicIcon name={cat.icon} className="h-5 w-5 text-primary" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
