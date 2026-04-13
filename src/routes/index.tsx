@@ -22,7 +22,8 @@ import {
   Sparkles,
   Quote,
 } from "lucide-react";
-import { getDoctors, getTests } from "@/lib/server-functions";
+import { getDoctors, getTests, getServices } from "@/lib/server-functions";
+import { HeroSearch } from "@/components/HeroSearch";
 import heroDoctor from "@/assets/hero-doctor.png";
 
 export const Route = createFileRoute("/")({
@@ -43,10 +44,13 @@ export const Route = createFileRoute("/")({
     ],
   }),
   loader: async () => {
-    const [doctors, tests] = await Promise.all([getDoctors(), getTests()]);
+    const [doctors, tests, services] = await Promise.all([getDoctors(), getTests(), getServices()]);
     return {
       doctors: (doctors ?? []).filter((d) => d.is_active).slice(0, 4),
       tests: (tests ?? []).filter((t) => t.is_active).slice(0, 6),
+      allDoctors: (doctors ?? []).filter((d) => d.is_active),
+      allServices: (services ?? []).filter((s: any) => s.is_active),
+      allTests: (tests ?? []).filter((t) => t.is_active),
     };
   },
   component: HomePage,
@@ -136,7 +140,7 @@ const testimonials = [
 ];
 
 function HomePage() {
-  const { doctors, tests } = Route.useLoaderData();
+  const { doctors, tests, allDoctors, allServices, allTests } = Route.useLoaderData();
 
   return (
     <>
@@ -181,6 +185,15 @@ function HomePage() {
                 <Clock className="h-4 w-4 text-primary" />
                 Dush–Shan: 8:00–20:00
               </span>
+            </div>
+
+            {/* Search bar */}
+            <div className="mt-8">
+              <HeroSearch
+                doctors={allDoctors as any}
+                services={allServices as any}
+                tests={allTests as any}
+              />
             </div>
           </div>
 
