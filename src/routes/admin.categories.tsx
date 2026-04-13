@@ -68,6 +68,7 @@ function generateSlug(name: string): string {
 interface FormData {
   name: string;
   type: string;
+  type_id: string;
   slug: string;
   description: string;
   icon: string;
