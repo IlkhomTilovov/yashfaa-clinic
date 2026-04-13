@@ -164,10 +164,9 @@ function AdminCategoriesPage() {
   };
 
   const handleSave = async () => {
-    console.log("[categories] handleSave called, form:", JSON.stringify(form));
-    if (!validate()) { console.log("[categories] validation failed, errors:", errors); return; }
+    if (!validate()) return;
     setSaving(true);
-    let typeId = form.type_id;
+    let typeId: string = form.type_id;
     let typeSlug = form.type;
 
     // If "Boshqa" selected, create new type in DB first
