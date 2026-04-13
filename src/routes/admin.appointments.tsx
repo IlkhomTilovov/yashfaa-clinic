@@ -39,15 +39,9 @@ function AdminAppointmentsPage() {
   useEffect(() => {
     fetchAppointments();
 
-    // Realtime subscription
-    const channel = supabase
-      .channel("admin-appointments")
-      .on("postgres_changes", { event: "*", schema: "public", table: "appointments" }, () => {
-        fetchAppointments();
-      })
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
+    // Poll every 30 seconds for new appointments
+    const interval = setInterval(fetchAppointments, 30000);
+    return () => clearInterval(interval);
   }, [fetchAppointments]);
 
   const handleDelete = async (id: string) => {
