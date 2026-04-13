@@ -187,7 +187,7 @@ function HomePage() {
                   Qabulga yozilish
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 rounded-full border-primary/30 bg-background px-8 text-base text-foreground hover:bg-primary/5 hover:text-primary" asChild>
+              <Button size="lg" variant="outline" className="h-12 rounded-full border-primary bg-background px-8 text-base text-primary shadow-sm hover:bg-primary hover:text-primary-foreground" asChild>
                 <a href="tel:+998711234567">
                   <Phone className="mr-2 h-5 w-5" />
                   Qo'ng'iroq qilish
