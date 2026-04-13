@@ -13,9 +13,16 @@ import { Route as TestsRouteImport } from './routes/tests'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AppointmentRouteImport } from './routes/appointment'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DoctorsIndexRouteImport } from './routes/doctors.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as DoctorsDoctorIdRouteImport } from './routes/doctors.$doctorId'
+import { Route as AdminTestsRouteImport } from './routes/admin.tests'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
+import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
+import { Route as AdminAppointmentsRouteImport } from './routes/admin.appointments'
 
 const TestsRoute = TestsRouteImport.update({
   id: '/tests',
@@ -37,6 +44,11 @@ const AppointmentRoute = AppointmentRouteImport.update({
   path: '/appointment',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -47,19 +59,56 @@ const DoctorsIndexRoute = DoctorsIndexRouteImport.update({
   path: '/doctors/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const DoctorsDoctorIdRoute = DoctorsDoctorIdRouteImport.update({
   id: '/doctors/$doctorId',
   path: '/doctors/$doctorId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTestsRoute = AdminTestsRouteImport.update({
+  id: '/tests',
+  path: '/tests',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAppointmentsRoute = AdminAppointmentsRouteImport.update({
+  id: '/appointments',
+  path: '/appointments',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/appointment': typeof AppointmentRoute
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
+  '/admin/appointments': typeof AdminAppointmentsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/doctors/': typeof DoctorsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -68,28 +117,48 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
+  '/admin/appointments': typeof AdminAppointmentsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
+  '/admin': typeof AdminIndexRoute
   '/doctors': typeof DoctorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/appointment': typeof AppointmentRoute
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
+  '/admin/appointments': typeof AdminAppointmentsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/doctors': typeof AdminDoctorsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/doctors/': typeof DoctorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/appointment'
     | '/contact'
     | '/services'
     | '/tests'
+    | '/admin/appointments'
+    | '/admin/categories'
+    | '/admin/doctors'
+    | '/admin/login'
+    | '/admin/tests'
     | '/doctors/$doctorId'
+    | '/admin/'
     | '/doctors/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -98,21 +167,35 @@ export interface FileRouteTypes {
     | '/contact'
     | '/services'
     | '/tests'
+    | '/admin/appointments'
+    | '/admin/categories'
+    | '/admin/doctors'
+    | '/admin/login'
+    | '/admin/tests'
     | '/doctors/$doctorId'
+    | '/admin'
     | '/doctors'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/appointment'
     | '/contact'
     | '/services'
     | '/tests'
+    | '/admin/appointments'
+    | '/admin/categories'
+    | '/admin/doctors'
+    | '/admin/login'
+    | '/admin/tests'
     | '/doctors/$doctorId'
+    | '/admin/'
     | '/doctors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AppointmentRoute: typeof AppointmentRoute
   ContactRoute: typeof ContactRoute
   ServicesRoute: typeof ServicesRoute
@@ -151,6 +234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppointmentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -165,6 +255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/doctors/$doctorId': {
       id: '/doctors/$doctorId'
       path: '/doctors/$doctorId'
@@ -172,11 +269,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorsDoctorIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/tests': {
+      id: '/admin/tests'
+      path: '/tests'
+      fullPath: '/admin/tests'
+      preLoaderRoute: typeof AdminTestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/doctors': {
+      id: '/admin/doctors'
+      path: '/doctors'
+      fullPath: '/admin/doctors'
+      preLoaderRoute: typeof AdminDoctorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/appointments': {
+      id: '/admin/appointments'
+      path: '/appointments'
+      fullPath: '/admin/appointments'
+      preLoaderRoute: typeof AdminAppointmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAppointmentsRoute: typeof AdminAppointmentsRoute
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminDoctorsRoute: typeof AdminDoctorsRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminTestsRoute: typeof AdminTestsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAppointmentsRoute: AdminAppointmentsRoute,
+  AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminDoctorsRoute: AdminDoctorsRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminTestsRoute: AdminTestsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AppointmentRoute: AppointmentRoute,
   ContactRoute: ContactRoute,
   ServicesRoute: ServicesRoute,
