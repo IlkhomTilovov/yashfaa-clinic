@@ -19,6 +19,7 @@ import { Route as DoctorsIndexRouteImport } from './routes/doctors.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as DoctorsDoctorIdRouteImport } from './routes/doctors.$doctorId'
 import { Route as AdminTestsRouteImport } from './routes/admin.tests'
+import { Route as AdminSetupRouteImport } from './routes/admin.setup'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
@@ -74,6 +75,11 @@ const AdminTestsRoute = AdminTestsRouteImport.update({
   path: '/tests',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSetupRoute = AdminSetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
   '/admin': typeof AdminIndexRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/doctors'
     | '/admin/login'
+    | '/admin/setup'
     | '/admin/tests'
     | '/doctors/$doctorId'
     | '/admin/'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/doctors'
     | '/admin/login'
+    | '/admin/setup'
     | '/admin/tests'
     | '/doctors/$doctorId'
     | '/admin'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/doctors'
     | '/admin/login'
+    | '/admin/setup'
     | '/admin/tests'
     | '/doctors/$doctorId'
     | '/admin/'
@@ -276,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTestsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/setup': {
+      id: '/admin/setup'
+      path: '/setup'
+      fullPath: '/admin/setup'
+      preLoaderRoute: typeof AdminSetupRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -312,6 +331,7 @@ interface AdminRouteChildren {
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDoctorsRoute: typeof AdminDoctorsRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminSetupRoute: typeof AdminSetupRoute
   AdminTestsRoute: typeof AdminTestsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -321,6 +341,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDoctorsRoute: AdminDoctorsRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminSetupRoute: AdminSetupRoute,
   AdminTestsRoute: AdminTestsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
