@@ -108,11 +108,11 @@ function AdminLayout() {
             <SidebarLink key={link.label} link={link} onClick={() => setSidebarOpen(false)} />
           ))}
           <p className="mb-2 mt-5 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Boshqaruv</p>
-          {sidebarLinks.slice(1, 6).map((link) => (
+          {sidebarLinks.slice(1, 7).map((link) => (
             <SidebarLink key={link.label} link={link} onClick={() => setSidebarOpen(false)} />
           ))}
           <p className="mb-2 mt-5 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Tizim</p>
-          {sidebarLinks.slice(6).map((link) => (
+          {sidebarLinks.slice(7).map((link) => (
             <SidebarLink key={link.label} link={link} onClick={() => setSidebarOpen(false)} />
           ))}
         </nav>
