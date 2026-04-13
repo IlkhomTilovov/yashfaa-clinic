@@ -75,7 +75,7 @@ export function HeroSearch({ doctors, services, tests }: HeroSearchProps) {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-xl">
+    <div ref={containerRef} className="relative z-50 w-full max-w-xl">
       {/* Search Input */}
       <div className="relative">
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
