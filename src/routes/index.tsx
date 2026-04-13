@@ -140,7 +140,7 @@ const testimonials = [
 ];
 
 function HomePage() {
-  const { doctors, tests } = Route.useLoaderData();
+  const { doctors, tests, allDoctors, allServices, allTests } = Route.useLoaderData();
 
   return (
     <>
