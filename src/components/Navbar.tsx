@@ -36,9 +36,9 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">
-            M
+            Y
           </div>
-          <span className="text-xl font-bold text-foreground">MedClinic</span>
+          <span className="text-xl font-bold text-foreground">Yashfaa Clinic</span>
         </Link>
 
         {/* Desktop */}

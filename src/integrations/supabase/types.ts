@@ -20,9 +20,11 @@ export type Database = {
           date: string
           doctor_id: string | null
           id: string
+          notes: string | null
           patient_name: string
           phone: string
           service: string
+          status: string
           time: string
         }
         Insert: {
@@ -30,9 +32,11 @@ export type Database = {
           date: string
           doctor_id?: string | null
           id?: string
+          notes?: string | null
           patient_name: string
           phone: string
           service: string
+          status?: string
           time: string
         }
         Update: {
@@ -40,9 +44,11 @@ export type Database = {
           date?: string
           doctor_id?: string | null
           id?: string
+          notes?: string | null
           patient_name?: string
           phone?: string
           service?: string
+          status?: string
           time?: string
         }
         Relationships: [
@@ -60,16 +66,58 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          type: string
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
+          type?: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      clinic_settings: {
+        Row: {
+          address: string | null
+          clinic_name: string
+          facebook: string | null
+          id: string
+          instagram: string | null
+          logo_url: string | null
+          phone: string | null
+          telegram: string | null
+          updated_at: string
+          working_hours: string | null
+        }
+        Insert: {
+          address?: string | null
+          clinic_name?: string
+          facebook?: string | null
+          id?: string
+          instagram?: string | null
+          logo_url?: string | null
+          phone?: string | null
+          telegram?: string | null
+          updated_at?: string
+          working_hours?: string | null
+        }
+        Update: {
+          address?: string | null
+          clinic_name?: string
+          facebook?: string | null
+          id?: string
+          instagram?: string | null
+          logo_url?: string | null
+          phone?: string | null
+          telegram?: string | null
+          updated_at?: string
+          working_hours?: string | null
         }
         Relationships: []
       }
@@ -77,25 +125,34 @@ export type Database = {
         Row: {
           bio: string | null
           created_at: string
+          experience_years: number | null
           id: string
           image_url: string | null
+          is_active: boolean
           name: string
+          phone: string | null
           specialization: string
         }
         Insert: {
           bio?: string | null
           created_at?: string
+          experience_years?: number | null
           id?: string
           image_url?: string | null
+          is_active?: boolean
           name: string
+          phone?: string | null
           specialization: string
         }
         Update: {
           bio?: string | null
           created_at?: string
+          experience_years?: number | null
           id?: string
           image_url?: string | null
+          is_active?: boolean
           name?: string
+          phone?: string | null
           specialization?: string
         }
         Relationships: []
@@ -127,25 +184,69 @@ export type Database = {
         }
         Relationships: []
       }
+      services: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          price: number | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          price?: number | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tests: {
         Row: {
           category_id: string | null
           created_at: string
+          description: string | null
           id: string
+          is_active: boolean
           name: string
           price: number
         }
         Insert: {
           category_id?: string | null
           created_at?: string
+          description?: string | null
           id?: string
+          is_active?: boolean
           name: string
           price?: number
         }
         Update: {
           category_id?: string | null
           created_at?: string
+          description?: string | null
           id?: string
+          is_active?: boolean
           name?: string
           price?: number
         }

@@ -10,9 +10,9 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-                M
+                Y
               </div>
-              <span className="text-lg font-bold">MedClinic</span>
+              <span className="text-lg font-bold">Yashfaa Clinic</span>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
               Zamonaviy tibbiy xizmatlar. Tajribali shifokorlar jamoasi siz va
@@ -41,7 +41,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary" />
-                info@medclinic.uz
+                info@yashfaa.uz
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 text-primary" />
@@ -65,7 +65,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t pt-6 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} MedClinic. Barcha huquqlar himoyalangan.
+          © {new Date().getFullYear()} Yashfaa Clinic. Barcha huquqlar himoyalangan.
         </div>
       </div>
     </footer>
