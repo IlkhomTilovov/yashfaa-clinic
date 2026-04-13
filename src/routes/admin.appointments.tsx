@@ -10,8 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Search, CalendarCheck, Phone, Calendar, Clock, Eye, User, Stethoscope, FileText, CheckCircle2, XCircle, AlertCircle, CircleDot, Filter, RotateCcw } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Trash2, Search, CalendarCheck, Phone, Calendar, Clock, Eye, User, Stethoscope, FileText, CheckCircle2, XCircle, AlertCircle, CircleDot, Filter, RotateCcw, CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { uz } from "date-fns/locale";
 
 export const Route = createFileRoute("/admin/appointments")({
   component: AdminAppointmentsPage,
