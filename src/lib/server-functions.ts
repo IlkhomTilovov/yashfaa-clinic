@@ -24,6 +24,23 @@ export const getTests = createServerFn({ method: "GET" }).handler(async () => {
   return data;
 });
 
+export const getTestBySlug = createServerFn({ method: "GET" })
+  .inputValidator((input: { slug: string }) => {
+    const parsed = z.object({ slug: z.string().min(1) }).parse(input);
+    return parsed;
+  })
+  .handler(async ({ data }) => {
+    const supabase = await getSupabase();
+    const { data: test, error } = await supabase
+      .from("tests")
+      .select("*, categories(name)")
+      .eq("slug", data.slug)
+      .eq("is_active", true)
+      .single();
+    if (error) throw new Error(error.message);
+    return test;
+  });
+
 export const getDoctors = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = await getSupabase();
   const { data, error } = await supabase.from("doctors").select("*").order("name");
