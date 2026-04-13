@@ -12,7 +12,9 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2, Loader2, FolderOpen, Star, Heart, FlaskConical, Microscope, Sparkles, Package } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, FolderOpen, Star } from "lucide-react";
+import { DynamicIcon } from "@/components/DynamicIcon";
+import { IconPicker } from "@/components/IconPicker";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/categories")({
@@ -41,19 +43,6 @@ interface CategoryTypeItem {
   icon: string | null;
 }
 
-const ICON_OPTIONS = [
-  { value: "flask", label: "Laboratoriya", icon: FlaskConical },
-  { value: "microscope", label: "Mikroskop", icon: Microscope },
-  { value: "heart", label: "Yurak", icon: Heart },
-  { value: "sparkles", label: "Kosmetologiya", icon: Sparkles },
-  { value: "package", label: "Paket", icon: Package },
-  { value: "folder", label: "Papka", icon: FolderOpen },
-];
-
-function getIconComponent(iconName: string | null) {
-  const found = ICON_OPTIONS.find((i) => i.value === iconName);
-  return found ? found.icon : FolderOpen;
-}
 
 function generateSlug(name: string): string {
   return name
@@ -268,7 +257,7 @@ function AdminCategoriesPage() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => {
             const typeLabel = categoryTypes.find(ct => ct.id === cat.type_id)?.name ?? cat.type;
-            const IconComp = getIconComponent(cat.icon);
+            // icon rendered dynamically below
             const parent = cat.parent_id ? categories.find((c) => c.id === cat.parent_id) : null;
             return (
               <Card key={cat.id} className={`border-0 shadow-sm transition-all hover:shadow-md ${!cat.is_active ? "opacity-60" : ""}`}>
@@ -276,7 +265,7 @@ function AdminCategoriesPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                        <IconComp className="h-5 w-5 text-primary" />
+                        <DynamicIcon name={cat.icon} className="h-5 w-5 text-primary" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
@@ -366,24 +355,7 @@ function AdminCategoriesPage() {
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-sm">Icon</Label>
-                  <Select value={form.icon} onValueChange={(v) => setForm({ ...form, icon: v })}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ICON_OPTIONS.map((ic) => {
-                        const Ic = ic.icon;
-                        return (
-                          <SelectItem key={ic.value} value={ic.value}>
-                            <span className="flex items-center gap-2">
-                              <Ic className="h-4 w-4" /> {ic.label}
-                            </span>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
+                  <IconPicker value={form.icon} onChange={(v) => setForm({ ...form, icon: v })} />
                 </div>
               </div>
 

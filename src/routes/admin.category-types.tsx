@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2, Loader2, Layers, FlaskConical, Microscope, Sparkles, Heart, Package, FolderOpen, Stethoscope } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Layers } from "lucide-react";
+import { DynamicIcon } from "@/components/DynamicIcon";
+import { IconPicker } from "@/components/IconPicker";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/category-types")({
@@ -24,20 +25,8 @@ interface CategoryType {
   created_at: string;
 }
 
-const ICON_OPTIONS = [
-  { value: "flask", label: "Laboratoriya", icon: FlaskConical },
-  { value: "microscope", label: "Mikroskop", icon: Microscope },
-  { value: "heart", label: "Yurak", icon: Heart },
-  { value: "sparkles", label: "Kosmetologiya", icon: Sparkles },
-  { value: "stethoscope", label: "Stetoskop", icon: Stethoscope },
-  { value: "package", label: "Paket", icon: Package },
-  { value: "folder", label: "Papka", icon: FolderOpen },
-];
 
-function getIconComponent(iconName: string | null) {
-  const found = ICON_OPTIONS.find((i) => i.value === iconName);
-  return found ? found.icon : Layers;
-}
+
 
 function generateSlug(name: string): string {
   return name
@@ -164,14 +153,14 @@ function AdminCategoryTypesPage() {
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {types.map((t) => {
-            const IconComp = getIconComponent(t.icon);
+            // dynamic icon
             return (
               <Card key={t.id} className="border-0 shadow-sm transition-all hover:shadow-md">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                        <IconComp className="h-5 w-5 text-primary" />
+                        <DynamicIcon name={t.icon} className="h-5 w-5 text-primary" />
                       </div>
                       <div>
                         <h3 className="font-semibold">{t.name}</h3>
@@ -223,27 +212,7 @@ function AdminCategoryTypesPage() {
               {errors.slug && <p className="text-xs text-destructive">{errors.slug}</p>}
             </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-sm">Icon</Label>
-              <Select value={form.icon || "none"} onValueChange={(v) => setForm({ ...form, icon: v === "none" ? "" : v })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Tanlanmagan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Tanlanmagan</SelectItem>
-                  {ICON_OPTIONS.map((ic) => {
-                    const Ic = ic.icon;
-                    return (
-                      <SelectItem key={ic.value} value={ic.value}>
-                        <span className="flex items-center gap-2">
-                          <Ic className="h-4 w-4" /> {ic.label}
-                        </span>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
+            <IconPicker value={form.icon} onChange={(v) => setForm({ ...form, icon: v })} />
 
             <Button onClick={handleSave} disabled={saving || !form.name.trim()} className="w-full">
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
