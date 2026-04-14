@@ -42,7 +42,7 @@ export function Footer() {
             <h3 className="mb-3 font-semibold">{t("footer.contact")}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="tel:+998711234567" className="flex items-center gap-2 hover:text-primary"><Phone className="h-4 w-4 text-primary" /> +998 71 123 45 67</a></li>
-              <li><a href="mailto:info@yashfaa.uz" className="flex items-center gap-2 hover:text-primary"><Mail className="h-4 w-4 text-primary" /> info@yashfaa.uz</a></li>
+              <li><a href="mailto:info@yashfaa.uz" className="flex items-center gap-2 hover:text-primary"><Mail className="h-4 w-4 text-primary" /><span>info@yashfaa.uz</span></a></li>
               <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /> Toshkent sh., Amir Temur ko'chasi, 10-uy</li>
             </ul>
           </div>
