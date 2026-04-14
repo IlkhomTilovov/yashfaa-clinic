@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Phone, Mail, MapPin, Clock, MessageCircle, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import logoSvg from "@/assets/logo.svg";
 
@@ -18,10 +18,7 @@ export function Footer() {
             </div>
             <p className="mt-3 text-sm text-muted-foreground">{t("footer.about")}</p>
             <div className="mt-4 flex items-center gap-3">
-              <a href="https://wa.me/998711234567" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-[#25D366]/10 text-[#25D366] transition-colors hover:bg-[#25D366] hover:text-white" aria-label="WhatsApp">
-                <MessageCircle className="h-4 w-4" />
-              </a>
-              <a href="https://t.me/yashfaaclinic" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0088cc]/10 text-[#0088cc] transition-colors hover:bg-[#0088cc] hover:text-white" aria-label="Telegram">
+              <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0088cc]/10 text-[#0088cc] transition-colors hover:bg-[#0088cc] hover:text-white" aria-label="Telegram">
                 <Send className="h-4 w-4" />
               </a>
             </div>
@@ -39,7 +36,7 @@ export function Footer() {
             <h3 className="mb-3 font-semibold">{t("footer.contact")}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="tel:+998711234567" className="flex items-center gap-2 hover:text-primary"><Phone className="h-4 w-4 text-primary" /> +998 71 123 45 67</a></li>
-              <li><a href="mailto:info@yashfaa.uz" className="flex items-center gap-2 hover:text-primary"><Mail className="h-4 w-4 text-primary" />{" info@yashfaa.uz"}</a></li>
+              <li><a href="mailto:info@yashfaa.uz" className="flex items-center gap-2 hover:text-primary"><Mail className="h-4 w-4 text-primary" /> info@yashfaa.uz</a></li>
               <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /> Toshkent sh., Amir Temur ko'chasi, 10-uy</li>
             </ul>
           </div>
