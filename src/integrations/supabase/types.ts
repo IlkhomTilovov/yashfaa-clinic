@@ -322,8 +322,12 @@ export type Database = {
           name_ru: string | null
           name_uz: string | null
           preparation_requirements: string | null
+          preparation_requirements_ru: string | null
+          preparation_requirements_uz: string | null
           price: number | null
           result_info: string | null
+          result_info_ru: string | null
+          result_info_uz: string | null
           slug: string | null
         }
         Insert: {
@@ -343,8 +347,12 @@ export type Database = {
           name_ru?: string | null
           name_uz?: string | null
           preparation_requirements?: string | null
+          preparation_requirements_ru?: string | null
+          preparation_requirements_uz?: string | null
           price?: number | null
           result_info?: string | null
+          result_info_ru?: string | null
+          result_info_uz?: string | null
           slug?: string | null
         }
         Update: {
@@ -364,8 +372,12 @@ export type Database = {
           name_ru?: string | null
           name_uz?: string | null
           preparation_requirements?: string | null
+          preparation_requirements_ru?: string | null
+          preparation_requirements_uz?: string | null
           price?: number | null
           result_info?: string | null
+          result_info_ru?: string | null
+          result_info_uz?: string | null
           slug?: string | null
         }
         Relationships: [
