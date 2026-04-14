@@ -24,11 +24,15 @@ export const Route = createFileRoute("/admin/categories")({
 interface Category {
   id: string;
   name: string;
+  name_uz: string | null;
+  name_ru: string | null;
   type: string;
   type_id: string | null;
   created_at: string;
   slug: string | null;
   description: string | null;
+  description_uz: string | null;
+  description_ru: string | null;
   icon: string | null;
   sort_order: number;
   is_featured: boolean;
@@ -56,11 +60,15 @@ function generateSlug(name: string): string {
 
 interface FormData {
   name: string;
+  name_uz: string;
+  name_ru: string;
   type: string;
   type_id: string;
   custom_type: string;
   slug: string;
   description: string;
+  description_uz: string;
+  description_ru: string;
   icon: string;
   sort_order: string;
   is_featured: boolean;
@@ -70,11 +78,15 @@ interface FormData {
 
 const emptyForm: FormData = {
   name: "",
+  name_uz: "",
+  name_ru: "",
   type: "others",
   type_id: "",
   custom_type: "",
   slug: "",
   description: "",
+  description_uz: "",
+  description_ru: "",
   icon: "folder",
   sort_order: "0",
   is_featured: false,
@@ -108,12 +120,12 @@ function AdminCategoriesPage() {
 
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
 
-  // Auto-slug
+  // Auto-slug from name_uz
   useEffect(() => {
-    if (!slugManual && form.name && dialogOpen) {
-      setForm((prev) => ({ ...prev, slug: generateSlug(prev.name) }));
+    if (!slugManual && form.name_uz && dialogOpen) {
+      setForm((prev) => ({ ...prev, slug: generateSlug(prev.name_uz) }));
     }
-  }, [form.name, slugManual, dialogOpen]);
+  }, [form.name_uz, slugManual, dialogOpen]);
 
   const openCreate = () => {
     setEditing(null);
@@ -127,11 +139,15 @@ function AdminCategoriesPage() {
     setEditing(cat);
     setForm({
       name: cat.name,
+      name_uz: cat.name_uz ?? cat.name ?? "",
+      name_ru: cat.name_ru ?? "",
       type: cat.type,
       type_id: cat.type_id ?? "",
       custom_type: "",
       slug: cat.slug ?? "",
       description: cat.description ?? "",
+      description_uz: cat.description_uz ?? cat.description ?? "",
+      description_ru: cat.description_ru ?? "",
       icon: cat.icon ?? "folder",
       sort_order: String(cat.sort_order),
       is_featured: cat.is_featured,
@@ -145,7 +161,7 @@ function AdminCategoriesPage() {
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
+    if (!form.name_uz.trim()) e.name_uz = "Nomi (UZ) kiritilishi shart";
     if (!form.type_id && form.type_id !== "__other") e.type_id = "Turi tanlanishi shart";
     if (form.type_id === "__other" && !form.custom_type.trim()) e.custom_type = "Yangi tur nomini kiriting";
     setErrors(e);
@@ -193,11 +209,15 @@ function AdminCategoriesPage() {
     }
 
     const payload = {
-      name: form.name,
+      name: form.name_uz || form.name,
+      name_uz: form.name_uz || null,
+      name_ru: form.name_ru || null,
       type: typeSlug,
       type_id: (typeId && typeId !== "__other") ? typeId : null,
       slug: form.slug || null,
-      description: form.description || null,
+      description: form.description_uz || form.description || null,
+      description_uz: form.description_uz || null,
+      description_ru: form.description_ru || null,
       icon: form.icon || null,
       sort_order: Number(form.sort_order) || 0,
       is_featured: form.is_featured,
@@ -316,15 +336,25 @@ function AdminCategoriesPage() {
               <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Asosiy ma'lumotlar
               </legend>
-              <div className="space-y-1.5">
-                <Label className="text-sm">Nomi <span className="text-destructive">*</span></Label>
-                <Input
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Laboratoriya tahlillari"
-                  className={errors.name ? "border-destructive" : ""}
-                />
-                {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Nomi (UZ) <span className="text-destructive">*</span></Label>
+                  <Input
+                    value={form.name_uz}
+                    onChange={(e) => setForm({ ...form, name_uz: e.target.value })}
+                    placeholder="Laboratoriya tahlillari"
+                    className={errors.name_uz ? "border-destructive" : ""}
+                  />
+                  {errors.name_uz && <p className="text-xs text-destructive">{errors.name_uz}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Nomi (RU)</Label>
+                  <Input
+                    value={form.name_ru}
+                    onChange={(e) => setForm({ ...form, name_ru: e.target.value })}
+                    placeholder="Лабораторные анализы"
+                  />
+                </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -394,12 +424,21 @@ function AdminCategoriesPage() {
                 Qo'shimcha
               </legend>
               <div className="space-y-1.5">
-                <Label className="text-sm">Tavsif</Label>
+                <Label className="text-sm">Tavsif (UZ)</Label>
                 <Textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  value={form.description_uz}
+                  onChange={(e) => setForm({ ...form, description_uz: e.target.value })}
                   rows={2}
                   placeholder="Turli laboratoriya tahlillari ushbu bo'limda jamlangan"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Tavsif (RU)</Label>
+                <Textarea
+                  value={form.description_ru}
+                  onChange={(e) => setForm({ ...form, description_ru: e.target.value })}
+                  rows={2}
+                  placeholder="Различные лабораторные анализы собраны в этом разделе"
                 />
               </div>
               <div className="space-y-1.5">
@@ -439,7 +478,7 @@ function AdminCategoriesPage() {
               </div>
             </fieldset>
 
-            <Button onClick={handleSave} disabled={saving || !form.name.trim()} className="w-full">
+            <Button onClick={handleSave} disabled={saving || !form.name_uz.trim()} className="w-full">
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editing ? "Saqlash" : "Qo'shish"}
             </Button>
