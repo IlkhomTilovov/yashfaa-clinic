@@ -22,12 +22,18 @@ export const Route = createFileRoute("/admin/tests")({
 interface Test {
   id: string;
   name: string;
+  name_uz: string | null;
+  name_ru: string | null;
   price: number;
   description: string | null;
+  description_uz: string | null;
+  description_ru: string | null;
   category_id: string | null;
   is_active: boolean;
   created_at: string;
   preparation_requirements: string | null;
+  preparation_requirements_uz: string | null;
+  preparation_requirements_ru: string | null;
   result_time: string | null;
   biomaterial_type: string | null;
   is_recommended: boolean;
