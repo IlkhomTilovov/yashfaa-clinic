@@ -62,13 +62,7 @@ function TestsPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const debouncedSearch = useDebounce(search, 300);
 
-  // Only show categories that actually have tests
-  const relevantCategories = useMemo(() => {
-    const testCategoryIds = new Set((tests as any[]).filter((t: any) => t.is_active && t.category_id).map((t: any) => t.category_id));
-    return (categories as any[]).filter((c: any) => testCategoryIds.has(c.id));
-  }, [tests, categories]);
-
-  const filtered = useMemo(() => (tests as any[]).filter((t: any) => {
+  const filtered = useMemo(() => tests.filter((t: any) => {
     const matchesSearch = t.name.toLowerCase().includes(debouncedSearch.toLowerCase());
     const matchesCategory = !activeCategory || t.category_id === activeCategory;
     return matchesSearch && matchesCategory && t.is_active;
@@ -103,7 +97,7 @@ function TestsPage() {
             >
               Barchasi
             </Button>
-            {relevantCategories.map((cat: any) => (
+            {categories.map((cat: any) => (
               <Button
                 key={cat.id}
                 variant={activeCategory === cat.id ? "default" : "outline"}
