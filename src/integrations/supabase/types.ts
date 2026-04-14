@@ -406,6 +406,8 @@ export type Database = {
           name_ru: string | null
           name_uz: string | null
           preparation_requirements: string | null
+          preparation_requirements_ru: string | null
+          preparation_requirements_uz: string | null
           price: number
           result_time: string | null
           slug: string | null
@@ -425,6 +427,8 @@ export type Database = {
           name_ru?: string | null
           name_uz?: string | null
           preparation_requirements?: string | null
+          preparation_requirements_ru?: string | null
+          preparation_requirements_uz?: string | null
           price?: number
           result_time?: string | null
           slug?: string | null
@@ -444,6 +448,8 @@ export type Database = {
           name_ru?: string | null
           name_uz?: string | null
           preparation_requirements?: string | null
+          preparation_requirements_ru?: string | null
+          preparation_requirements_uz?: string | null
           price?: number
           result_time?: string | null
           slug?: string | null

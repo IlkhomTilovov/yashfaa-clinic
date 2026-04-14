@@ -22,12 +22,18 @@ export const Route = createFileRoute("/admin/tests")({
 interface Test {
   id: string;
   name: string;
+  name_uz: string | null;
+  name_ru: string | null;
   price: number;
   description: string | null;
+  description_uz: string | null;
+  description_ru: string | null;
   category_id: string | null;
   is_active: boolean;
   created_at: string;
   preparation_requirements: string | null;
+  preparation_requirements_uz: string | null;
+  preparation_requirements_ru: string | null;
   result_time: string | null;
   biomaterial_type: string | null;
   is_recommended: boolean;
@@ -41,10 +47,13 @@ const RESULT_TIMES = ["1 kun", "2–3 kun", "3–5 kun", "5–7 kun", "1 hafta",
 const BIOMATERIALS = ["Qon", "Siydik", "So'lak", "Najas", "Surtma", "Tish nurash"];
 
 interface FormData {
-  name: string;
+  name_uz: string;
+  name_ru: string;
   category_id: string;
-  description: string;
-  preparation_requirements: string;
+  description_uz: string;
+  description_ru: string;
+  preparation_requirements_uz: string;
+  preparation_requirements_ru: string;
   result_time: string;
   biomaterial_type: string;
   is_recommended: boolean;
@@ -54,10 +63,13 @@ interface FormData {
 }
 
 const emptyForm: FormData = {
-  name: "",
+  name_uz: "",
+  name_ru: "",
   category_id: "",
-  description: "",
-  preparation_requirements: "",
+  description_uz: "",
+  description_ru: "",
+  preparation_requirements_uz: "",
+  preparation_requirements_ru: "",
   result_time: "",
   biomaterial_type: "",
   is_recommended: false,
@@ -114,10 +126,13 @@ function AdminTestsPage() {
   const openEdit = (test: Test) => {
     setEditing(test);
     setForm({
-      name: test.name,
+      name_uz: test.name_uz ?? test.name ?? "",
+      name_ru: test.name_ru ?? "",
       category_id: test.category_id ?? "",
-      description: test.description ?? "",
-      preparation_requirements: test.preparation_requirements ?? "",
+      description_uz: test.description_uz ?? test.description ?? "",
+      description_ru: test.description_ru ?? "",
+      preparation_requirements_uz: test.preparation_requirements_uz ?? test.preparation_requirements ?? "",
+      preparation_requirements_ru: test.preparation_requirements_ru ?? "",
       result_time: test.result_time ?? "",
       biomaterial_type: test.biomaterial_type ?? "",
       is_recommended: test.is_recommended,
@@ -131,7 +146,7 @@ function AdminTestsPage() {
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
+    if (!form.name_uz.trim()) e.name_uz = "Nomi kiritilishi shart";
     if (!form.category_id) e.category_id = "Kategoriya tanlanishi shart";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -140,18 +155,24 @@ function AdminTestsPage() {
   const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
-    const slug = form.name
+    const slug = form.name_uz
       .toLowerCase()
       .replace(/[^a-zA-Z0-9\u0400-\u04FF\s-]/g, "")
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-")
       .replace(/^-|-$/g, "");
     const payload: any = {
-      name: form.name,
+      name: form.name_uz,
+      name_uz: form.name_uz,
+      name_ru: form.name_ru || null,
       price: form.price ? Number(form.price) : 0,
-      description: form.description || null,
+      description: form.description_uz || null,
+      description_uz: form.description_uz || null,
+      description_ru: form.description_ru || null,
       category_id: form.category_id || null,
-      preparation_requirements: form.preparation_requirements || null,
+      preparation_requirements: form.preparation_requirements_uz || null,
+      preparation_requirements_uz: form.preparation_requirements_uz || null,
+      preparation_requirements_ru: form.preparation_requirements_ru || null,
       result_time: form.result_time || null,
       biomaterial_type: form.biomaterial_type || null,
       is_recommended: form.is_recommended,
@@ -181,7 +202,7 @@ function AdminTestsPage() {
     setDeleteId(null);
   };
 
-  const isValid = form.name.trim() && form.category_id;
+  const isValid = form.name_uz.trim() && form.category_id;
 
   return (
     <div className="space-y-6">
@@ -273,15 +294,25 @@ function AdminTestsPage() {
               <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Asosiy ma'lumotlar
               </legend>
-              <div className="space-y-1.5">
-                <Label className="text-sm">Nomi <span className="text-destructive">*</span></Label>
-                <Input
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Umumiy qon tahlili"
-                  className={errors.name ? "border-destructive" : ""}
-                />
-                {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Nomi (UZ) <span className="text-destructive">*</span></Label>
+                  <Input
+                    value={form.name_uz}
+                    onChange={(e) => setForm({ ...form, name_uz: e.target.value })}
+                    placeholder="Umumiy qon tahlili"
+                    className={errors.name_uz ? "border-destructive" : ""}
+                  />
+                  {errors.name_uz && <p className="text-xs text-destructive">{errors.name_uz}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Nomi (RU)</Label>
+                  <Input
+                    value={form.name_ru}
+                    onChange={(e) => setForm({ ...form, name_ru: e.target.value })}
+                    placeholder="Общий анализ крови"
+                  />
+                </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
@@ -333,21 +364,39 @@ function AdminTestsPage() {
                 Qo'shimcha ma'lumotlar
               </legend>
               <div className="space-y-1.5">
-                <Label className="text-sm">Tavsif</Label>
+                <Label className="text-sm">Tavsif (UZ)</Label>
                 <Textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  value={form.description_uz}
+                  onChange={(e) => setForm({ ...form, description_uz: e.target.value })}
                   rows={2}
                   placeholder="Tahlil haqida qisqa ma'lumot..."
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-sm">Tayyorgarlik talablari</Label>
+                <Label className="text-sm">Tavsif (RU)</Label>
                 <Textarea
-                  value={form.preparation_requirements}
-                  onChange={(e) => setForm({ ...form, preparation_requirements: e.target.value })}
+                  value={form.description_ru}
+                  onChange={(e) => setForm({ ...form, description_ru: e.target.value })}
+                  rows={2}
+                  placeholder="Краткое описание анализа..."
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Tayyorgarlik talablari (UZ)</Label>
+                <Textarea
+                  value={form.preparation_requirements_uz}
+                  onChange={(e) => setForm({ ...form, preparation_requirements_uz: e.target.value })}
                   rows={2}
                   placeholder="Och qoringa topshiriladi, 8 soat ovqat yemaslik..."
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Требования подготовки (RU)</Label>
+                <Textarea
+                  value={form.preparation_requirements_ru}
+                  onChange={(e) => setForm({ ...form, preparation_requirements_ru: e.target.value })}
+                  rows={2}
+                  placeholder="Сдается натощак, не есть 8 часов..."
                 />
               </div>
             </fieldset>
