@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Heart, FlaskConical, Stethoscope, Calendar, ArrowRight,
   Users, Clock, Award, ShieldCheck, Zap, Star, Phone,
-  CheckCircle, Activity, Sparkles, Quote, MessageCircle,
+  CheckCircle, Activity, Sparkles, Quote, Send,
 } from "lucide-react";
 import { getDoctors, getTests, getServices } from "@/lib/server-functions";
 import { HeroSearch } from "@/components/HeroSearch";
@@ -129,10 +129,10 @@ function HomePage() {
                   {t("hero.cta_appointment")}
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 rounded-full border-[#25D366] bg-[#25D366]/10 px-8 text-base text-[#25D366] hover:bg-[#25D366] hover:text-white" asChild>
-                <a href="https://wa.me/998711234567" target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  {t("cta.whatsapp")}
+              <Button size="lg" variant="outline" className="h-12 rounded-full border-[#0088cc] bg-[#0088cc]/10 px-8 text-base text-[#0088cc] hover:bg-[#0088cc] hover:text-white" asChild>
+                <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer">
+                  <Send className="mr-2 h-5 w-5" />
+                  {t("cta.telegram")}
                 </a>
               </Button>
             </div>
