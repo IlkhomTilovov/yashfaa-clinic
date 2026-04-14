@@ -65,11 +65,15 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          description_ru: string | null
+          description_uz: string | null
           icon: string | null
           id: string
           is_active: boolean
           is_featured: boolean
           name: string
+          name_ru: string | null
+          name_uz: string | null
           parent_id: string | null
           slug: string | null
           sort_order: number
@@ -79,11 +83,15 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          description_ru?: string | null
+          description_uz?: string | null
           icon?: string | null
           id?: string
           is_active?: boolean
           is_featured?: boolean
           name: string
+          name_ru?: string | null
+          name_uz?: string | null
           parent_id?: string | null
           slug?: string | null
           sort_order?: number
@@ -93,11 +101,15 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          description_ru?: string | null
+          description_uz?: string | null
           icon?: string | null
           id?: string
           is_active?: boolean
           is_featured?: boolean
           name?: string
+          name_ru?: string | null
+          name_uz?: string | null
           parent_id?: string | null
           slug?: string | null
           sort_order?: number
@@ -127,6 +139,8 @@ export type Database = {
           icon: string | null
           id: string
           name: string
+          name_ru: string | null
+          name_uz: string | null
           slug: string
         }
         Insert: {
@@ -134,6 +148,8 @@ export type Database = {
           icon?: string | null
           id?: string
           name: string
+          name_ru?: string | null
+          name_uz?: string | null
           slug: string
         }
         Update: {
@@ -141,6 +157,8 @@ export type Database = {
           icon?: string | null
           id?: string
           name?: string
+          name_ru?: string | null
+          name_uz?: string | null
           slug?: string
         }
         Relationships: []
@@ -187,6 +205,8 @@ export type Database = {
       doctors: {
         Row: {
           bio: string | null
+          bio_ru: string | null
+          bio_uz: string | null
           branch: string | null
           consultation_price: number | null
           created_at: string
@@ -196,15 +216,21 @@ export type Database = {
           is_active: boolean
           languages: string[] | null
           name: string
+          name_ru: string | null
+          name_uz: string | null
           online_available: boolean
           phone: string | null
           schedule: string | null
           services_offered: string[] | null
           slug: string | null
           specialization: string
+          specialization_ru: string | null
+          specialization_uz: string | null
         }
         Insert: {
           bio?: string | null
+          bio_ru?: string | null
+          bio_uz?: string | null
           branch?: string | null
           consultation_price?: number | null
           created_at?: string
@@ -214,15 +240,21 @@ export type Database = {
           is_active?: boolean
           languages?: string[] | null
           name: string
+          name_ru?: string | null
+          name_uz?: string | null
           online_available?: boolean
           phone?: string | null
           schedule?: string | null
           services_offered?: string[] | null
           slug?: string | null
           specialization: string
+          specialization_ru?: string | null
+          specialization_uz?: string | null
         }
         Update: {
           bio?: string | null
+          bio_ru?: string | null
+          bio_uz?: string | null
           branch?: string | null
           consultation_price?: number | null
           created_at?: string
@@ -232,12 +264,16 @@ export type Database = {
           is_active?: boolean
           languages?: string[] | null
           name?: string
+          name_ru?: string | null
+          name_uz?: string | null
           online_available?: boolean
           phone?: string | null
           schedule?: string | null
           services_offered?: string[] | null
           slug?: string | null
           specialization?: string
+          specialization_ru?: string | null
+          specialization_uz?: string | null
         }
         Relationships: []
       }
@@ -273,6 +309,8 @@ export type Database = {
           category_id: string | null
           created_at: string
           description: string | null
+          description_ru: string | null
+          description_uz: string | null
           doctor_ids: string[] | null
           duration: string | null
           id: string
@@ -281,6 +319,8 @@ export type Database = {
           is_online: boolean
           location_type: string | null
           name: string
+          name_ru: string | null
+          name_uz: string | null
           preparation_requirements: string | null
           price: number | null
           result_info: string | null
@@ -290,6 +330,8 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          description_ru?: string | null
+          description_uz?: string | null
           doctor_ids?: string[] | null
           duration?: string | null
           id?: string
@@ -298,6 +340,8 @@ export type Database = {
           is_online?: boolean
           location_type?: string | null
           name: string
+          name_ru?: string | null
+          name_uz?: string | null
           preparation_requirements?: string | null
           price?: number | null
           result_info?: string | null
@@ -307,6 +351,8 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          description_ru?: string | null
+          description_uz?: string | null
           doctor_ids?: string[] | null
           duration?: string | null
           id?: string
@@ -315,6 +361,8 @@ export type Database = {
           is_online?: boolean
           location_type?: string | null
           name?: string
+          name_ru?: string | null
+          name_uz?: string | null
           preparation_requirements?: string | null
           price?: number | null
           result_info?: string | null
@@ -336,11 +384,15 @@ export type Database = {
           category_id: string | null
           created_at: string
           description: string | null
+          description_ru: string | null
+          description_uz: string | null
           id: string
           is_active: boolean
           is_recommended: boolean
           is_urgent: boolean
           name: string
+          name_ru: string | null
+          name_uz: string | null
           preparation_requirements: string | null
           price: number
           result_time: string | null
@@ -351,11 +403,15 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          description_ru?: string | null
+          description_uz?: string | null
           id?: string
           is_active?: boolean
           is_recommended?: boolean
           is_urgent?: boolean
           name: string
+          name_ru?: string | null
+          name_uz?: string | null
           preparation_requirements?: string | null
           price?: number
           result_time?: string | null
@@ -366,11 +422,15 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
+          description_ru?: string | null
+          description_uz?: string | null
           id?: string
           is_active?: boolean
           is_recommended?: boolean
           is_urgent?: boolean
           name?: string
+          name_ru?: string | null
+          name_uz?: string | null
           preparation_requirements?: string | null
           price?: number
           result_time?: string | null
