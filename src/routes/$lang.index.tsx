@@ -366,9 +366,9 @@ function HomePage() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-primary-foreground/10 px-8 text-primary-foreground" asChild>
-              <a href="https://wa.me/998711234567" target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="mr-2 h-5 w-5" />
-                {t("cta.whatsapp")}
+              <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer">
+                <Send className="mr-2 h-5 w-5" />
+                {t("cta.telegram")}
               </a>
             </Button>
           </div>
