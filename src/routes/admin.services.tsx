@@ -57,14 +57,18 @@ const LOCATIONS = [
 ];
 
 interface FormData {
-  name: string;
+  name_uz: string;
+  name_ru: string;
   category_id: string;
-  description: string;
+  description_uz: string;
+  description_ru: string;
   duration: string;
   location_type: string;
   doctor_ids: string[];
-  preparation_requirements: string;
-  result_info: string;
+  preparation_requirements_uz: string;
+  preparation_requirements_ru: string;
+  result_info_uz: string;
+  result_info_ru: string;
   is_featured: boolean;
   is_online: boolean;
   is_active: boolean;
@@ -72,14 +76,18 @@ interface FormData {
 }
 
 const emptyForm: FormData = {
-  name: "",
+  name_uz: "",
+  name_ru: "",
   category_id: "",
-  description: "",
+  description_uz: "",
+  description_ru: "",
   duration: "",
   location_type: "",
   doctor_ids: [],
-  preparation_requirements: "",
-  result_info: "",
+  preparation_requirements_uz: "",
+  preparation_requirements_ru: "",
+  result_info_uz: "",
+  result_info_ru: "",
   is_featured: false,
   is_online: false,
   is_active: true,
