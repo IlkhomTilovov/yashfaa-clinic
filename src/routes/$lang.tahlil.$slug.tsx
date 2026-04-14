@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
-import { Phone, Star, Zap, Clock, FlaskConical, AlertTriangle, MapPin, ArrowLeft, MessageCircle } from "lucide-react";
+import { Phone, Star, Zap, Clock, FlaskConical, AlertTriangle, MapPin, ArrowLeft, Send } from "lucide-react";
 import { getTestBySlug } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 
@@ -79,8 +79,7 @@ function TestDetailPage() {
             <p className="mt-2 text-muted-foreground">{t("detail.book_info")}</p>
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <a href="tel:+998711234567" className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground sm:w-auto"><Phone className="h-5 w-5" />{t("detail.call")}</a>
-              <a href="https://wa.me/998711234567" target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-green-600 bg-green-600 px-6 py-3 font-medium text-white sm:w-auto"><MessageCircle className="h-5 w-5" />{t("detail.whatsapp")}</a>
-              <a href="tel:+998711234567" className="inline-flex w-full items-center justify-center gap-2 rounded-lg border px-6 py-3 font-medium sm:w-auto"><Phone className="h-5 w-5" />{t("detail.contact_us")}</a>
+              <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#0088cc] px-6 py-3 font-medium text-white sm:w-auto"><Send className="h-5 w-5" />{t("detail.telegram")}</a>
             </div>
           </CardContent>
         </Card>

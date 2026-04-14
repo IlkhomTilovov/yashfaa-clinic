@@ -70,7 +70,7 @@
     "subtitle": "Shifokorimiz bilan maslahat olish uchun hoziroq murojaat qiling. Sog'liq — eng qimmatli boylik!",
     "appointment": "Qabulga yozilish",
     "call": "Qo'ng'iroq qilish",
-    "whatsapp": "WhatsApp orqali yozish"
+    "telegram": "Telegram orqali yozish"
   },
   "stats": {
     "doctors": "Tajribali shifokorlar",
@@ -147,8 +147,7 @@
     "book_service": "Qabulga yozilish",
     "book_info": "Batafsil ma'lumot va yozilish uchun mutaxassisimiz bilan bog'laning",
     "call": "Qo'ng'iroq qilish",
-    "whatsapp": "WhatsApp orqali yozish",
-    "telegram": "Telegram",
+     "telegram": "Telegram orqali yozish",
     "contact_us": "Murojaat qiling",
     "duration": "Davomiyligi",
     "doctors_label": "Shifokorlar",

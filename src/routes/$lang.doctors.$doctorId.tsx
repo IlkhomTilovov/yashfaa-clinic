@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Calendar, Award, Phone, MessageCircle } from "lucide-react";
+import { ArrowLeft, Calendar, Award, Phone, Send } from "lucide-react";
 import { getDoctorById } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 
@@ -81,10 +81,10 @@ function DoctorProfilePage() {
                       <Calendar className="mr-2 h-5 w-5" />{t("hero.cta_appointment")}
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline" className="border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white" asChild>
-                    <a href="https://wa.me/998711234567" target="_blank" rel="noopener noreferrer">
-                      <MessageCircle className="mr-2 h-5 w-5" />
-                      {t("cta.whatsapp")}
+                  <Button size="lg" variant="outline" className="border-[#0088cc] text-[#0088cc] hover:bg-[#0088cc] hover:text-white" asChild>
+                    <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer">
+                      <Send className="mr-2 h-5 w-5" />
+                      {t("cta.telegram")}
                     </a>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
