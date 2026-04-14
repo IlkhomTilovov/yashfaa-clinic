@@ -22,8 +22,8 @@ export function Navbar() {
 
   const switchLang = (newLang: string) => {
     const currentPath = window.location.pathname;
-    const newPath = currentPath.replace(`/${lang}`, `/${newLang}`);
-    window.location.href = newPath || `/${newLang}`;
+    const newPath = currentPath.replace(`/${lang}`, `/${newLang}`) || `/${newLang}`;
+    navigate({ to: newPath as any });
   };
 
   return (
