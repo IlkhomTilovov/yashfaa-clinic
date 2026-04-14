@@ -20,13 +20,12 @@ export const Route = createFileRoute("/admin/category-types")({
 interface CategoryType {
   id: string;
   name: string;
+  name_uz: string | null;
+  name_ru: string | null;
   slug: string;
   icon: string | null;
   created_at: string;
 }
-
-
-
 
 function generateSlug(name: string): string {
   return name
@@ -39,12 +38,13 @@ function generateSlug(name: string): string {
 }
 
 interface FormData {
-  name: string;
+  name_uz: string;
+  name_ru: string;
   slug: string;
   icon: string;
 }
 
-const emptyForm: FormData = { name: "", slug: "", icon: "" };
+const emptyForm: FormData = { name_uz: "", name_ru: "", slug: "", icon: "" };
 
 function AdminCategoryTypesPage() {
   const [types, setTypes] = useState<CategoryType[]>([]);
@@ -67,10 +67,10 @@ function AdminCategoryTypesPage() {
   useEffect(() => { fetchTypes(); }, [fetchTypes]);
 
   useEffect(() => {
-    if (!slugManual && form.name && dialogOpen) {
-      setForm((prev) => ({ ...prev, slug: generateSlug(prev.name) }));
+    if (!slugManual && form.name_uz && dialogOpen) {
+      setForm((prev) => ({ ...prev, slug: generateSlug(prev.name_uz) }));
     }
-  }, [form.name, slugManual, dialogOpen]);
+  }, [form.name_uz, slugManual, dialogOpen]);
 
   const openCreate = () => {
     setEditing(null);
@@ -82,7 +82,7 @@ function AdminCategoryTypesPage() {
 
   const openEdit = (t: CategoryType) => {
     setEditing(t);
-    setForm({ name: t.name, slug: t.slug, icon: t.icon ?? "" });
+    setForm({ name_uz: t.name_uz ?? t.name ?? "", name_ru: t.name_ru ?? "", slug: t.slug, icon: t.icon ?? "" });
     setErrors({});
     setSlugManual(true);
     setDialogOpen(true);
@@ -90,7 +90,7 @@ function AdminCategoryTypesPage() {
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
+    if (!form.name_uz.trim()) e.name_uz = "Nomi (UZ) kiritilishi shart";
     if (!form.slug.trim()) e.slug = "Slug kiritilishi shart";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -100,7 +100,9 @@ function AdminCategoryTypesPage() {
     if (!validate()) return;
     setSaving(true);
     const payload = {
-      name: form.name.trim(),
+      name: form.name_uz.trim(),
+      name_uz: form.name_uz.trim() || null,
+      name_ru: form.name_ru.trim() || null,
       slug: form.slug.trim(),
       icon: form.icon || null,
     };
@@ -190,15 +192,25 @@ function AdminCategoryTypesPage() {
             <DialogTitle>{editing ? "Turni tahrirlash" : "Yangi tur qo'shish"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
-            <div className="space-y-1.5">
-              <Label className="text-sm">Nomi <span className="text-destructive">*</span></Label>
-              <Input
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Laboratoriya"
-                className={errors.name ? "border-destructive" : ""}
-              />
-              {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label className="text-sm">Nomi (UZ) <span className="text-destructive">*</span></Label>
+                <Input
+                  value={form.name_uz}
+                  onChange={(e) => setForm({ ...form, name_uz: e.target.value })}
+                  placeholder="Laboratoriya"
+                  className={errors.name_uz ? "border-destructive" : ""}
+                />
+                {errors.name_uz && <p className="text-xs text-destructive">{errors.name_uz}</p>}
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Nomi (RU)</Label>
+                <Input
+                  value={form.name_ru}
+                  onChange={(e) => setForm({ ...form, name_ru: e.target.value })}
+                  placeholder="Лаборатория"
+                />
+              </div>
             </div>
 
             <div className="space-y-1.5">
@@ -214,7 +226,7 @@ function AdminCategoryTypesPage() {
 
             <IconPicker value={form.icon} onChange={(v) => setForm({ ...form, icon: v })} />
 
-            <Button onClick={handleSave} disabled={saving || !form.name.trim()} className="w-full">
+            <Button onClick={handleSave} disabled={saving || !form.name_uz.trim()} className="w-full">
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editing ? "Saqlash" : "Qo'shish"}
             </Button>
