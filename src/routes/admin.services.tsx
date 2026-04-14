@@ -138,14 +138,18 @@ function AdminServicesPage() {
   const openEdit = (svc: Service) => {
     setEditing(svc);
     setForm({
-      name: svc.name,
+      name_uz: svc.name_uz ?? svc.name ?? "",
+      name_ru: svc.name_ru ?? "",
       category_id: svc.category_id ?? "",
-      description: svc.description ?? "",
+      description_uz: svc.description_uz ?? svc.description ?? "",
+      description_ru: svc.description_ru ?? "",
       duration: svc.duration ?? "",
       location_type: svc.location_type ?? "",
       doctor_ids: svc.doctor_ids ?? [],
-      preparation_requirements: svc.preparation_requirements ?? "",
-      result_info: svc.result_info ?? "",
+      preparation_requirements_uz: svc.preparation_requirements_uz ?? svc.preparation_requirements ?? "",
+      preparation_requirements_ru: svc.preparation_requirements_ru ?? "",
+      result_info_uz: svc.result_info_uz ?? svc.result_info ?? "",
+      result_info_ru: svc.result_info_ru ?? "",
       is_featured: svc.is_featured,
       is_online: svc.is_online,
       is_active: svc.is_active,
@@ -157,7 +161,7 @@ function AdminServicesPage() {
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
+    if (!form.name_uz.trim()) e.name_uz = "Nomi kiritilishi shart";
     if (!form.category_id) e.category_id = "Kategoriya tanlanishi shart";
     setErrors(e);
     return Object.keys(e).length === 0;
