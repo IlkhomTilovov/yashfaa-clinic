@@ -20,13 +20,12 @@ export const Route = createFileRoute("/admin/category-types")({
 interface CategoryType {
   id: string;
   name: string;
+  name_uz: string | null;
+  name_ru: string | null;
   slug: string;
   icon: string | null;
   created_at: string;
 }
-
-
-
 
 function generateSlug(name: string): string {
   return name
@@ -39,12 +38,13 @@ function generateSlug(name: string): string {
 }
 
 interface FormData {
-  name: string;
+  name_uz: string;
+  name_ru: string;
   slug: string;
   icon: string;
 }
 
-const emptyForm: FormData = { name: "", slug: "", icon: "" };
+const emptyForm: FormData = { name_uz: "", name_ru: "", slug: "", icon: "" };
 
 function AdminCategoryTypesPage() {
   const [types, setTypes] = useState<CategoryType[]>([]);
