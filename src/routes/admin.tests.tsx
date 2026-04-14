@@ -126,10 +126,13 @@ function AdminTestsPage() {
   const openEdit = (test: Test) => {
     setEditing(test);
     setForm({
-      name: test.name,
+      name_uz: test.name_uz ?? test.name ?? "",
+      name_ru: test.name_ru ?? "",
       category_id: test.category_id ?? "",
-      description: test.description ?? "",
-      preparation_requirements: test.preparation_requirements ?? "",
+      description_uz: test.description_uz ?? test.description ?? "",
+      description_ru: test.description_ru ?? "",
+      preparation_requirements_uz: test.preparation_requirements_uz ?? test.preparation_requirements ?? "",
+      preparation_requirements_ru: test.preparation_requirements_ru ?? "",
       result_time: test.result_time ?? "",
       biomaterial_type: test.biomaterial_type ?? "",
       is_recommended: test.is_recommended,
