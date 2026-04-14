@@ -254,53 +254,89 @@ function AdminCategoriesPage() {
           </Button>
         </div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((cat) => {
-            const typeLabel = categoryTypes.find(ct => ct.id === cat.type_id)?.name ?? cat.type;
-            // icon rendered dynamically below
-            const parent = cat.parent_id ? categories.find((c) => c.id === cat.parent_id) : null;
-            return (
-              <Card key={cat.id} className={`border-0 shadow-sm transition-all hover:shadow-md ${!cat.is_active ? "opacity-60" : ""}`}>
-                <CardContent className="p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                        <DynamicIcon name={cat.icon} className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold">{cat.name}</h3>
-                          {cat.is_featured && <Star className="h-3.5 w-3.5 fill-primary text-primary" />}
-                          {!cat.is_active && <Badge variant="secondary" className="text-[10px]">Nofaol</Badge>}
-                        </div>
-                        <div className="mt-1 flex items-center gap-1.5">
-                          <Badge variant="outline" className="text-[10px]">{typeLabel}</Badge>
-                          {cat.sort_order > 0 && <span className="text-[10px] text-muted-foreground">#{cat.sort_order}</span>}
-                        </div>
-                        {parent && (
-                          <p className="mt-1 text-xs text-muted-foreground">↳ {parent.name}</p>
-                        )}
-                        {cat.description && (
-                          <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">{cat.description}</p>
-                        )}
-                        {cat.slug && (
-                          <p className="mt-0.5 font-mono text-[10px] text-muted-foreground/60">/{cat.slug}</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(cat)}>
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => setDeleteId(cat.id)}>
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="space-y-8">
+          {/* Group categories by type, ordered: Xizmatlar first, then Tahlillar, then others */}
+          {(() => {
+            const grouped = new Map<string, { label: string; cats: Category[] }>();
+            // Initialize groups from categoryTypes
+            categoryTypes.forEach(ct => {
+              grouped.set(ct.id, { label: ct.name, cats: [] });
+            });
+            // Add an "other" group for categories without type_id
+            grouped.set("__none", { label: "Boshqa", cats: [] });
+            // Distribute categories
+            categories.forEach(cat => {
+              const key = cat.type_id ?? "__none";
+              const group = grouped.get(key);
+              if (group) group.cats.push(cat);
+              else grouped.get("__none")!.cats.push(cat);
+            });
+            // Filter out empty groups and sort: Xizmatlar first, Tahlillar second, rest alphabetically
+            const sortedGroups = Array.from(grouped.entries())
+              .filter(([, g]) => g.cats.length > 0)
+              .sort(([, a], [, b]) => {
+                const order = (label: string) => {
+                  const lower = label.toLowerCase();
+                  if (lower.includes("xizmat")) return 0;
+                  if (lower.includes("tahlil") || lower.includes("laboratoriya")) return 1;
+                  if (label === "Boshqa") return 99;
+                  return 2;
+                };
+                return order(a.label) - order(b.label);
+              });
+            return sortedGroups.map(([groupId, group]) => (
+              <div key={groupId}>
+                <h2 className="mb-3 text-lg font-semibold text-foreground/80">{group.label}</h2>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.cats.map((cat) => {
+                    const typeLabel = categoryTypes.find(ct => ct.id === cat.type_id)?.name ?? cat.type;
+                    const parent = cat.parent_id ? categories.find((c) => c.id === cat.parent_id) : null;
+                    return (
+                      <Card key={cat.id} className={`border-0 shadow-sm transition-all hover:shadow-md ${!cat.is_active ? "opacity-60" : ""}`}>
+                        <CardContent className="p-5">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start gap-3">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                                <DynamicIcon name={cat.icon} className="h-5 w-5 text-primary" />
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h3 className="font-semibold">{cat.name}</h3>
+                                  {cat.is_featured && <Star className="h-3.5 w-3.5 fill-primary text-primary" />}
+                                  {!cat.is_active && <Badge variant="secondary" className="text-[10px]">Nofaol</Badge>}
+                                </div>
+                                <div className="mt-1 flex items-center gap-1.5">
+                                  <Badge variant="outline" className="text-[10px]">{typeLabel}</Badge>
+                                  {cat.sort_order > 0 && <span className="text-[10px] text-muted-foreground">#{cat.sort_order}</span>}
+                                </div>
+                                {parent && (
+                                  <p className="mt-1 text-xs text-muted-foreground">↳ {parent.name}</p>
+                                )}
+                                {cat.description && (
+                                  <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">{cat.description}</p>
+                                )}
+                                {cat.slug && (
+                                  <p className="mt-0.5 font-mono text-[10px] text-muted-foreground/60">/{cat.slug}</p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex gap-1">
+                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(cat)}>
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => setDeleteId(cat.id)}>
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+            ));
+          })()}
         </div>
       )}
 
