@@ -21,9 +21,11 @@ export function Navbar() {
   ];
 
   const switchLang = (newLang: string) => {
+    if (newLang === lang) return;
     const currentPath = window.location.pathname;
+    const searchAndHash = window.location.search + window.location.hash;
     const newPath = currentPath.replace(`/${lang}`, `/${newLang}`) || `/${newLang}`;
-    navigate({ to: newPath as any });
+    navigate({ to: newPath as any, resetScroll: false } as any);
   };
 
   return (
