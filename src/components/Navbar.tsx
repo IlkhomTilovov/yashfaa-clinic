@@ -54,14 +54,34 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           {/* Language Switcher */}
-          <div className="flex items-center rounded-full border p-0.5">
-            <button onClick={() => switchLang("uz")} className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${lang === "uz" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-              🇺🇿 UZ
+          <div className="flex items-center rounded-full border border-border/60 bg-muted/50 p-[3px] shadow-sm">
+            <button
+              onClick={() => switchLang("uz")}
+              className={`relative rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-wide transition-all duration-200 ${
+                lang === "uz"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span className="flex items-center gap-1.5">
+                <span className="text-[11px] uppercase opacity-70">uz</span>
+                <span className="uppercase">UZ</span>
+              </span>
             </button>
-            <button onClick={() => switchLang("ru")} className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${lang === "ru" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-              🇷🇺 RU
+            <button
+              onClick={() => switchLang("ru")}
+              className={`relative rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-wide transition-all duration-200 ${
+                lang === "ru"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span className="flex items-center gap-1.5">
+                <span className="text-[11px] uppercase opacity-70">ru</span>
+                <span className="uppercase">RU</span>
+              </span>
             </button>
           </div>
           <Button asChild>
@@ -82,9 +102,13 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="mt-2 flex gap-2">
-              <button onClick={() => { switchLang("uz"); setMobileOpen(false); }} className={`flex-1 rounded-lg py-2 text-sm font-medium ${lang === "uz" ? "bg-primary text-primary-foreground" : "border"}`}>🇺🇿 O'zbek</button>
-              <button onClick={() => { switchLang("ru"); setMobileOpen(false); }} className={`flex-1 rounded-lg py-2 text-sm font-medium ${lang === "ru" ? "bg-primary text-primary-foreground" : "border"}`}>🇷🇺 Русский</button>
+            <div className="mt-2 flex rounded-full border border-border/60 bg-muted/50 p-[3px] shadow-sm">
+              <button onClick={() => { switchLang("uz"); setMobileOpen(false); }} className={`flex-1 rounded-full py-2 text-sm font-semibold tracking-wide transition-all duration-200 ${lang === "uz" ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground"}`}>
+                UZ
+              </button>
+              <button onClick={() => { switchLang("ru"); setMobileOpen(false); }} className={`flex-1 rounded-full py-2 text-sm font-semibold tracking-wide transition-all duration-200 ${lang === "ru" ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground"}`}>
+                RU
+              </button>
             </div>
             <Button asChild className="mt-2">
               <Link to={`/${lang}/appointment` as any} onClick={() => setMobileOpen(false)}>{t("nav.appointment")}</Link>
