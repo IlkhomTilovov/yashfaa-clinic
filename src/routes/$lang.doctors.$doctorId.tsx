@@ -67,7 +67,7 @@ function DoctorProfilePage() {
                 <p className="mt-2 text-lg text-primary">{getLocalizedField(doctor, "specialization", lang)}</p>
                 {(doctor.bio || doctor.bio_uz || doctor.bio_ru) && <p className="mt-4 text-muted-foreground">{getLocalizedField(doctor, "bio", lang)}</p>}
                 <Button className="mt-6" size="lg" asChild>
-                  <Link to={"/$lang/appointment" as any} params={{ lang }}><Calendar className="mr-2 h-5 w-5" />{t("hero.cta_appointment")}</Link>
+                  <Link to={"/$lang/appointment" as any} params={{ lang } as any}><Calendar className="mr-2 h-5 w-5" />{t("hero.cta_appointment")}</Link>
                 </Button>
               </div>
             </div>
