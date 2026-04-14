@@ -288,15 +288,25 @@ function AdminServicesPage() {
             {/* Asosiy */}
             <fieldset className="space-y-4 rounded-lg border border-border/50 p-4">
               <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Asosiy ma'lumotlar</legend>
-              <div className="space-y-1.5">
-                <Label className="text-sm">Nomi <span className="text-destructive">*</span></Label>
-                <Input
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="UZI diagnostikasi"
-                  className={errors.name ? "border-destructive" : ""}
-                />
-                {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Nomi (UZ) <span className="text-destructive">*</span></Label>
+                  <Input
+                    value={form.name_uz}
+                    onChange={(e) => setForm({ ...form, name_uz: e.target.value })}
+                    placeholder="UZI diagnostikasi"
+                    className={errors.name_uz ? "border-destructive" : ""}
+                  />
+                  {errors.name_uz && <p className="text-xs text-destructive">{errors.name_uz}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Nomi (RU)</Label>
+                  <Input
+                    value={form.name_ru}
+                    onChange={(e) => setForm({ ...form, name_ru: e.target.value })}
+                    placeholder="УЗИ диагностика"
+                  />
+                </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
@@ -346,29 +356,55 @@ function AdminServicesPage() {
             <fieldset className="space-y-4 rounded-lg border border-border/50 p-4">
               <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Qo'shimcha ma'lumotlar</legend>
               <div className="space-y-1.5">
-                <Label className="text-sm">Tavsif</Label>
+                <Label className="text-sm">Tavsif (UZ)</Label>
                 <Textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  value={form.description_uz}
+                  onChange={(e) => setForm({ ...form, description_uz: e.target.value })}
                   rows={2}
                   placeholder="Xizmat haqida qisqa ma'lumot..."
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-sm">Tayyorgarlik talablari</Label>
+                <Label className="text-sm">Tavsif (RU)</Label>
                 <Textarea
-                  value={form.preparation_requirements}
-                  onChange={(e) => setForm({ ...form, preparation_requirements: e.target.value })}
+                  value={form.description_ru}
+                  onChange={(e) => setForm({ ...form, description_ru: e.target.value })}
+                  rows={2}
+                  placeholder="Краткое описание услуги..."
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Tayyorgarlik talablari (UZ)</Label>
+                <Textarea
+                  value={form.preparation_requirements_uz}
+                  onChange={(e) => setForm({ ...form, preparation_requirements_uz: e.target.value })}
                   rows={2}
                   placeholder="Och qoringa kelish kerak..."
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-sm">Natija / Effekt</Label>
+                <Label className="text-sm">Требования подготовки (RU)</Label>
+                <Textarea
+                  value={form.preparation_requirements_ru}
+                  onChange={(e) => setForm({ ...form, preparation_requirements_ru: e.target.value })}
+                  rows={2}
+                  placeholder="Необходимо прийти натощак..."
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Natija / Effekt (UZ)</Label>
                 <Input
-                  value={form.result_info}
-                  onChange={(e) => setForm({ ...form, result_info: e.target.value })}
+                  value={form.result_info_uz}
+                  onChange={(e) => setForm({ ...form, result_info_uz: e.target.value })}
                   placeholder="Natija darhol beriladi"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Результат / Эффект (RU)</Label>
+                <Input
+                  value={form.result_info_ru}
+                  onChange={(e) => setForm({ ...form, result_info_ru: e.target.value })}
+                  placeholder="Результат сразу"
                 />
               </div>
 
@@ -439,7 +475,7 @@ function AdminServicesPage() {
               </div>
             </fieldset>
 
-            <Button onClick={handleSave} disabled={saving || !form.name.trim() || !form.category_id} className="w-full">
+            <Button onClick={handleSave} disabled={saving || !form.name_uz.trim() || !form.category_id} className="w-full">
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editing ? "Saqlash" : "Qo'shish"}
             </Button>
