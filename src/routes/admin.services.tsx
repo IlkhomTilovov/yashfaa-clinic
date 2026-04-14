@@ -22,7 +22,11 @@ export const Route = createFileRoute("/admin/services")({
 interface Service {
   id: string;
   name: string;
+  name_uz: string | null;
+  name_ru: string | null;
   description: string | null;
+  description_uz: string | null;
+  description_ru: string | null;
   price: number;
   category_id: string | null;
   is_active: boolean;
@@ -30,7 +34,11 @@ interface Service {
   duration: string | null;
   location_type: string | null;
   preparation_requirements: string | null;
+  preparation_requirements_uz: string | null;
+  preparation_requirements_ru: string | null;
   result_info: string | null;
+  result_info_uz: string | null;
+  result_info_ru: string | null;
   is_featured: boolean;
   is_online: boolean;
   doctor_ids: string[] | null;
