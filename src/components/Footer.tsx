@@ -55,7 +55,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-10 border-t pt-6 text-center text-sm text-muted-foreground">
-          © 2025 Yashfaa Clinic. {t("footer.rights")}
+          © 2026 <a href="https://sellsoft.uz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Sell Soft</a>. {t("footer.rights")}
         </div>
       </div>
     </footer>
