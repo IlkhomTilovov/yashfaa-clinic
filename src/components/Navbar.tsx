@@ -1,95 +1,91 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useParams, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Phone, Clock } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Menu, X, Phone, Clock, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const navLinks = [
-  { to: "/" as const, label: "Bosh sahifa" },
-  { to: "/services" as const, label: "Xizmatlar" },
-  { to: "/doctors" as const, label: "Shifokorlar" },
-  { to: "/tests" as const, label: "Tahlillar" },
-  { to: "/appointment" as const, label: "Qabulga yozilish" },
-  { to: "/contact" as const, label: "Aloqa" },
-];
+import { useLang } from "@/hooks/useLang";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const lang = useLang();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const navLinks = [
+    { to: `/${lang}` as any, label: t("nav.home") },
+    { to: `/${lang}/services` as any, label: t("nav.services") },
+    { to: `/${lang}/doctors` as any, label: t("nav.doctors") },
+    { to: `/${lang}/tests` as any, label: t("nav.tests") },
+    { to: `/${lang}/appointment` as any, label: t("nav.appointment") },
+    { to: `/${lang}/contact` as any, label: t("nav.contact") },
+  ];
+
+  const switchLang = (newLang: string) => {
+    const currentPath = window.location.pathname;
+    const newPath = currentPath.replace(`/${lang}`, `/${newLang}`);
+    window.location.href = newPath || `/${newLang}`;
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-      {/* Top bar */}
       <div className="hidden border-b bg-primary px-4 py-1.5 text-primary-foreground md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between text-xs">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <Phone className="h-3 w-3" /> +998 71 123 45 67
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" /> Dush–Shan: 8:00–20:00
-            </span>
+            <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> +998 71 123 45 67</span>
+            <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {t("hero.working_hours")}</span>
           </div>
           <span>Toshkent, O'zbekiston</span>
         </div>
       </div>
 
-      {/* Main nav */}
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">
-            Y
-          </div>
+        <Link to={`/${lang}` as any} className="flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">Y</div>
           <span className="text-xl font-bold text-foreground">Yashfaa Clinic</span>
         </Link>
 
-        {/* Desktop */}
         <nav className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              activeProps={{ className: "bg-accent text-foreground" }}
-            >
+            <Link key={link.to} to={link.to} className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground" activeProps={{ className: "bg-accent text-foreground" }}>
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-2 lg:flex">
+          {/* Language Switcher */}
+          <div className="flex items-center rounded-full border p-0.5">
+            <button onClick={() => switchLang("uz")} className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${lang === "uz" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+              🇺🇿 UZ
+            </button>
+            <button onClick={() => switchLang("ru")} className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${lang === "ru" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+              🇷🇺 RU
+            </button>
+          </div>
           <Button asChild>
-            <Link to="/appointment">Qabulga yozilish</Link>
+            <Link to={`/${lang}/appointment` as any}>{t("nav.appointment")}</Link>
           </Button>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          className="lg:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Menyu"
-        >
+        <button className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menyu">
           {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="border-t bg-card px-4 pb-4 lg:hidden">
           <nav className="flex flex-col gap-1 pt-2">
             {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                activeProps={{ className: "bg-accent text-foreground" }}
-                onClick={() => setMobileOpen(false)}
-              >
+              <Link key={link.to} to={link.to} className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground" activeProps={{ className: "bg-accent text-foreground" }} onClick={() => setMobileOpen(false)}>
                 {link.label}
               </Link>
             ))}
+            <div className="mt-2 flex gap-2">
+              <button onClick={() => { switchLang("uz"); setMobileOpen(false); }} className={`flex-1 rounded-lg py-2 text-sm font-medium ${lang === "uz" ? "bg-primary text-primary-foreground" : "border"}`}>🇺🇿 O'zbek</button>
+              <button onClick={() => { switchLang("ru"); setMobileOpen(false); }} className={`flex-1 rounded-lg py-2 text-sm font-medium ${lang === "ru" ? "bg-primary text-primary-foreground" : "border"}`}>🇷🇺 Русский</button>
+            </div>
             <Button asChild className="mt-2">
-              <Link to="/appointment" onClick={() => setMobileOpen(false)}>
-                Qabulga yozilish
-              </Link>
+              <Link to={`/${lang}/appointment` as any} onClick={() => setMobileOpen(false)}>{t("nav.appointment")}</Link>
             </Button>
           </nav>
         </div>

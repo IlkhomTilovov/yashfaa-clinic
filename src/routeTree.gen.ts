@@ -9,22 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestsRouteImport } from './routes/tests'
 import { Route as SetupRouteImport } from './routes/setup'
-import { Route as ServicesRouteImport } from './routes/services'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AppointmentRouteImport } from './routes/appointment'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LangRouteImport } from './routes/$lang'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ServicesIndexRouteImport } from './routes/services.index'
-import { Route as DoctorsIndexRouteImport } from './routes/doctors.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as LangIndexRouteImport } from './routes/$lang.index'
-import { Route as TahlilSlugRouteImport } from './routes/tahlil.$slug'
-import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
-import { Route as DoctorsDoctorIdRouteImport } from './routes/doctors.$doctorId'
 import { Route as AdminTestsRouteImport } from './routes/admin.tests'
 import { Route as AdminSetupRouteImport } from './routes/admin.setup'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -44,34 +35,14 @@ import { Route as LangTahlilSlugRouteImport } from './routes/$lang.tahlil.$slug'
 import { Route as LangServicesSlugRouteImport } from './routes/$lang.services.$slug'
 import { Route as LangDoctorsDoctorIdRouteImport } from './routes/$lang.doctors.$doctorId'
 
-const TestsRoute = TestsRouteImport.update({
-  id: '/tests',
-  path: '/tests',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SetupRoute = SetupRouteImport.update({
   id: '/setup',
   path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicesRoute = ServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppointmentRoute = AppointmentRouteImport.update({
-  id: '/appointment',
-  path: '/appointment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -89,16 +60,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicesIndexRoute = ServicesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ServicesRoute,
-} as any)
-const DoctorsIndexRoute = DoctorsIndexRouteImport.update({
-  id: '/doctors/',
-  path: '/doctors/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -108,21 +69,6 @@ const LangIndexRoute = LangIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LangRoute,
-} as any)
-const TahlilSlugRoute = TahlilSlugRouteImport.update({
-  id: '/tahlil/$slug',
-  path: '/tahlil/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServicesSlugRoute = ServicesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ServicesRoute,
-} as any)
-const DoctorsDoctorIdRoute = DoctorsDoctorIdRouteImport.update({
-  id: '/doctors/$doctorId',
-  path: '/doctors/$doctorId',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminTestsRoute = AdminTestsRouteImport.update({
   id: '/tests',
@@ -219,12 +165,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
-  '/appointment': typeof AppointmentRoute
-  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
-  '/services': typeof ServicesRouteWithChildren
   '/setup': typeof SetupRoute
-  '/tests': typeof TestsRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
   '/$lang/services': typeof LangServicesRouteWithChildren
@@ -238,13 +180,8 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
-  '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
-  '/services/$slug': typeof ServicesSlugRoute
-  '/tahlil/$slug': typeof TahlilSlugRoute
   '/$lang/': typeof LangIndexRoute
   '/admin/': typeof AdminIndexRoute
-  '/doctors/': typeof DoctorsIndexRoute
-  '/services/': typeof ServicesIndexRoute
   '/$lang/doctors/$doctorId': typeof LangDoctorsDoctorIdRoute
   '/$lang/services/$slug': typeof LangServicesSlugRoute
   '/$lang/tahlil/$slug': typeof LangTahlilSlugRoute
@@ -253,11 +190,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/appointment': typeof AppointmentRoute
-  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/setup': typeof SetupRoute
-  '/tests': typeof TestsRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
   '/$lang/tests': typeof LangTestsRoute
@@ -270,13 +204,8 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
-  '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
-  '/services/$slug': typeof ServicesSlugRoute
-  '/tahlil/$slug': typeof TahlilSlugRoute
   '/$lang': typeof LangIndexRoute
   '/admin': typeof AdminIndexRoute
-  '/doctors': typeof DoctorsIndexRoute
-  '/services': typeof ServicesIndexRoute
   '/$lang/doctors/$doctorId': typeof LangDoctorsDoctorIdRoute
   '/$lang/services/$slug': typeof LangServicesSlugRoute
   '/$lang/tahlil/$slug': typeof LangTahlilSlugRoute
@@ -288,12 +217,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
-  '/appointment': typeof AppointmentRoute
-  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
-  '/services': typeof ServicesRouteWithChildren
   '/setup': typeof SetupRoute
-  '/tests': typeof TestsRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
   '/$lang/services': typeof LangServicesRouteWithChildren
@@ -307,13 +232,8 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
-  '/doctors/$doctorId': typeof DoctorsDoctorIdRoute
-  '/services/$slug': typeof ServicesSlugRoute
-  '/tahlil/$slug': typeof TahlilSlugRoute
   '/$lang/': typeof LangIndexRoute
   '/admin/': typeof AdminIndexRoute
-  '/doctors/': typeof DoctorsIndexRoute
-  '/services/': typeof ServicesIndexRoute
   '/$lang/doctors/$doctorId': typeof LangDoctorsDoctorIdRoute
   '/$lang/services/$slug': typeof LangServicesSlugRoute
   '/$lang/tahlil/$slug': typeof LangTahlilSlugRoute
@@ -326,12 +246,8 @@ export interface FileRouteTypes {
     | '/'
     | '/$lang'
     | '/admin'
-    | '/appointment'
-    | '/contact'
     | '/login'
-    | '/services'
     | '/setup'
-    | '/tests'
     | '/$lang/appointment'
     | '/$lang/contact'
     | '/$lang/services'
@@ -345,13 +261,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/setup'
     | '/admin/tests'
-    | '/doctors/$doctorId'
-    | '/services/$slug'
-    | '/tahlil/$slug'
     | '/$lang/'
     | '/admin/'
-    | '/doctors/'
-    | '/services/'
     | '/$lang/doctors/$doctorId'
     | '/$lang/services/$slug'
     | '/$lang/tahlil/$slug'
@@ -360,11 +271,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/appointment'
-    | '/contact'
     | '/login'
     | '/setup'
-    | '/tests'
     | '/$lang/appointment'
     | '/$lang/contact'
     | '/$lang/tests'
@@ -377,13 +285,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/setup'
     | '/admin/tests'
-    | '/doctors/$doctorId'
-    | '/services/$slug'
-    | '/tahlil/$slug'
     | '/$lang'
     | '/admin'
-    | '/doctors'
-    | '/services'
     | '/$lang/doctors/$doctorId'
     | '/$lang/services/$slug'
     | '/$lang/tahlil/$slug'
@@ -394,12 +297,8 @@ export interface FileRouteTypes {
     | '/'
     | '/$lang'
     | '/admin'
-    | '/appointment'
-    | '/contact'
     | '/login'
-    | '/services'
     | '/setup'
-    | '/tests'
     | '/$lang/appointment'
     | '/$lang/contact'
     | '/$lang/services'
@@ -413,13 +312,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/setup'
     | '/admin/tests'
-    | '/doctors/$doctorId'
-    | '/services/$slug'
-    | '/tahlil/$slug'
     | '/$lang/'
     | '/admin/'
-    | '/doctors/'
-    | '/services/'
     | '/$lang/doctors/$doctorId'
     | '/$lang/services/$slug'
     | '/$lang/tahlil/$slug'
@@ -431,26 +325,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LangRoute: typeof LangRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
-  AppointmentRoute: typeof AppointmentRoute
-  ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
-  ServicesRoute: typeof ServicesRouteWithChildren
   SetupRoute: typeof SetupRoute
-  TestsRoute: typeof TestsRoute
-  DoctorsDoctorIdRoute: typeof DoctorsDoctorIdRoute
-  TahlilSlugRoute: typeof TahlilSlugRoute
-  DoctorsIndexRoute: typeof DoctorsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/tests': {
-      id: '/tests'
-      path: '/tests'
-      fullPath: '/tests'
-      preLoaderRoute: typeof TestsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/setup': {
       id: '/setup'
       path: '/setup'
@@ -458,32 +338,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/appointment': {
-      id: '/appointment'
-      path: '/appointment'
-      fullPath: '/appointment'
-      preLoaderRoute: typeof AppointmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -507,20 +366,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services/': {
-      id: '/services/'
-      path: '/'
-      fullPath: '/services/'
-      preLoaderRoute: typeof ServicesIndexRouteImport
-      parentRoute: typeof ServicesRoute
-    }
-    '/doctors/': {
-      id: '/doctors/'
-      path: '/doctors'
-      fullPath: '/doctors/'
-      preLoaderRoute: typeof DoctorsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -534,27 +379,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$lang/'
       preLoaderRoute: typeof LangIndexRouteImport
       parentRoute: typeof LangRoute
-    }
-    '/tahlil/$slug': {
-      id: '/tahlil/$slug'
-      path: '/tahlil/$slug'
-      fullPath: '/tahlil/$slug'
-      preLoaderRoute: typeof TahlilSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services/$slug': {
-      id: '/services/$slug'
-      path: '/$slug'
-      fullPath: '/services/$slug'
-      preLoaderRoute: typeof ServicesSlugRouteImport
-      parentRoute: typeof ServicesRoute
-    }
-    '/doctors/$doctorId': {
-      id: '/doctors/$doctorId'
-      path: '/doctors/$doctorId'
-      fullPath: '/doctors/$doctorId'
-      preLoaderRoute: typeof DoctorsDoctorIdRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/admin/tests': {
       id: '/admin/tests'
@@ -751,33 +575,12 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface ServicesRouteChildren {
-  ServicesSlugRoute: typeof ServicesSlugRoute
-  ServicesIndexRoute: typeof ServicesIndexRoute
-}
-
-const ServicesRouteChildren: ServicesRouteChildren = {
-  ServicesSlugRoute: ServicesSlugRoute,
-  ServicesIndexRoute: ServicesIndexRoute,
-}
-
-const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
-  ServicesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LangRoute: LangRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
-  AppointmentRoute: AppointmentRoute,
-  ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
-  ServicesRoute: ServicesRouteWithChildren,
   SetupRoute: SetupRoute,
-  TestsRoute: TestsRoute,
-  DoctorsDoctorIdRoute: DoctorsDoctorIdRoute,
-  TahlilSlugRoute: TahlilSlugRoute,
-  DoctorsIndexRoute: DoctorsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
