@@ -47,10 +47,13 @@ const RESULT_TIMES = ["1 kun", "2–3 kun", "3–5 kun", "5–7 kun", "1 hafta",
 const BIOMATERIALS = ["Qon", "Siydik", "So'lak", "Najas", "Surtma", "Tish nurash"];
 
 interface FormData {
-  name: string;
+  name_uz: string;
+  name_ru: string;
   category_id: string;
-  description: string;
-  preparation_requirements: string;
+  description_uz: string;
+  description_ru: string;
+  preparation_requirements_uz: string;
+  preparation_requirements_ru: string;
   result_time: string;
   biomaterial_type: string;
   is_recommended: boolean;
@@ -60,10 +63,13 @@ interface FormData {
 }
 
 const emptyForm: FormData = {
-  name: "",
+  name_uz: "",
+  name_ru: "",
   category_id: "",
-  description: "",
-  preparation_requirements: "",
+  description_uz: "",
+  description_ru: "",
+  preparation_requirements_uz: "",
+  preparation_requirements_ru: "",
   result_time: "",
   biomaterial_type: "",
   is_recommended: false,
