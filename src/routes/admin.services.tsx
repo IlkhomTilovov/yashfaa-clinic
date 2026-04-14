@@ -22,7 +22,11 @@ export const Route = createFileRoute("/admin/services")({
 interface Service {
   id: string;
   name: string;
+  name_uz: string | null;
+  name_ru: string | null;
   description: string | null;
+  description_uz: string | null;
+  description_ru: string | null;
   price: number;
   category_id: string | null;
   is_active: boolean;
@@ -30,7 +34,11 @@ interface Service {
   duration: string | null;
   location_type: string | null;
   preparation_requirements: string | null;
+  preparation_requirements_uz: string | null;
+  preparation_requirements_ru: string | null;
   result_info: string | null;
+  result_info_uz: string | null;
+  result_info_ru: string | null;
   is_featured: boolean;
   is_online: boolean;
   doctor_ids: string[] | null;
@@ -49,14 +57,18 @@ const LOCATIONS = [
 ];
 
 interface FormData {
-  name: string;
+  name_uz: string;
+  name_ru: string;
   category_id: string;
-  description: string;
+  description_uz: string;
+  description_ru: string;
   duration: string;
   location_type: string;
   doctor_ids: string[];
-  preparation_requirements: string;
-  result_info: string;
+  preparation_requirements_uz: string;
+  preparation_requirements_ru: string;
+  result_info_uz: string;
+  result_info_ru: string;
   is_featured: boolean;
   is_online: boolean;
   is_active: boolean;
@@ -64,14 +76,18 @@ interface FormData {
 }
 
 const emptyForm: FormData = {
-  name: "",
+  name_uz: "",
+  name_ru: "",
   category_id: "",
-  description: "",
+  description_uz: "",
+  description_ru: "",
   duration: "",
   location_type: "",
   doctor_ids: [],
-  preparation_requirements: "",
-  result_info: "",
+  preparation_requirements_uz: "",
+  preparation_requirements_ru: "",
+  result_info_uz: "",
+  result_info_ru: "",
   is_featured: false,
   is_online: false,
   is_active: true,
@@ -122,14 +138,18 @@ function AdminServicesPage() {
   const openEdit = (svc: Service) => {
     setEditing(svc);
     setForm({
-      name: svc.name,
+      name_uz: svc.name_uz ?? svc.name ?? "",
+      name_ru: svc.name_ru ?? "",
       category_id: svc.category_id ?? "",
-      description: svc.description ?? "",
+      description_uz: svc.description_uz ?? svc.description ?? "",
+      description_ru: svc.description_ru ?? "",
       duration: svc.duration ?? "",
       location_type: svc.location_type ?? "",
       doctor_ids: svc.doctor_ids ?? [],
-      preparation_requirements: svc.preparation_requirements ?? "",
-      result_info: svc.result_info ?? "",
+      preparation_requirements_uz: svc.preparation_requirements_uz ?? svc.preparation_requirements ?? "",
+      preparation_requirements_ru: svc.preparation_requirements_ru ?? "",
+      result_info_uz: svc.result_info_uz ?? svc.result_info ?? "",
+      result_info_ru: svc.result_info_ru ?? "",
       is_featured: svc.is_featured,
       is_online: svc.is_online,
       is_active: svc.is_active,
@@ -141,7 +161,7 @@ function AdminServicesPage() {
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = "Nomi kiritilishi shart";
+    if (!form.name_uz.trim()) e.name_uz = "Nomi kiritilishi shart";
     if (!form.category_id) e.category_id = "Kategoriya tanlanishi shart";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -158,15 +178,23 @@ function AdminServicesPage() {
     if (!validate()) return;
     setSaving(true);
     const payload = {
-      name: form.name,
-      description: form.description || null,
+      name: form.name_uz,
+      name_uz: form.name_uz,
+      name_ru: form.name_ru || null,
+      description: form.description_uz || null,
+      description_uz: form.description_uz || null,
+      description_ru: form.description_ru || null,
       price: form.price ? Number(form.price) : 0,
       category_id: form.category_id || null,
       duration: form.duration || null,
       location_type: form.location_type || null,
       doctor_ids: form.doctor_ids.length > 0 ? form.doctor_ids : null,
-      preparation_requirements: form.preparation_requirements || null,
-      result_info: form.result_info || null,
+      preparation_requirements: form.preparation_requirements_uz || null,
+      preparation_requirements_uz: form.preparation_requirements_uz || null,
+      preparation_requirements_ru: form.preparation_requirements_ru || null,
+      result_info: form.result_info_uz || null,
+      result_info_uz: form.result_info_uz || null,
+      result_info_ru: form.result_info_ru || null,
       is_featured: form.is_featured,
       is_online: form.is_online,
       is_active: form.is_active,
@@ -268,15 +296,25 @@ function AdminServicesPage() {
             {/* Asosiy */}
             <fieldset className="space-y-4 rounded-lg border border-border/50 p-4">
               <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Asosiy ma'lumotlar</legend>
-              <div className="space-y-1.5">
-                <Label className="text-sm">Nomi <span className="text-destructive">*</span></Label>
-                <Input
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="UZI diagnostikasi"
-                  className={errors.name ? "border-destructive" : ""}
-                />
-                {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Nomi (UZ) <span className="text-destructive">*</span></Label>
+                  <Input
+                    value={form.name_uz}
+                    onChange={(e) => setForm({ ...form, name_uz: e.target.value })}
+                    placeholder="UZI diagnostikasi"
+                    className={errors.name_uz ? "border-destructive" : ""}
+                  />
+                  {errors.name_uz && <p className="text-xs text-destructive">{errors.name_uz}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm">Nomi (RU)</Label>
+                  <Input
+                    value={form.name_ru}
+                    onChange={(e) => setForm({ ...form, name_ru: e.target.value })}
+                    placeholder="УЗИ диагностика"
+                  />
+                </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
@@ -326,29 +364,55 @@ function AdminServicesPage() {
             <fieldset className="space-y-4 rounded-lg border border-border/50 p-4">
               <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Qo'shimcha ma'lumotlar</legend>
               <div className="space-y-1.5">
-                <Label className="text-sm">Tavsif</Label>
+                <Label className="text-sm">Tavsif (UZ)</Label>
                 <Textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  value={form.description_uz}
+                  onChange={(e) => setForm({ ...form, description_uz: e.target.value })}
                   rows={2}
                   placeholder="Xizmat haqida qisqa ma'lumot..."
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-sm">Tayyorgarlik talablari</Label>
+                <Label className="text-sm">Tavsif (RU)</Label>
                 <Textarea
-                  value={form.preparation_requirements}
-                  onChange={(e) => setForm({ ...form, preparation_requirements: e.target.value })}
+                  value={form.description_ru}
+                  onChange={(e) => setForm({ ...form, description_ru: e.target.value })}
+                  rows={2}
+                  placeholder="Краткое описание услуги..."
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Tayyorgarlik talablari (UZ)</Label>
+                <Textarea
+                  value={form.preparation_requirements_uz}
+                  onChange={(e) => setForm({ ...form, preparation_requirements_uz: e.target.value })}
                   rows={2}
                   placeholder="Och qoringa kelish kerak..."
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-sm">Natija / Effekt</Label>
+                <Label className="text-sm">Требования подготовки (RU)</Label>
+                <Textarea
+                  value={form.preparation_requirements_ru}
+                  onChange={(e) => setForm({ ...form, preparation_requirements_ru: e.target.value })}
+                  rows={2}
+                  placeholder="Необходимо прийти натощак..."
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Natija / Effekt (UZ)</Label>
                 <Input
-                  value={form.result_info}
-                  onChange={(e) => setForm({ ...form, result_info: e.target.value })}
+                  value={form.result_info_uz}
+                  onChange={(e) => setForm({ ...form, result_info_uz: e.target.value })}
                   placeholder="Natija darhol beriladi"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Результат / Эффект (RU)</Label>
+                <Input
+                  value={form.result_info_ru}
+                  onChange={(e) => setForm({ ...form, result_info_ru: e.target.value })}
+                  placeholder="Результат сразу"
                 />
               </div>
 
@@ -419,7 +483,7 @@ function AdminServicesPage() {
               </div>
             </fieldset>
 
-            <Button onClick={handleSave} disabled={saving || !form.name.trim() || !form.category_id} className="w-full">
+            <Button onClick={handleSave} disabled={saving || !form.name_uz.trim() || !form.category_id} className="w-full">
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editing ? "Saqlash" : "Qo'shish"}
             </Button>
