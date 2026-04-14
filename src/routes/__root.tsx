@@ -7,8 +7,7 @@ import {
   useMatches,
 } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import "@/lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -23,7 +22,7 @@ function NotFoundComponent() {
         </p>
         <div className="mt-6">
           <Link
-            to="/"
+            to={"/$lang" as any} params={{ lang: "uz" } as any}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Bosh sahifaga qaytish
@@ -38,14 +37,10 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       { title: "Yashfaa Clinic — Zamonaviy tibbiy xizmatlar" },
-      { name: "description", content: "Yashfaa Clinic — Toshkentdagi zamonaviy tibbiy klinika. Laboratoriya tahlillari, diagnostika, shifokorlar va onlayn qabulga yozilish." },
+      { name: "description", content: "Yashfaa Clinic — Toshkentdagi zamonaviy tibbiy klinika." },
       { name: "author", content: "Yashfaa Clinic" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { property: "og:title", content: "Yashfaa Clinic — Zamonaviy tibbiy xizmatlar" },
-      { name: "twitter:title", content: "Yashfaa Clinic — Zamonaviy tibbiy xizmatlar" },
-      { property: "og:description", content: "Yashfaa Clinic — Toshkentdagi zamonaviy tibbiy klinika. Laboratoriya tahlillari, diagnostika, shifokorlar va onlayn qabulga yozilish." },
-      { name: "twitter:description", content: "Yashfaa Clinic — Toshkentdagi zamonaviy tibbiy klinika. Laboratoriya tahlillari, diagnostika, shifokorlar va onlayn qabulga yozilish." },
     ],
   }),
   shellComponent: RootShell,
@@ -74,20 +69,5 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  const matches = useMatches();
-  const isAdminRoute = matches.some((m) => m.fullPath.startsWith("/admin"));
-
-  if (isAdminRoute) {
-    return <Outlet />;
-  }
-
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <Outlet />;
 }
