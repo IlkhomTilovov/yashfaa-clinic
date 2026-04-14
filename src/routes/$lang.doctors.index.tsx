@@ -2,7 +2,9 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Calendar, Award } from "lucide-react";
 import { getDoctors } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 
@@ -52,13 +54,21 @@ function DoctorsPage() {
           {doctors.map((doc: any) => (
             <Link key={doc.id} to="/$lang/doctors/$doctorId" params={{ lang, doctorId: doc.id }}>
               <Card className="group h-full overflow-hidden transition-shadow hover:shadow-lg">
-                <div className="aspect-square overflow-hidden">
+                <div className="relative aspect-square overflow-hidden">
                   <img src={doc.image_url || "/placeholder.svg"} alt={getLocalizedField(doc, "name", lang)} className="h-full w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
+                  {doc.experience_years && (
+                    <Badge className="absolute left-3 top-3 gap-1 bg-card/90 text-foreground backdrop-blur-sm">
+                      <Award className="h-3 w-3" /> {doc.experience_years} {t("doctors_section.experience")}
+                    </Badge>
+                  )}
                 </div>
                 <CardContent className="p-5">
                   <h3 className="font-semibold">{getLocalizedField(doc, "name", lang)}</h3>
                   <p className="mt-1 text-sm text-primary">{getLocalizedField(doc, "specialization", lang)}</p>
-                  <Button variant="outline" size="sm" className="mt-3 w-full">{t("pages.detail")}</Button>
+                  <span className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors group-hover:bg-primary/90">
+                    <Calendar className="h-4 w-4" />
+                    {t("hero.cta_appointment")}
+                  </span>
                 </CardContent>
               </Card>
             </Link>

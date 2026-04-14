@@ -93,9 +93,9 @@ function ServicesPage() {
               {svc.doctor_ids.map((id: string) => { const name = getDoctorName(id); return name ? <Badge key={id} variant="secondary" className="text-[10px]">{name}</Badge> : null; })}
             </div>
           )}
-          {svc.preparation_requirements && <p className="mt-2 text-xs text-muted-foreground/70 italic">📋 {svc.preparation_requirements}</p>}
-          <div className="mt-auto pt-4">
-            <span className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">{t("pages.view_details")}</span>
+          {svc.preparation_requirements && <p className="mt-2 text-xs text-muted-foreground/70 italic">📋 {getLocalizedField(svc, "preparation_requirements", lang)}</p>}
+          <div className="mt-auto flex gap-2 pt-4">
+            <span className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">{t("pages.view_details")}</span>
           </div>
         </CardContent>
       </Card>

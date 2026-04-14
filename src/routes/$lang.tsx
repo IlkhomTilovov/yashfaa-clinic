@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { isValidLang } from "@/lib/i18n";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { FloatingCTA } from "@/components/FloatingCTA";
 
 export const Route = createFileRoute("/$lang")({
   beforeLoad: ({ params }) => {
@@ -20,6 +21,9 @@ function LangLayout() {
         <Outlet />
       </main>
       <Footer />
+      <FloatingCTA />
+      {/* Spacer for mobile sticky CTA bar */}
+      <div className="h-16 md:hidden" />
     </div>
   );
 }
