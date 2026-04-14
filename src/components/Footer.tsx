@@ -18,8 +18,6 @@ export function Footer() {
             </div>
             <p className="mt-3 text-sm text-muted-foreground">{t("footer.about")}</p>
           </div>
-            <p className="mt-3 text-sm text-muted-foreground">{t("footer.about")}</p>
-          </div>
           <div>
             <h3 className="mb-3 font-semibold">{t("footer.quick_links")}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
