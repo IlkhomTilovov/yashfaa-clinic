@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Menu, X, Phone, Clock, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLang } from "@/hooks/useLang";
+import logoSvg from "@/assets/logo.svg";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -42,8 +43,7 @@ export function Navbar() {
 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <Link to={`/${lang}` as any} className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">Y</div>
-          <span className="text-xl font-bold text-foreground">Yashfaa Clinic</span>
+          <img src={logoSvg} alt="Yashfaa Clinic" className="h-9" />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
