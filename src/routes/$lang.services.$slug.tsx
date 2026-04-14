@@ -45,7 +45,7 @@ export const Route = createFileRoute("/$lang/services/$slug")({
 });
 
 function ServiceDetailPage() {
-  const { service, doctors } = Route.useLoaderData();
+  const { service, doctors } = Route.useLoaderData() as any;
   const lang = useLang();
   const { t } = useTranslation();
   const svc = service as any;
