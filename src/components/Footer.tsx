@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
+import logoSvg from "@/assets/logo.svg";
 
 export function Footer() {
   const lang = useLang();
@@ -13,9 +14,10 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">Y</div>
-              <span className="text-lg font-bold">Yashfaa Clinic</span>
+              <img src={logoSvg} alt="Yashfaa Clinic" className="h-8" />
             </div>
+            <p className="mt-3 text-sm text-muted-foreground">{t("footer.about")}</p>
+          </div>
             <p className="mt-3 text-sm text-muted-foreground">{t("footer.about")}</p>
           </div>
           <div>
