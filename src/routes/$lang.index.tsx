@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Heart, FlaskConical, Stethoscope, Calendar, ArrowRight,
   Users, Clock, Award, ShieldCheck, Zap, Star, Phone,
-  CheckCircle, Activity, Sparkles, Quote,
+  CheckCircle, Activity, Sparkles, Quote, MessageCircle,
 } from "lucide-react";
 import { getDoctors, getTests, getServices } from "@/lib/server-functions";
 import { HeroSearch } from "@/components/HeroSearch";
@@ -85,7 +85,7 @@ function HomePage() {
       <section className="relative min-h-screen w-full overflow-visible">
         <div className="absolute inset-0">
           <img src={heroLab} alt="Yashfaa Clinic laboratoriya" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/30" />
         </div>
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -105,6 +105,23 @@ function HomePage() {
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">{t("hero.subtitle")}</p>
 
+            {/* ─── Trust Badges ─── */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:justify-start">
+              <div className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700">
+                <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
+                4.9 {lang === "ru" ? "рейтинг" : "reyting"}
+              </div>
+              <div className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+                <Users className="h-4 w-4" />
+                10,000+ {lang === "ru" ? "пациентов" : "bemor"}
+              </div>
+              <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
+                <CheckCircle className="h-4 w-4" />
+                {lang === "ru" ? "Лицензия №12345" : "Litsenziya №12345"}
+              </div>
+            </div>
+
+            {/* ─── CTA Buttons ─── */}
             <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
               <Button size="lg" className="h-12 rounded-full px-8 text-base shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30" asChild>
                 <Link to="/$lang/appointment" params={{ lang }}>
@@ -112,13 +129,22 @@ function HomePage() {
                   {t("hero.cta_appointment")}
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 rounded-full border-primary bg-background/80 px-8 text-base text-primary backdrop-blur-sm" asChild>
-                <a href="tel:+998711234567">
-                  <Phone className="mr-2 h-5 w-5" />
-                  {t("hero.cta_call")}
+              <Button size="lg" variant="outline" className="h-12 rounded-full border-[#25D366] bg-[#25D366]/10 px-8 text-base text-[#25D366] hover:bg-[#25D366] hover:text-white" asChild>
+                <a href="https://wa.me/998711234567" target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  {t("cta.whatsapp")}
                 </a>
               </Button>
             </div>
+
+            {/* ─── Urgency line ─── */}
+            <p className="mt-4 flex items-center justify-center gap-2 text-sm font-medium text-emerald-600 md:justify-start">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+              </span>
+              {lang === "ru" ? "Сегодня есть свободные места" : "Bugun bo'sh vaqtlar mavjud"}
+            </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-muted-foreground md:justify-start">
               <a href="tel:+998711234567" className="flex items-center gap-2 transition-colors hover:text-primary">
@@ -219,6 +245,12 @@ function HomePage() {
                       {doc.experience_years && (
                         <p className="mt-2 text-xs text-muted-foreground">{doc.experience_years} {t("doctors_section.experience")}</p>
                       )}
+                      <div className="mt-3">
+                        <span className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                          <Calendar className="h-4 w-4" />
+                          {t("hero.cta_appointment")}
+                        </span>
+                      </div>
                     </CardContent>
                   </Card>
                 </Link>
@@ -334,9 +366,9 @@ function HomePage() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-primary-foreground/10 px-8 text-primary-foreground" asChild>
-              <a href="tel:+998711234567">
-                <Phone className="mr-2 h-5 w-5" />
-                {t("cta.call")}
+              <a href="https://wa.me/998711234567" target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="mr-2 h-5 w-5" />
+                {t("cta.whatsapp")}
               </a>
             </Button>
           </div>

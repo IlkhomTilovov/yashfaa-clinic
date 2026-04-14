@@ -2,8 +2,9 @@ import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-rout
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Calendar } from "lucide-react";
+import { ArrowLeft, Calendar, Award, Phone, MessageCircle } from "lucide-react";
 import { getDoctorById } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 
@@ -65,10 +66,34 @@ function DoctorProfilePage() {
               <div className="flex-1">
                 <h1 className="text-2xl font-bold md:text-3xl">{getLocalizedField(doctor, "name", lang)}</h1>
                 <p className="mt-2 text-lg text-primary">{getLocalizedField(doctor, "specialization", lang)}</p>
+                {doctor.experience_years && (
+                  <Badge className="mt-3 gap-1.5">
+                    <Award className="h-3.5 w-3.5" />
+                    {doctor.experience_years} {t("doctors_section.experience")}
+                  </Badge>
+                )}
                 {(doctor.bio || doctor.bio_uz || doctor.bio_ru) && <p className="mt-4 text-muted-foreground">{getLocalizedField(doctor, "bio", lang)}</p>}
-                <Button className="mt-6" size="lg" asChild>
-                  <Link to={"/$lang/appointment" as any} params={{ lang } as any}><Calendar className="mr-2 h-5 w-5" />{t("hero.cta_appointment")}</Link>
-                </Button>
+                
+                {/* CTA Buttons */}
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Button size="lg" asChild>
+                    <Link to={"/$lang/appointment" as any} params={{ lang } as any}>
+                      <Calendar className="mr-2 h-5 w-5" />{t("hero.cta_appointment")}
+                    </Link>
+                  </Button>
+                  <Button size="lg" variant="outline" className="border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white" asChild>
+                    <a href="https://wa.me/998711234567" target="_blank" rel="noopener noreferrer">
+                      <MessageCircle className="mr-2 h-5 w-5" />
+                      {t("cta.whatsapp")}
+                    </a>
+                  </Button>
+                  <Button size="lg" variant="outline" asChild>
+                    <a href="tel:+998711234567">
+                      <Phone className="mr-2 h-5 w-5" />
+                      {t("hero.cta_call")}
+                    </a>
+                  </Button>
+                </div>
               </div>
             </div>
           </CardContent>
