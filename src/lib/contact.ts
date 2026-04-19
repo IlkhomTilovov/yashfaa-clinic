@@ -33,8 +33,8 @@ export const CLINIC_BRANCHES: Branch[] = [
     lng: 69.347177,
   },
   {
-    name: "2-filial",
-    name_ru: "Филиал №2",
+    name: "Mirzo Ulug'bek filiali",
+    name_ru: "Филиал Мирзо Улугбек",
     address: "Toshkent sh., Feruza ko'chasi",
     address_ru: "г. Ташкент, ул. Феруза",
     phone: CLINIC_PHONE_DISPLAY_2,
