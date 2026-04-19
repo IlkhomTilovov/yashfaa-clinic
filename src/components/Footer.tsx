@@ -2,12 +2,15 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
+import { useSiteContent } from "@/hooks/useSiteContent";
+import { EditableText } from "@/components/EditableText";
 import logoSvg from "@/assets/logo.svg";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_EMAIL, CLINIC_ADDRESS, CLINIC_TELEGRAM, CLINIC_INSTAGRAM, CLINIC_FACEBOOK, CLINIC_BRANCHES } from "@/lib/contact";
 
 export function Footer() {
   const lang = useLang();
   const { t } = useTranslation();
+  const { get } = useSiteContent();
 
   return (
     <footer className="border-t bg-card">
@@ -17,7 +20,11 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <img src={logoSvg} alt="Yashfaa Clinic" className="h-8" />
             </div>
-            <p className="mt-3 text-sm text-muted-foreground">{t("footer.about")}</p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              <EditableText contentKey="footer.about" fallback={get("footer.about", t("footer.about"))} multiline>
+                {get("footer.about", t("footer.about"))}
+              </EditableText>
+            </p>
             <div className="mt-4 flex items-center gap-3">
               <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0088cc]/10 text-[#0088cc] transition-colors hover:bg-[#0088cc] hover:text-white" aria-label="Telegram">
                 <Send className="h-4 w-4" />
@@ -31,7 +38,11 @@ export function Footer() {
             </div>
           </div>
           <div>
-            <h3 className="mb-3 font-semibold">{t("footer.quick_links")}</h3>
+            <h3 className="mb-3 font-semibold">
+              <EditableText contentKey="footer.quick_links" fallback={get("footer.quick_links", t("footer.quick_links"))}>
+                {get("footer.quick_links", t("footer.quick_links"))}
+              </EditableText>
+            </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to={`/${lang}/services` as any} className="hover:text-primary">{t("nav.services")}</Link></li>
               <li><Link to={`/${lang}/doctors` as any} className="hover:text-primary">{t("nav.doctors")}</Link></li>
@@ -40,7 +51,11 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="mb-3 font-semibold">{t("footer.contact")}</h3>
+            <h3 className="mb-3 font-semibold">
+              <EditableText contentKey="footer.contact" fallback={get("footer.contact", t("footer.contact"))}>
+                {get("footer.contact", t("footer.contact"))}
+              </EditableText>
+            </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href={`tel:${CLINIC_PHONE_TEL}`} className="flex items-center gap-2 hover:text-primary"><Phone className="h-4 w-4 text-primary" /> {CLINIC_PHONE_DISPLAY}</a></li>
               <li><a href={`mailto:${CLINIC_EMAIL}`} className="flex items-center gap-2 hover:text-primary"><Mail className="h-4 w-4 text-primary" /><span>{CLINIC_EMAIL}</span></a></li>
@@ -48,7 +63,11 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="mb-3 font-semibold">{t("footer.working_hours")}</h3>
+            <h3 className="mb-3 font-semibold">
+              <EditableText contentKey="footer.working_hours" fallback={get("footer.working_hours", t("footer.working_hours"))}>
+                {get("footer.working_hours", t("footer.working_hours"))}
+              </EditableText>
+            </h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <div className="flex items-center gap-2 font-medium text-foreground"><Clock className="h-4 w-4 text-primary" /> {lang === "ru" ? CLINIC_BRANCHES[0].name_ru : CLINIC_BRANCHES[0].name}</div>
@@ -65,7 +84,9 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-10 border-t pt-6 text-center text-sm text-muted-foreground">
-          © 2026 <a href="https://sellsoft.uz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Sell Soft</a>. {t("footer.rights")}
+          <EditableText contentKey="footer.copyright" fallback={get("footer.copyright", `© 2026 Sell Soft. ${t("footer.rights")}`)} multiline>
+            {get("footer.copyright", `© 2026 Sell Soft. ${t("footer.rights")}`)}
+          </EditableText>
         </div>
       </div>
     </footer>
