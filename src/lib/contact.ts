@@ -29,8 +29,8 @@ export const CLINIC_BRANCHES: Branch[] = [
     address_ru: "Ташкентская обл., Кибрайский р-н, ул. Университет, 17",
     phone: CLINIC_PHONE_DISPLAY,
     phoneTel: CLINIC_PHONE_TEL,
-    lat: 41.3775,
-    lng: 69.3886,
+    lat: 41.372065,
+    lng: 69.347177,
   },
   {
     name: "2-filial",
