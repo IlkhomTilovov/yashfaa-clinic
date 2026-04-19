@@ -71,14 +71,34 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <div className="flex items-center gap-2 font-medium text-foreground"><Clock className="h-4 w-4 text-primary" /> {lang === "ru" ? CLINIC_BRANCHES[0].name_ru : CLINIC_BRANCHES[0].name}</div>
-                <div className="pl-6">{lang === "ru" ? "Пн–Сб: 8:00–22:00" : "Dush–Shan: 8:00–22:00"}</div>
-                <div className="pl-6">{lang === "ru" ? "Вс: выходной" : "Yakshanba: dam olish"}</div>
+                <div className="pl-6">
+                  <EditableText contentKey="footer.hours.branch1.weekdays" fallback={get("footer.hours.branch1.weekdays", lang === "ru" ? "Пн–Сб: 8:00–22:00" : "Dush–Shan: 8:00–22:00")}>
+                    {get("footer.hours.branch1.weekdays", lang === "ru" ? "Пн–Сб: 8:00–22:00" : "Dush–Shan: 8:00–22:00")}
+                  </EditableText>
+                </div>
+                <div className="pl-6">
+                  <EditableText contentKey="footer.hours.branch1.sunday" fallback={get("footer.hours.branch1.sunday", lang === "ru" ? "Вс: выходной" : "Yakshanba: dam olish")}>
+                    {get("footer.hours.branch1.sunday", lang === "ru" ? "Вс: выходной" : "Yakshanba: dam olish")}
+                  </EditableText>
+                </div>
               </li>
               <li>
                 <div className="flex items-center gap-2 font-medium text-foreground"><Clock className="h-4 w-4 text-primary" /> {lang === "ru" ? CLINIC_BRANCHES[1].name_ru : CLINIC_BRANCHES[1].name}</div>
-                <div className="pl-6">{lang === "ru" ? "Пн–Пт: 8:00–22:00" : "Dush–Juma: 8:00–22:00"}</div>
-                <div className="pl-6">{lang === "ru" ? "Сб: выходной" : "Shanba: dam olish"}</div>
-                <div className="pl-6">{lang === "ru" ? "Вс: 8:00–14:00" : "Yakshanba: 8:00–14:00"}</div>
+                <div className="pl-6">
+                  <EditableText contentKey="footer.hours.branch2.weekdays" fallback={get("footer.hours.branch2.weekdays", lang === "ru" ? "Пн–Пт: 8:00–22:00" : "Dush–Juma: 8:00–22:00")}>
+                    {get("footer.hours.branch2.weekdays", lang === "ru" ? "Пн–Пт: 8:00–22:00" : "Dush–Juma: 8:00–22:00")}
+                  </EditableText>
+                </div>
+                <div className="pl-6">
+                  <EditableText contentKey="footer.hours.branch2.saturday" fallback={get("footer.hours.branch2.saturday", lang === "ru" ? "Сб: выходной" : "Shanba: dam olish")}>
+                    {get("footer.hours.branch2.saturday", lang === "ru" ? "Сб: выходной" : "Shanba: dam olish")}
+                  </EditableText>
+                </div>
+                <div className="pl-6">
+                  <EditableText contentKey="footer.hours.branch2.sunday" fallback={get("footer.hours.branch2.sunday", lang === "ru" ? "Вс: 8:00–14:00" : "Yakshanba: 8:00–14:00")}>
+                    {get("footer.hours.branch2.sunday", lang === "ru" ? "Вс: 8:00–14:00" : "Yakshanba: 8:00–14:00")}
+                  </EditableText>
+                </div>
               </li>
             </ul>
           </div>
