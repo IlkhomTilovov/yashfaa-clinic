@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { useLang } from "@/hooks/useLang";
+import { getSiteContent } from "@/lib/server-functions";
 
 export type SiteContentRow = {
   key: string;
@@ -9,36 +9,33 @@ export type SiteContentRow = {
   value_type: string;
 };
 
-async function fetchSiteContent(): Promise<Record<string, SiteContentRow>> {
-  const { data, error } = await supabase
-    .from("site_content")
-    .select("key, value_uz, value_ru, value_type");
-  if (error) throw new Error(error.message);
-  const map: Record<string, SiteContentRow> = {};
-  for (const row of data ?? []) {
-    map[row.key] = row as SiteContentRow;
-  }
-  return map;
-}
-
 /**
  * Hook to read editable site content from the `site_content` table.
- * Falls back gracefully to provided defaults if a key is missing.
+ *
+ * IMPORTANT: This data is SSR-prefetched in `__root.tsx` loader, so on the
+ * first paint the cache is already hydrated. This means `data` is available
+ * synchronously on the very first render — NO flash of stale/fallback content.
+ *
+ * Fallbacks are still supported (i18n translations remain as defaults for
+ * keys that admin has not overridden in the DB), but the cached DB value
+ * always wins when present.
  */
 export function useSiteContent() {
   const lang = useLang();
   const { data, isLoading } = useQuery({
     queryKey: ["site_content"],
-    queryFn: fetchSiteContent,
-    staleTime: 60_000,
+    queryFn: () => getSiteContent(),
+    staleTime: 5 * 60_000, // 5 min — admin edits invalidate manually
+    refetchOnWindowFocus: false,
+    refetchOnMount: false, // SSR already provided fresh data
   });
 
   const get = (key: string, fallback = ""): string => {
-    const row = data?.[key];
+    const row = (data as Record<string, SiteContentRow> | undefined)?.[key];
     if (!row) return fallback;
     const localized = lang === "ru" ? row.value_ru : row.value_uz;
     return (localized ?? row.value_uz ?? fallback) || fallback;
   };
 
-  return { get, isLoading, raw: data };
+  return { get, isLoading, raw: data as Record<string, SiteContentRow> | undefined };
 }
