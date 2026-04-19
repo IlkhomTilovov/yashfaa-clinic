@@ -12,6 +12,7 @@ import {
 import { getDoctors, getTests, getServices } from "@/lib/server-functions";
 import { HeroSearch } from "@/components/HeroSearch";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
 import heroLab from "@/assets/hero-lab.png";
 
 export const Route = createFileRoute("/$lang/")({
@@ -130,7 +131,7 @@ function HomePage() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-12 rounded-full border-[#0088cc] bg-[#0088cc]/10 px-8 text-base text-[#0088cc] hover:bg-[#0088cc] hover:text-white" asChild>
-                <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer">
+                <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer">
                   <Send className="mr-2 h-5 w-5" />
                   {t("cta.telegram")}
                 </a>
@@ -366,7 +367,7 @@ function HomePage() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-primary-foreground/10 px-8 text-primary-foreground" asChild>
-              <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer">
+              <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer">
                 <Send className="mr-2 h-5 w-5" />
                 {t("cta.telegram")}
               </a>
