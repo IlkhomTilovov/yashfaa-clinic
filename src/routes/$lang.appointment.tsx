@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, CheckCircle2, Loader2 } from "lucide-react";
 import { getDoctors, createAppointment } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
+import { ET } from "@/components/ET";
 
 export const Route = createFileRoute("/$lang/appointment")({
   head: ({ params }) => {
@@ -76,8 +77,12 @@ function AppointmentPage() {
       <section className="px-4 py-16">
         <div className="mx-auto max-w-lg text-center">
           <CheckCircle2 className="mx-auto h-16 w-16 text-primary" />
-          <h2 className="mt-4 text-2xl font-bold">{t("appointment_page.success_title")}</h2>
-          <p className="mt-2 text-muted-foreground">{t("appointment_page.success_message")}</p>
+          <h2 className="mt-4 text-2xl font-bold">
+            <ET k="appointment.success_title" t="appointment_page.success_title" />
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            <ET k="appointment.success_message" t="appointment_page.success_message" multiline />
+          </p>
         </div>
       </section>
     );
@@ -90,12 +95,18 @@ function AppointmentPage() {
     <section className="px-4 py-16">
       <div className="mx-auto max-w-2xl">
         <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold md:text-4xl">{t("appointment_page.title")}</h1>
-          <p className="mt-3 text-muted-foreground">{t("appointment_page.subtitle")}</p>
+          <h1 className="text-3xl font-bold md:text-4xl">
+            <ET k="appointment.title" t="appointment_page.title" />
+          </h1>
+          <p className="mt-3 text-muted-foreground">
+            <ET k="appointment.subtitle" t="appointment_page.subtitle" multiline />
+          </p>
         </div>
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Calendar className="h-5 w-5 text-primary" />{t("appointment_page.form_title")}</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Calendar className="h-5 w-5 text-primary" />
+              <ET k="appointment.form_title" t="appointment_page.form_title" />
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -143,7 +154,7 @@ function AppointmentPage() {
               {error && <p className="text-sm text-destructive">{error}</p>}
               <Button type="submit" size="lg" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t("appointment_page.submit")}
+                <ET k="appointment.submit" t="appointment_page.submit" />
               </Button>
             </form>
           </CardContent>

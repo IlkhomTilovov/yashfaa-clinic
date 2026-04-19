@@ -15,6 +15,7 @@ import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
 import { EditableText } from "@/components/EditableText";
+import { ET } from "@/components/ET";
 import heroLab from "@/assets/hero-lab.jpg";
 
 export const Route = createFileRoute("/$lang/")({
@@ -64,10 +65,10 @@ function HomePage() {
   const ctaSubtitle = get("cta.subtitle", t("cta.subtitle"));
 
   const serviceCards = [
-    { icon: FlaskConical, title: t("services_section.lab"), desc: t("services_section.lab_desc"), link: `/${lang}/tests` as const, color: "bg-blue-50 text-blue-600", hoverColor: "group-hover:bg-blue-600 group-hover:text-white" },
-    { icon: Stethoscope, title: t("services_section.diagnostics"), desc: t("services_section.diagnostics_desc"), link: `/${lang}/services` as const, color: "bg-emerald-50 text-emerald-600", hoverColor: "group-hover:bg-emerald-600 group-hover:text-white" },
-    { icon: Heart, title: t("services_section.cosmetology"), desc: t("services_section.cosmetology_desc"), link: `/${lang}/services` as const, color: "bg-rose-50 text-rose-600", hoverColor: "group-hover:bg-rose-600 group-hover:text-white" },
-    { icon: Calendar, title: t("services_section.reception"), desc: t("services_section.reception_desc"), link: `/${lang}/appointment` as const, color: "bg-amber-50 text-amber-600", hoverColor: "group-hover:bg-amber-600 group-hover:text-white" },
+    { icon: FlaskConical, kBase: "services_section.lab", title: t("services_section.lab"), desc: t("services_section.lab_desc"), link: `/${lang}/tests` as const, color: "bg-blue-50 text-blue-600", hoverColor: "group-hover:bg-blue-600 group-hover:text-white" },
+    { icon: Stethoscope, kBase: "services_section.diagnostics", title: t("services_section.diagnostics"), desc: t("services_section.diagnostics_desc"), link: `/${lang}/services` as const, color: "bg-emerald-50 text-emerald-600", hoverColor: "group-hover:bg-emerald-600 group-hover:text-white" },
+    { icon: Heart, kBase: "services_section.cosmetology", title: t("services_section.cosmetology"), desc: t("services_section.cosmetology_desc"), link: `/${lang}/services` as const, color: "bg-rose-50 text-rose-600", hoverColor: "group-hover:bg-rose-600 group-hover:text-white" },
+    { icon: Calendar, kBase: "services_section.reception", title: t("services_section.reception"), desc: t("services_section.reception_desc"), link: `/${lang}/appointment` as const, color: "bg-amber-50 text-amber-600", hoverColor: "group-hover:bg-amber-600 group-hover:text-white" },
   ];
 
   const statsData = [
@@ -78,16 +79,16 @@ function HomePage() {
   ];
 
   const advantagesData = [
-    { icon: Award, title: t("advantages.experienced_title"), desc: t("advantages.experienced_desc") },
-    { icon: Sparkles, title: t("advantages.modern_title"), desc: t("advantages.modern_desc") },
-    { icon: Zap, title: t("advantages.fast_title"), desc: t("advantages.fast_desc") },
-    { icon: ShieldCheck, title: t("advantages.reliable_title"), desc: t("advantages.reliable_desc") },
+    { icon: Award, kBase: "advantages.experienced", title: t("advantages.experienced_title"), desc: t("advantages.experienced_desc") },
+    { icon: Sparkles, kBase: "advantages.modern", title: t("advantages.modern_title"), desc: t("advantages.modern_desc") },
+    { icon: Zap, kBase: "advantages.fast", title: t("advantages.fast_title"), desc: t("advantages.fast_desc") },
+    { icon: ShieldCheck, kBase: "advantages.reliable", title: t("advantages.reliable_title"), desc: t("advantages.reliable_desc") },
   ];
 
   const testimonialsData = [
-    { text: lang === "ru" ? "Я очень довольна лечением в Yashfaa Clinic. Врачи внимательные и профессиональные. Результаты анализов были готовы быстро." : "Yashfaa Clinic'da davolanganimdan juda mamnunman. Shifokorlar e'tiborli va professional. Tahlil natijalari tez chiqdi.", name: "Dilnoza Karimova", role: t("testimonials.patient") },
-    { text: lang === "ru" ? "Искали педиатра для ребёнка. Здесь нашли отличного специалиста. Клиника чистая и современная." : "Bolam uchun pediatr qidirayotgan edik. Bu yerda juda yaxshi mutaxassis topdik. Klinika toza va zamonaviy.", name: "Sardor Alimov", role: t("testimonials.patient") },
-    { text: lang === "ru" ? "Лабораторный сервис на высшем уровне. Все анализы сдала в одном месте, результаты качественные." : "Laboratoriya xizmati a'lo darajada. Barcha tahlillarni bitta joyda topshirdim va natijalar sifatli chiqdi.", name: "Madina Rahimova", role: t("testimonials.patient") },
+    { kBase: "testimonials.t1", text: lang === "ru" ? "Я очень довольна лечением в Yashfaa Clinic. Врачи внимательные и профессиональные. Результаты анализов были готовы быстро." : "Yashfaa Clinic'da davolanganimdan juda mamnunman. Shifokorlar e'tiborli va professional. Tahlil natijalari tez chiqdi.", name: "Dilnoza Karimova", role: t("testimonials.patient") },
+    { kBase: "testimonials.t2", text: lang === "ru" ? "Искали педиатра для ребёнка. Здесь нашли отличного специалиста. Клиника чистая и современная." : "Bolam uchun pediatr qidirayotgan edik. Bu yerda juda yaxshi mutaxassis topdik. Klinika toza va zamonaviy.", name: "Sardor Alimov", role: t("testimonials.patient") },
+    { kBase: "testimonials.t3", text: lang === "ru" ? "Лабораторный сервис на высшем уровне. Все анализы сдала в одном месте, результаты качественные." : "Laboratoriya xizmati a'lo darajada. Barcha tahlillarni bitta joyda topshirdim va natijalar sifatli chiqdi.", name: "Madina Rahimova", role: t("testimonials.patient") },
   ];
 
   return (
@@ -204,9 +205,15 @@ function HomePage() {
       <section className="px-4 py-20 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="text-center">
-            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("services_section.badge")}</Badge>
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("services_section.title")}</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t("services_section.subtitle")}</p>
+            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+              <ET k="services_section.badge" t="services_section.badge" />
+            </Badge>
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+              <ET k="services_section.title" t="services_section.title" />
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              <ET k="services_section.subtitle" t="services_section.subtitle" multiline />
+            </p>
           </div>
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {serviceCards.map((s) => (
@@ -216,10 +223,14 @@ function HomePage() {
                     <div className={`mb-5 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors ${s.color} ${s.hoverColor}`}>
                       <s.icon className="h-8 w-8" />
                     </div>
-                    <h3 className="text-lg font-bold">{s.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                    <h3 className="text-lg font-bold">
+                      <ET k={`${s.kBase}.title`}>{s.title}</ET>
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      <ET k={`${s.kBase}.desc`} multiline>{s.desc}</ET>
+                    </p>
                     <span className="mt-4 flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                      {t("services_section.details")} <ArrowRight className="h-4 w-4" />
+                      <ET k="services_section.details" t="services_section.details" /> <ArrowRight className="h-4 w-4" />
                     </span>
                   </CardContent>
                 </Card>
@@ -235,13 +246,19 @@ function HomePage() {
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               <div>
-                <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("doctors_section.badge")}</Badge>
-                <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("doctors_section.title")}</h2>
-                <p className="mt-3 max-w-lg text-muted-foreground">{t("doctors_section.subtitle")}</p>
+                <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+                  <ET k="doctors_section.badge" t="doctors_section.badge" />
+                </Badge>
+                <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+                  <ET k="doctors_section.title" t="doctors_section.title" />
+                </h2>
+                <p className="mt-3 max-w-lg text-muted-foreground">
+                  <ET k="doctors_section.subtitle" t="doctors_section.subtitle" multiline />
+                </p>
               </div>
               <Button variant="outline" className="rounded-full" asChild>
                 <Link to="/$lang/doctors" params={{ lang }}>
-                  {t("doctors_section.all_doctors")}
+                  <ET k="doctors_section.all_doctors" t="doctors_section.all_doctors" />
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -286,13 +303,19 @@ function HomePage() {
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               <div>
-                <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("tests_section.badge")}</Badge>
-                <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("tests_section.title")}</h2>
-                <p className="mt-3 max-w-lg text-muted-foreground">{t("tests_section.subtitle")}</p>
+                <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+                  <ET k="tests_section.badge" t="tests_section.badge" />
+                </Badge>
+                <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+                  <ET k="tests_section.title" t="tests_section.title" />
+                </h2>
+                <p className="mt-3 max-w-lg text-muted-foreground">
+                  <ET k="tests_section.subtitle" t="tests_section.subtitle" multiline />
+                </p>
               </div>
               <Button variant="outline" className="rounded-full" asChild>
                 <Link to="/$lang/tests" params={{ lang }}>
-                  {t("tests_section.all_tests")}
+                  <ET k="tests_section.all_tests" t="tests_section.all_tests" />
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -325,16 +348,26 @@ function HomePage() {
       <section className="bg-muted/40 px-4 py-20 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="text-center">
-            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("advantages.badge")}</Badge>
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("advantages.title")}</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t("advantages.subtitle")}</p>
+            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+              <ET k="advantages.badge" t="advantages.badge" />
+            </Badge>
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+              <ET k="advantages.title" t="advantages.title" />
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              <ET k="advantages.subtitle" t="advantages.subtitle" multiline />
+            </p>
           </div>
           <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {advantagesData.map((a) => (
               <div key={a.title} className="flex flex-col items-center text-center">
                 <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/25"><a.icon className="h-8 w-8" /></div>
-                <h3 className="text-lg font-bold text-foreground">{a.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{a.desc}</p>
+                <h3 className="text-lg font-bold text-foreground">
+                  <ET k={`${a.kBase}.title`}>{a.title}</ET>
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  <ET k={`${a.kBase}.desc`} multiline>{a.desc}</ET>
+                </p>
               </div>
             ))}
           </div>
@@ -345,21 +378,33 @@ function HomePage() {
       <section className="px-4 py-20 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="text-center">
-            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("testimonials.badge")}</Badge>
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("testimonials.title")}</h2>
-            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{t("testimonials.subtitle")}</p>
+            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+              <ET k="testimonials.badge" t="testimonials.badge" />
+            </Badge>
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+              <ET k="testimonials.title" t="testimonials.title" />
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+              <ET k="testimonials.subtitle" t="testimonials.subtitle" multiline />
+            </p>
           </div>
           <div className="mt-14 grid gap-6 md:grid-cols-3">
             {testimonialsData.map((tm, i) => (
               <Card key={i} className="relative border-0 bg-card shadow-md">
                 <CardContent className="p-7">
                   <Quote className="mb-4 h-8 w-8 text-primary/20" />
-                  <p className="text-sm leading-relaxed text-muted-foreground">{tm.text}</p>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    <ET k={`${tm.kBase}.text`} multiline>{tm.text}</ET>
+                  </p>
                   <div className="mt-6 flex items-center gap-3 border-t pt-5">
                     <Avatar className="h-10 w-10"><AvatarFallback className="bg-primary/10 font-semibold text-primary">{tm.name.charAt(0)}</AvatarFallback></Avatar>
                     <div>
-                      <p className="text-sm font-semibold text-foreground">{tm.name}</p>
-                      <p className="text-xs text-muted-foreground">{tm.role}</p>
+                      <p className="text-sm font-semibold text-foreground">
+                        <ET k={`${tm.kBase}.name`}>{tm.name}</ET>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        <ET k={`${tm.kBase}.role`}>{tm.role}</ET>
+                      </p>
                     </div>
                     <div className="ml-auto flex gap-0.5 text-amber-400">
                       {[...Array(5)].map((_, j) => (<Star key={j} className="h-3.5 w-3.5 fill-current" />))}
@@ -386,13 +431,13 @@ function HomePage() {
             <Button size="lg" variant="secondary" className="rounded-full px-8 shadow-lg" asChild>
               <Link to="/$lang/appointment" params={{ lang }}>
                 <Calendar className="mr-2 h-5 w-5" />
-                {t("cta.appointment")}
+                <ET k="cta.appointment" t="cta.appointment" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-primary-foreground/10 px-8 text-primary-foreground" asChild>
               <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer">
                 <Send className="mr-2 h-5 w-5" />
-                {t("cta.telegram")}
+                <ET k="cta.telegram" t="cta.telegram" />
               </a>
             </Button>
           </div>
