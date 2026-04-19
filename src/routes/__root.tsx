@@ -1,15 +1,18 @@
 import {
   Outlet,
   Link,
-  createRootRoute,
+  createRootRouteWithContext,
   HeadContent,
   Scripts,
-  useMatches,
 } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
 import appCss from "../styles.css?url";
 import "@/lib/i18n";
+import { getSiteContent } from "@/lib/server-functions";
+
+interface RouterContext {
+  queryClient: QueryClient;
+}
 
 function NotFoundComponent() {
   return (
@@ -35,7 +38,7 @@ function NotFoundComponent() {
   );
 }
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       { title: "Yashfaa Clinic — Zamonaviy tibbiy xizmatlar" },
@@ -45,13 +48,20 @@ export const Route = createRootRoute({
       { name: "twitter:card", content: "summary" },
     ],
   }),
+  // SSR prefetch site_content so editable text is hydrated correctly on first paint
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData({
+      queryKey: ["site_content"],
+      queryFn: () => getSiteContent(),
+      staleTime: 5 * 60_000,
+    });
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
   return (
     <html lang="uz">
       <head>
@@ -64,9 +74,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        {children}
         <Scripts />
       </body>
     </html>
@@ -74,5 +82,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  const { queryClient } = Route.useRouteContext();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+    </QueryClientProvider>
+  );
 }
