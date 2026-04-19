@@ -105,6 +105,8 @@ function HomePage() {
           backgroundRepeat: "no-repeat",
         }}
       >
+        {/* Admin: replace hero image */}
+        <EditableImage contentKey="hero.image" currentUrl={heroImage} folder="hero" />
         {/* Overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/30" />
         <div className="pointer-events-none absolute inset-0">
