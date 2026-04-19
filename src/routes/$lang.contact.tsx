@@ -77,7 +77,15 @@ function ContactPage() {
               <CardContent className="p-6 text-center">
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary"><item.icon className="h-6 w-6" /></div>
                 <h3 className="font-semibold">{item.title}</h3>
-                {item.lines.map((line, i) => (<p key={i} className="mt-1 text-sm text-muted-foreground">{line}</p>))}
+                {item.lines.map((line, i) => {
+                  if (line === "") return <div key={i} className="h-2" />;
+                  const isHeader = line.endsWith(":");
+                  return (
+                    <p key={i} className={isHeader ? "mt-2 text-sm font-semibold text-foreground" : "mt-0.5 text-sm text-muted-foreground"}>
+                      {line}
+                    </p>
+                  );
+                })}
               </CardContent>
             </Card>
           ))}
