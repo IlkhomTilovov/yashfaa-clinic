@@ -58,7 +58,6 @@ function ContactPage() {
         </div>
 
         <div className="mt-12">
-          <h2 className="mb-6 text-2xl font-bold">{t("pages.our_branches") || "Bizning filiallarimiz"}</h2>
           {mounted ? (
             <BranchesMap />
           ) : (
