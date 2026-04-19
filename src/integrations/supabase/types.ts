@@ -390,6 +390,36 @@ export type Database = {
           },
         ]
       }
+      site_content: {
+        Row: {
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+          value_ru: string | null
+          value_type: string
+          value_uz: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+          value_ru?: string | null
+          value_type?: string
+          value_uz?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+          value_ru?: string | null
+          value_type?: string
+          value_uz?: string | null
+        }
+        Relationships: []
+      }
       tests: {
         Row: {
           biomaterial_type: string | null
