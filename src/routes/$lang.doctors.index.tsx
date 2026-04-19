@@ -7,6 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, Award } from "lucide-react";
 import { getDoctors } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
+import { EditableText } from "@/components/EditableText";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export const Route = createFileRoute("/$lang/doctors/")({
   head: ({ params }) => {
@@ -42,13 +44,22 @@ function DoctorsPage() {
   const doctors = Route.useLoaderData();
   const lang = useLang();
   const { t } = useTranslation();
+  const { get } = useSiteContent();
 
   return (
     <section className="px-4 py-16">
       <div className="mx-auto max-w-7xl">
         <div className="text-center">
-          <h1 className="text-3xl font-bold md:text-4xl">{t("pages.doctors_title")}</h1>
-          <p className="mt-3 text-muted-foreground">{t("pages.doctors_subtitle")}</p>
+          <h1 className="text-3xl font-bold md:text-4xl">
+            <EditableText contentKey="doctors.title" fallback={get("doctors.title", t("pages.doctors_title"))}>
+              {get("doctors.title", t("pages.doctors_title"))}
+            </EditableText>
+          </h1>
+          <p className="mt-3 text-muted-foreground">
+            <EditableText contentKey="doctors.subtitle" fallback={get("doctors.subtitle", t("pages.doctors_subtitle"))} multiline>
+              {get("doctors.subtitle", t("pages.doctors_subtitle"))}
+            </EditableText>
+          </p>
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {doctors.map((doc: any) => (

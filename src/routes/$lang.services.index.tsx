@@ -8,6 +8,8 @@ import { Phone, Clock, MapPin, Star, Globe, Briefcase } from "lucide-react";
 import { getServices, getCategories, getDoctors } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
+import { EditableText } from "@/components/EditableText";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export const Route = createFileRoute("/$lang/services/")({
   head: ({ params }) => {
@@ -57,6 +59,7 @@ function ServicesPage() {
   const { services, categories, doctors } = Route.useLoaderData();
   const lang = useLang();
   const { t } = useTranslation();
+  const { get } = useSiteContent();
   const locationLabels = lang === "ru" ? LOCATION_LABELS_RU : LOCATION_LABELS_UZ;
 
   const activeServices = (services as any[]).filter((s: any) => s.is_active);
@@ -112,8 +115,16 @@ function ServicesPage() {
     <section className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <div className="text-center">
-          <h1 className="text-3xl font-bold md:text-4xl">{t("pages.services_title")}</h1>
-          <p className="mt-3 text-muted-foreground">{t("pages.services_subtitle")}</p>
+          <h1 className="text-3xl font-bold md:text-4xl">
+            <EditableText contentKey="services.title" fallback={get("services.title", t("pages.services_title"))}>
+              {get("services.title", t("pages.services_title"))}
+            </EditableText>
+          </h1>
+          <p className="mt-3 text-muted-foreground">
+            <EditableText contentKey="services.subtitle" fallback={get("services.subtitle", t("pages.services_subtitle"))} multiline>
+              {get("services.subtitle", t("pages.services_subtitle"))}
+            </EditableText>
+          </p>
         </div>
         {featuredServices.length > 0 && (
           <div className="mt-12">
@@ -133,8 +144,16 @@ function ServicesPage() {
           )}
         </div>
         <div className="mt-12 rounded-xl bg-muted/50 p-6 text-center">
-          <h3 className="text-lg font-semibold">{t("pages.price_info_title")}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">{t("pages.price_info_subtitle")}</p>
+          <h3 className="text-lg font-semibold">
+            <EditableText contentKey="services.price_info_title" fallback={get("services.price_info_title", t("pages.price_info_title"))}>
+              {get("services.price_info_title", t("pages.price_info_title"))}
+            </EditableText>
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            <EditableText contentKey="services.price_info_subtitle" fallback={get("services.price_info_subtitle", t("pages.price_info_subtitle"))} multiline>
+              {get("services.price_info_subtitle", t("pages.price_info_subtitle"))}
+            </EditableText>
+          </p>
           <a href={`tel:${CLINIC_PHONE_TEL}`} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90">
             <Phone className="h-5 w-5" /> {CLINIC_PHONE_DISPLAY}
           </a>

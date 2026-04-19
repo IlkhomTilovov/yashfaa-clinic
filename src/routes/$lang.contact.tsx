@@ -6,6 +6,8 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2, CLINIC_EMAIL, CLINIC_ADDRESS, CLINIC_BRANCHES } from "@/lib/contact";
 import { BranchesMap } from "@/components/BranchesMap";
+import { EditableText } from "@/components/EditableText";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 export const Route = createFileRoute("/$lang/contact")({
   head: ({ params }) => {
@@ -25,6 +27,7 @@ export const Route = createFileRoute("/$lang/contact")({
 function ContactPage() {
   const { t, i18n } = useTranslation();
   useLang();
+  const { get } = useSiteContent();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -68,8 +71,16 @@ function ContactPage() {
     <section className="px-4 py-16">
       <div className="mx-auto max-w-7xl">
         <div className="text-center">
-          <h1 className="text-3xl font-bold md:text-4xl">{t("pages.contact_title")}</h1>
-          <p className="mt-3 text-muted-foreground">{t("pages.contact_subtitle")}</p>
+          <h1 className="text-3xl font-bold md:text-4xl">
+            <EditableText contentKey="contact.title" fallback={get("contact.title", t("pages.contact_title"))}>
+              {get("contact.title", t("pages.contact_title"))}
+            </EditableText>
+          </h1>
+          <p className="mt-3 text-muted-foreground">
+            <EditableText contentKey="contact.subtitle" fallback={get("contact.subtitle", t("pages.contact_subtitle"))} multiline>
+              {get("contact.subtitle", t("pages.contact_subtitle"))}
+            </EditableText>
+          </p>
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {contactInfo.map((item) => (
