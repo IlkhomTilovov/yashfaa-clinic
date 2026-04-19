@@ -8,15 +8,37 @@ import { Phone, Star, Zap, Clock, FlaskConical, AlertTriangle, MapPin, ArrowLeft
 import { getTestBySlug } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
+import { buildMeta, jsonLdScript, pickLang, truncate, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/tahlil/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.lang === "ru" ? "Анализ" : "Tahlil"} — Yashfaa Clinic` },
-      { rel: "alternate", hrefLang: "uz", href: `/uz/tahlil/${params.slug}` },
-      { rel: "alternate", hrefLang: "ru", href: `/ru/tahlil/${params.slug}` },
-    ],
-  }),
+  head: ({ params, loaderData }) => {
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const isRu = lang === "ru";
+    const test: any = loaderData;
+    const name = test ? pickLang(test, "name", lang) : (isRu ? "Анализ" : "Tahlil");
+    const desc = test ? pickLang(test, "description", lang) : "";
+    const title = `${name} — Yashfaa Clinic Toshkent`;
+    const description = desc
+      ? truncate(desc, 160)
+      : isRu
+        ? `${name} — лабораторный анализ в Yashfaa Clinic Ташкент. Быстрые результаты, доступные цены.`
+        : `${name} — Yashfaa Clinic Toshkentda laboratoriya tahlili. Tezkor natijalar, hamyonbop narxlar.`;
+    const meta = buildMeta({ title, description, pathWithoutLang: `/tahlil/${params.slug}`, lang, type: "article" });
+    const scripts = test
+      ? [
+          jsonLdScript({
+            "@context": "https://schema.org",
+            "@type": "MedicalTest",
+            name,
+            description: truncate(desc, 300) || name,
+            url: `${SITE_URL}/${lang}/tahlil/${params.slug}`,
+            usedToDiagnose: test.biomaterial_type || undefined,
+            inLanguage: lang,
+          }),
+        ]
+      : undefined;
+    return scripts ? { meta, scripts } : { meta };
+  },
   loader: async ({ params }: any) => getTestBySlug({ data: { slug: params.slug } }),
   component: TestDetailPage,
   errorComponent: ({ error, reset }) => {

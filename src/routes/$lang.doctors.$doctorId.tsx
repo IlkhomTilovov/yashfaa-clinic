@@ -8,15 +8,49 @@ import { ArrowLeft, Calendar, Award, Phone, Send } from "lucide-react";
 import { getDoctorById } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
+import { buildMeta, jsonLdScript, pickLang, truncate, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/doctors/$doctorId")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.lang === "ru" ? "Врач" : "Shifokor"} — Yashfaa Clinic` },
-      { rel: "alternate", hrefLang: "uz", href: `/uz/doctors/${params.doctorId}` },
-      { rel: "alternate", hrefLang: "ru", href: `/ru/doctors/${params.doctorId}` },
-    ],
-  }),
+  head: ({ params, loaderData }) => {
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const isRu = lang === "ru";
+    const doc: any = loaderData;
+    const name = doc ? pickLang(doc, "name", lang) : (isRu ? "Врач" : "Shifokor");
+    const spec = doc ? pickLang(doc, "specialization", lang) : "";
+    const bio = doc ? pickLang(doc, "bio", lang) : "";
+    const title = spec
+      ? `${name} — ${spec} | Yashfaa Clinic Toshkent`
+      : `${name} — Yashfaa Clinic Toshkent`;
+    const description = bio
+      ? truncate(bio, 160)
+      : isRu
+        ? `${name}${spec ? `, ${spec}` : ""} — врач Yashfaa Clinic в Ташкенте. Запишитесь на приём онлайн.`
+        : `${name}${spec ? `, ${spec}` : ""} — Yashfaa Clinic shifokori Toshkentda. Onlayn qabulga yoziling.`;
+    const meta = buildMeta({
+      title,
+      description,
+      pathWithoutLang: `/doctors/${params.doctorId}`,
+      lang,
+      type: "profile",
+      image: doc?.image_url || null,
+    });
+    const scripts = doc
+      ? [
+          jsonLdScript({
+            "@context": "https://schema.org",
+            "@type": "Physician",
+            name,
+            medicalSpecialty: spec || undefined,
+            description: truncate(bio, 300) || undefined,
+            image: doc.image_url || undefined,
+            telephone: doc.phone || undefined,
+            url: `${SITE_URL}/${lang}/doctors/${params.doctorId}`,
+            inLanguage: lang,
+          }),
+        ]
+      : undefined;
+    return scripts ? { meta, scripts } : { meta };
+  },
   loader: async ({ params }) => {
     try { return await getDoctorById({ data: { id: params.doctorId } }); }
     catch { throw notFound(); }
