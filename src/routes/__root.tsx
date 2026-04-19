@@ -41,11 +41,14 @@ function NotFoundComponent() {
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
-      { title: "Yashfaa Clinic — Zamonaviy tibbiy xizmatlar" },
-      { name: "description", content: "Yashfaa Clinic — Toshkentdagi zamonaviy tibbiy klinika." },
+      // Base defaults — every shareable route OVERRIDES title/description in its own head()
       { name: "author", content: "Yashfaa Clinic" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "index,follow,max-image-preview:large,max-snippet:-1" },
+      { name: "theme-color", content: "#ffffff" },
+      { property: "og:site_name", content: "Yashfaa Clinic" },
+    ],
+    links: [
+      { rel: "icon", href: "/favicon.ico" },
     ],
   }),
   // SSR prefetch site_content so editable text is hydrated correctly on first paint

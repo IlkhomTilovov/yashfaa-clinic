@@ -8,18 +8,39 @@ import { Phone, Clock, MapPin, Globe, ArrowLeft, MessageCircle, AlertTriangle, S
 import { getServiceBySlug, getDoctors } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
+import { buildMeta, jsonLdScript, pickLang, truncate, SITE_URL } from "@/lib/seo";
 
 const LOCATION_LABELS_UZ: Record<string, string> = { clinic: "Klinikada", home: "Uyga chiqib", online: "Online", clinic_home: "Klinikada / Uyga chiqib" };
 const LOCATION_LABELS_RU: Record<string, string> = { clinic: "В клинике", home: "На дом", online: "Онлайн", clinic_home: "В клинике / На дом" };
 
 export const Route = createFileRoute("/$lang/services/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.lang === "ru" ? "Услуга" : "Xizmat"} — Yashfaa Clinic` },
-      { rel: "alternate", hrefLang: "uz", href: `/uz/services/${params.slug}` },
-      { rel: "alternate", hrefLang: "ru", href: `/ru/services/${params.slug}` },
-    ],
-  }),
+  head: ({ params, loaderData }) => {
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const isRu = lang === "ru";
+    const svc: any = (loaderData as any)?.service;
+    const baseName = svc ? pickLang(svc, "name", lang) : (isRu ? "Услуга" : "Xizmat");
+    const baseDesc = svc ? pickLang(svc, "description", lang) : "";
+    const title = `${baseName} — Yashfaa Clinic Toshkent`;
+    const description = baseDesc
+      ? truncate(baseDesc, 160)
+      : isRu
+        ? `${baseName} в клинике Yashfaa в Ташкенте. Опытные врачи, доступные цены, онлайн запись.`
+        : `${baseName} — Yashfaa Clinic Toshkentda. Tajribali shifokorlar, hamyonbop narxlar, onlayn yozilish.`;
+    const meta = buildMeta({ title, description, pathWithoutLang: `/services/${params.slug}`, lang, type: "article" });
+    const scripts = svc
+      ? [
+          jsonLdScript({
+            "@context": "https://schema.org",
+            "@type": "MedicalProcedure",
+            name: baseName,
+            description: truncate(baseDesc, 300) || baseName,
+            url: `${SITE_URL}/${lang}/services/${params.slug}`,
+            inLanguage: lang,
+          }),
+        ]
+      : undefined;
+    return scripts ? { meta, scripts } : { meta };
+  },
   loader: async ({ params }) => {
     const [service, doctors] = await Promise.all([getServiceBySlug({ data: { slug: params.slug } }), getDoctors()]);
     return { service, doctors };

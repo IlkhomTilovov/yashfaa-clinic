@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SetupRouteImport } from './routes/setup'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LangRouteImport } from './routes/$lang'
@@ -36,9 +38,19 @@ import { Route as LangTahlilSlugRouteImport } from './routes/$lang.tahlil.$slug'
 import { Route as LangServicesSlugRouteImport } from './routes/$lang.services.$slug'
 import { Route as LangDoctorsDoctorIdRouteImport } from './routes/$lang.doctors.$doctorId'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SetupRoute = SetupRouteImport.update({
   id: '/setup',
   path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -172,7 +184,9 @@ export interface FileRoutesByFullPath {
   '/$lang': typeof LangRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/setup': typeof SetupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
   '/$lang/services': typeof LangServicesRouteWithChildren
@@ -198,7 +212,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/setup': typeof SetupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
   '/$lang/tests': typeof LangTestsRoute
@@ -226,7 +242,9 @@ export interface FileRoutesById {
   '/$lang': typeof LangRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/setup': typeof SetupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
   '/$lang/services': typeof LangServicesRouteWithChildren
@@ -256,7 +274,9 @@ export interface FileRouteTypes {
     | '/$lang'
     | '/admin'
     | '/login'
+    | '/robots.txt'
     | '/setup'
+    | '/sitemap.xml'
     | '/$lang/appointment'
     | '/$lang/contact'
     | '/$lang/services'
@@ -282,7 +302,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/robots.txt'
     | '/setup'
+    | '/sitemap.xml'
     | '/$lang/appointment'
     | '/$lang/contact'
     | '/$lang/tests'
@@ -309,7 +331,9 @@ export interface FileRouteTypes {
     | '/$lang'
     | '/admin'
     | '/login'
+    | '/robots.txt'
     | '/setup'
+    | '/sitemap.xml'
     | '/$lang/appointment'
     | '/$lang/contact'
     | '/$lang/services'
@@ -338,16 +362,32 @@ export interface RootRouteChildren {
   LangRoute: typeof LangRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SetupRoute: typeof SetupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/setup': {
       id: '/setup'
       path: '/setup'
       fullPath: '/setup'
       preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -601,7 +641,9 @@ const rootRouteChildren: RootRouteChildren = {
   LangRoute: LangRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SetupRoute: SetupRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

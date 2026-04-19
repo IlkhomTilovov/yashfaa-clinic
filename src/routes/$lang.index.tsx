@@ -18,24 +18,36 @@ import { EditableText } from "@/components/EditableText";
 import { EditableImage } from "@/components/EditableImage";
 import { ET } from "@/components/ET";
 import heroLab from "@/assets/hero-lab.jpg";
+import { buildMeta, jsonLdScript, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/")({
   head: ({ params }) => {
     const isRu = params.lang === "ru";
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const title = isRu
+      ? "Yashfaa Clinic — клиника в Ташкенте | анализы, врачи, диагностика"
+      : "Yashfaa Clinic — Toshkentdagi klinika | tahlillar va shifokorlar";
+    const description = isRu
+      ? "Yashfaa Clinic — современная клиника в Ташкенте. Лабораторные анализы, диагностика, опытные врачи и онлайн запись на приём."
+      : "Yashfaa Clinic — Toshkentdagi zamonaviy klinika. Laboratoriya tahlillari, diagnostika, tajribali shifokorlar va onlayn qabulga yozilish.";
     return {
-      meta: [
-        { title: isRu ? "Yashfaa Clinic — Современные медицинские услуги" : "Yashfaa Clinic — Zamonaviy tibbiy xizmatlar" },
-        { name: "description", content: isRu
-          ? "Yashfaa Clinic — современная клиника в Ташкенте. Лабораторные анализы, диагностика, врачи и онлайн запись."
-          : "Yashfaa Clinic — Toshkentdagi zamonaviy tibbiy klinika. Laboratoriya tahlillari, diagnostika, shifokorlar va onlayn qabulga yozilish."
-        },
-        { property: "og:title", content: isRu ? "Yashfaa Clinic — Современные медицинские услуги" : "Yashfaa Clinic — Zamonaviy tibbiy xizmatlar" },
-        { property: "og:description", content: isRu
-          ? "Современная клиника в Ташкенте. Опытные врачи, лаборатория и диагностика."
-          : "Toshkentdagi zamonaviy tibbiy klinika. Tajribali shifokorlar, laboratoriya va diagnostika xizmatlari."
-        },
-        { rel: "alternate", hrefLang: "uz", href: "/uz" },
-        { rel: "alternate", hrefLang: "ru", href: "/ru" },
+      meta: buildMeta({ title, description, pathWithoutLang: "", lang, type: "website" }),
+      scripts: [
+        jsonLdScript({
+          "@context": "https://schema.org",
+          "@type": "MedicalBusiness",
+          name: "Yashfaa Clinic",
+          url: `${SITE_URL}/${lang}`,
+          telephone: "+998 71 123 45 67",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: isRu ? "Ташкент" : "Toshkent",
+            addressCountry: "UZ",
+          },
+          areaServed: isRu ? "Ташкент" : "Toshkent",
+          medicalSpecialty: ["GeneralPractice", "Diagnostics", "Laboratory"],
+          inLanguage: ["uz", "ru"],
+        }),
       ],
     };
   },

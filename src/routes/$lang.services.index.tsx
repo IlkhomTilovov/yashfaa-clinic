@@ -10,19 +10,19 @@ import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
 import { EditableText } from "@/components/EditableText";
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { buildMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/services/")({
   head: ({ params }) => {
     const isRu = params.lang === "ru";
-    return {
-      meta: [
-        { title: isRu ? "Услуги — Yashfaa Clinic" : "Xizmatlar — Yashfaa Clinic" },
-        { name: "description", content: isRu ? "Медицинские услуги Yashfaa Clinic." : "Yashfaa Clinic tibbiy xizmatlari." },
-        { property: "og:title", content: isRu ? "Услуги — Yashfaa Clinic" : "Xizmatlar — Yashfaa Clinic" },
-        { rel: "alternate", hrefLang: "uz", href: "/uz/services" },
-        { rel: "alternate", hrefLang: "ru", href: "/ru/services" },
-      ],
-    };
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const title = isRu
+      ? "Медицинские услуги в Ташкенте — Yashfaa Clinic"
+      : "Toshkentda tibbiy xizmatlar — Yashfaa Clinic";
+    const description = isRu
+      ? "Полный список медицинских услуг Yashfaa Clinic в Ташкенте: консультации врачей, диагностика, УЗИ, ЭКГ, лечение и онлайн запись."
+      : "Yashfaa Clinic Toshkentdagi to'liq tibbiy xizmatlar: shifokor maslahati, diagnostika, UZI, EKG, davolash va onlayn yozilish.";
+    return { meta: buildMeta({ title, description, pathWithoutLang: "/services", lang }) };
   },
   loader: async () => {
     const [services, categories, doctors] = await Promise.all([getServices(), getCategories(), getDoctors()]);
