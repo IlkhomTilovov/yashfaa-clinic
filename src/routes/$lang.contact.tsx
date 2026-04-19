@@ -38,33 +38,33 @@ function ContactPage() {
   const branch1Name = isRu ? CLINIC_BRANCHES[0].name_ru : CLINIC_BRANCHES[0].name;
   const branch2Name = isRu ? CLINIC_BRANCHES[1].name_ru : CLINIC_BRANCHES[1].name;
 
-  const scheduleLines = isRu
+  const scheduleItems = isRu
     ? [
-        `${branch1Name}:`,
-        "Пн–Сб: 8:00–22:00",
-        "Вс: выходной",
-        "",
-        `${branch2Name}:`,
-        "Пн–Пт: 8:00–22:00",
-        "Сб: выходной",
-        "Вс: 8:00–14:00",
+        { key: "contact.hours.branch1.title", text: `${branch1Name}:` },
+        { key: "contact.hours.branch1.weekdays", text: "Пн–Сб: 8:00–22:00" },
+        { key: "contact.hours.branch1.sunday", text: "Вс: выходной" },
+        { key: "__spacer1", text: "" },
+        { key: "contact.hours.branch2.title", text: `${branch2Name}:` },
+        { key: "contact.hours.branch2.weekdays", text: "Пн–Пт: 8:00–22:00" },
+        { key: "contact.hours.branch2.saturday", text: "Сб: выходной" },
+        { key: "contact.hours.branch2.sunday", text: "Вс: 8:00–14:00" },
       ]
     : [
-        `${branch1Name}:`,
-        "Dush–Shan: 8:00–22:00",
-        "Yakshanba: dam olish",
-        "",
-        `${branch2Name}:`,
-        "Dush–Juma: 8:00–22:00",
-        "Shanba: dam olish",
-        "Yakshanba: 8:00–14:00",
+        { key: "contact.hours.branch1.title", text: `${branch1Name}:` },
+        { key: "contact.hours.branch1.weekdays", text: "Dush–Shan: 8:00–22:00" },
+        { key: "contact.hours.branch1.sunday", text: "Yakshanba: dam olish" },
+        { key: "__spacer1", text: "" },
+        { key: "contact.hours.branch2.title", text: `${branch2Name}:` },
+        { key: "contact.hours.branch2.weekdays", text: "Dush–Juma: 8:00–22:00" },
+        { key: "contact.hours.branch2.saturday", text: "Shanba: dam olish" },
+        { key: "contact.hours.branch2.sunday", text: "Yakshanba: 8:00–14:00" },
       ];
 
   const contactInfo = [
-    { icon: Phone, title: t("pages.phone"), lines: [CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2] },
-    { icon: Mail, title: t("pages.email"), lines: [CLINIC_EMAIL] },
-    { icon: MapPin, title: t("pages.address"), lines: [CLINIC_ADDRESS] },
-    { icon: Clock, title: t("pages.schedule"), lines: scheduleLines },
+    { icon: Phone, title: t("pages.phone"), lines: [{ key: "__phone1", text: CLINIC_PHONE_DISPLAY }, { key: "__phone2", text: CLINIC_PHONE_DISPLAY_2 }] },
+    { icon: Mail, title: t("pages.email"), lines: [{ key: "__email", text: CLINIC_EMAIL }] },
+    { icon: MapPin, title: t("pages.address"), lines: [{ key: "__address", text: CLINIC_ADDRESS }] },
+    { icon: Clock, title: t("pages.schedule"), lines: scheduleItems },
   ];
 
   return (
@@ -89,11 +89,21 @@ function ContactPage() {
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary"><item.icon className="h-6 w-6" /></div>
                 <h3 className="font-semibold">{item.title}</h3>
                 {item.lines.map((line, i) => {
-                  if (line === "") return <div key={i} className="h-2" />;
-                  const isHeader = line.endsWith(":");
+                  if (line.text === "") return <div key={i} className="h-2" />;
+                  const isHeader = line.text.endsWith(":");
+                  const isEditable = !line.key.startsWith("__");
+                  const className = isHeader
+                    ? "mt-2 text-sm font-semibold text-foreground"
+                    : "mt-0.5 text-sm text-muted-foreground";
                   return (
-                    <p key={i} className={isHeader ? "mt-2 text-sm font-semibold text-foreground" : "mt-0.5 text-sm text-muted-foreground"}>
-                      {line}
+                    <p key={i} className={className}>
+                      {isEditable ? (
+                        <EditableText contentKey={line.key} fallback={get(line.key, line.text)}>
+                          {get(line.key, line.text)}
+                        </EditableText>
+                      ) : (
+                        line.text
+                      )}
                     </p>
                   );
                 })}
