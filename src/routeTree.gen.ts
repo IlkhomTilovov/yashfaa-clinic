@@ -22,6 +22,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
+import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminCategoryTypesRouteImport } from './routes/admin.category-types'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminAppointmentsRouteImport } from './routes/admin.appointments'
@@ -100,6 +101,11 @@ const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
   path: '/doctors',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCategoryTypesRoute = AdminCategoryTypesRouteImport.update({
   id: '/category-types',
   path: '/category-types',
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/category-types': typeof AdminCategoryTypesRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
@@ -198,6 +205,7 @@ export interface FileRoutesByTo {
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/category-types': typeof AdminCategoryTypesRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
@@ -226,6 +234,7 @@ export interface FileRoutesById {
   '/admin/appointments': typeof AdminAppointmentsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/category-types': typeof AdminCategoryTypesRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/admin/appointments'
     | '/admin/categories'
     | '/admin/category-types'
+    | '/admin/content'
     | '/admin/doctors'
     | '/admin/login'
     | '/admin/services'
@@ -279,6 +289,7 @@ export interface FileRouteTypes {
     | '/admin/appointments'
     | '/admin/categories'
     | '/admin/category-types'
+    | '/admin/content'
     | '/admin/doctors'
     | '/admin/login'
     | '/admin/services'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/admin/appointments'
     | '/admin/categories'
     | '/admin/category-types'
+    | '/admin/content'
     | '/admin/doctors'
     | '/admin/login'
     | '/admin/services'
@@ -420,6 +432,13 @@ declare module '@tanstack/react-router' {
       path: '/doctors'
       fullPath: '/admin/doctors'
       preLoaderRoute: typeof AdminDoctorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/content': {
+      id: '/admin/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminContentRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/category-types': {
@@ -551,6 +570,7 @@ interface AdminRouteChildren {
   AdminAppointmentsRoute: typeof AdminAppointmentsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminCategoryTypesRoute: typeof AdminCategoryTypesRoute
+  AdminContentRoute: typeof AdminContentRoute
   AdminDoctorsRoute: typeof AdminDoctorsRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminServicesRoute: typeof AdminServicesRoute
@@ -564,6 +584,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAppointmentsRoute: AdminAppointmentsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminCategoryTypesRoute: AdminCategoryTypesRoute,
+  AdminContentRoute: AdminContentRoute,
   AdminDoctorsRoute: AdminDoctorsRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminServicesRoute: AdminServicesRoute,
