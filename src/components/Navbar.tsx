@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLang } from "@/hooks/useLang";
 import logoSvg from "@/assets/logo.svg";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
+import { ET } from "@/components/ET";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -14,12 +15,12 @@ export function Navbar() {
   const navigate = useNavigate();
 
   const navLinks = [
-    { to: `/${lang}` as any, label: t("nav.home") },
-    { to: `/${lang}/services` as any, label: t("nav.services") },
-    { to: `/${lang}/doctors` as any, label: t("nav.doctors") },
-    { to: `/${lang}/tests` as any, label: t("nav.tests") },
-    { to: `/${lang}/appointment` as any, label: t("nav.appointment") },
-    { to: `/${lang}/contact` as any, label: t("nav.contact") },
+    { to: `/${lang}` as any, kBase: "nav.home", label: t("nav.home") },
+    { to: `/${lang}/services` as any, kBase: "nav.services", label: t("nav.services") },
+    { to: `/${lang}/doctors` as any, kBase: "nav.doctors", label: t("nav.doctors") },
+    { to: `/${lang}/tests` as any, kBase: "nav.tests", label: t("nav.tests") },
+    { to: `/${lang}/appointment` as any, kBase: "nav.appointment", label: t("nav.appointment") },
+    { to: `/${lang}/contact` as any, kBase: "nav.contact", label: t("nav.contact") },
   ];
 
   const switchLang = (newLang: string) => {
@@ -36,9 +37,11 @@ export function Navbar() {
         <div className="mx-auto flex max-w-7xl items-center justify-between text-xs">
           <div className="flex items-center gap-4">
             <a href={`tel:${CLINIC_PHONE_TEL}`} className="flex items-center gap-1 hover:underline"><Phone className="h-3 w-3" /> {CLINIC_PHONE_DISPLAY}</a>
-            <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {t("hero.working_hours")}</span>
+            <span className="flex items-center gap-1"><Clock className="h-3 w-3" />
+              <ET k="hero.working_hours" t="hero.working_hours" />
+            </span>
           </div>
-          <span>Toshkent, O'zbekiston</span>
+          <span><ET k="navbar.location" >{lang === "ru" ? "Ташкент, Узбекистан" : "Toshkent, O'zbekiston"}</ET></span>
         </div>
       </div>
 
@@ -50,7 +53,7 @@ export function Navbar() {
         <nav className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
             <Link key={link.to} to={link.to} className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground" activeProps={{ className: "bg-accent text-foreground" }}>
-              {link.label}
+              <ET k={link.kBase}>{link.label}</ET>
             </Link>
           ))}
         </nav>
@@ -86,7 +89,9 @@ export function Navbar() {
             </button>
           </div>
           <Button asChild>
-            <Link to={`/${lang}/appointment` as any}>{t("nav.appointment")}</Link>
+            <Link to={`/${lang}/appointment` as any}>
+              <ET k="nav.appointment_btn" t="nav.appointment" />
+            </Link>
           </Button>
         </div>
 
@@ -100,7 +105,7 @@ export function Navbar() {
           <nav className="flex flex-col gap-1 pt-2">
             {navLinks.map((link) => (
               <Link key={link.to} to={link.to} className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground" activeProps={{ className: "bg-accent text-foreground" }} onClick={() => setMobileOpen(false)}>
-                {link.label}
+                <ET k={link.kBase}>{link.label}</ET>
               </Link>
             ))}
             <div className="mt-2 flex rounded-full border border-border/60 bg-muted/50 p-[3px] shadow-sm">
@@ -112,7 +117,9 @@ export function Navbar() {
               </button>
             </div>
             <Button asChild className="mt-2">
-              <Link to={`/${lang}/appointment` as any} onClick={() => setMobileOpen(false)}>{t("nav.appointment")}</Link>
+              <Link to={`/${lang}/appointment` as any} onClick={() => setMobileOpen(false)}>
+                <ET k="nav.appointment_btn" t="nav.appointment" />
+              </Link>
             </Button>
           </nav>
         </div>
