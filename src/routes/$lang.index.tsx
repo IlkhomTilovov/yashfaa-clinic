@@ -392,8 +392,8 @@ function HomePage() {
       <section className="relative overflow-hidden bg-primary px-4 py-20 text-primary-foreground md:py-28">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
         <div className="relative mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold md:text-4xl">{t("cta.title")}</h2>
-          <p className="mt-5 text-lg text-primary-foreground/80">{t("cta.subtitle")}</p>
+          <h2 className="text-3xl font-bold md:text-4xl">{ctaTitle}</h2>
+          <p className="mt-5 text-lg text-primary-foreground/80">{ctaSubtitle}</p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Button size="lg" variant="secondary" className="rounded-full px-8 shadow-lg" asChild>
               <Link to="/$lang/appointment" params={{ lang }}>
