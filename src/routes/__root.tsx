@@ -5,7 +5,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import appCss from "../styles.css?url";
 import "@/lib/i18n";
 import { getSiteContent } from "@/lib/server-functions";
@@ -82,10 +82,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
-  );
+  // QueryClientProvider is provided by routerWithQueryClient wrapper in router.tsx,
+  // which also handles SSR cache dehydration/hydration automatically.
+  return <Outlet />;
 }
