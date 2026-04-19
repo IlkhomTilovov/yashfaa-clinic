@@ -348,16 +348,26 @@ function HomePage() {
       <section className="bg-muted/40 px-4 py-20 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="text-center">
-            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("advantages.badge")}</Badge>
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("advantages.title")}</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t("advantages.subtitle")}</p>
+            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+              <ET k="advantages.badge" t="advantages.badge" />
+            </Badge>
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+              <ET k="advantages.title" t="advantages.title" />
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              <ET k="advantages.subtitle" t="advantages.subtitle" multiline />
+            </p>
           </div>
           <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {advantagesData.map((a) => (
               <div key={a.title} className="flex flex-col items-center text-center">
                 <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/25"><a.icon className="h-8 w-8" /></div>
-                <h3 className="text-lg font-bold text-foreground">{a.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{a.desc}</p>
+                <h3 className="text-lg font-bold text-foreground">
+                  <ET k={`${a.kBase}.title`}>{a.title}</ET>
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  <ET k={`${a.kBase}.desc`} multiline>{a.desc}</ET>
+                </p>
               </div>
             ))}
           </div>
@@ -368,21 +378,33 @@ function HomePage() {
       <section className="px-4 py-20 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="text-center">
-            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("testimonials.badge")}</Badge>
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("testimonials.title")}</h2>
-            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{t("testimonials.subtitle")}</p>
+            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+              <ET k="testimonials.badge" t="testimonials.badge" />
+            </Badge>
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+              <ET k="testimonials.title" t="testimonials.title" />
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+              <ET k="testimonials.subtitle" t="testimonials.subtitle" multiline />
+            </p>
           </div>
           <div className="mt-14 grid gap-6 md:grid-cols-3">
             {testimonialsData.map((tm, i) => (
               <Card key={i} className="relative border-0 bg-card shadow-md">
                 <CardContent className="p-7">
                   <Quote className="mb-4 h-8 w-8 text-primary/20" />
-                  <p className="text-sm leading-relaxed text-muted-foreground">{tm.text}</p>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    <ET k={`${tm.kBase}.text`} multiline>{tm.text}</ET>
+                  </p>
                   <div className="mt-6 flex items-center gap-3 border-t pt-5">
                     <Avatar className="h-10 w-10"><AvatarFallback className="bg-primary/10 font-semibold text-primary">{tm.name.charAt(0)}</AvatarFallback></Avatar>
                     <div>
-                      <p className="text-sm font-semibold text-foreground">{tm.name}</p>
-                      <p className="text-xs text-muted-foreground">{tm.role}</p>
+                      <p className="text-sm font-semibold text-foreground">
+                        <ET k={`${tm.kBase}.name`}>{tm.name}</ET>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        <ET k={`${tm.kBase}.role`}>{tm.role}</ET>
+                      </p>
                     </div>
                     <div className="ml-auto flex gap-0.5 text-amber-400">
                       {[...Array(5)].map((_, j) => (<Star key={j} className="h-3.5 w-3.5 fill-current" />))}
