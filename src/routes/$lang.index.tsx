@@ -246,9 +246,15 @@ function HomePage() {
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               <div>
-                <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("doctors_section.badge")}</Badge>
-                <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("doctors_section.title")}</h2>
-                <p className="mt-3 max-w-lg text-muted-foreground">{t("doctors_section.subtitle")}</p>
+                <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+                  <ET k="doctors_section.badge" t="doctors_section.badge" />
+                </Badge>
+                <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+                  <ET k="doctors_section.title" t="doctors_section.title" />
+                </h2>
+                <p className="mt-3 max-w-lg text-muted-foreground">
+                  <ET k="doctors_section.subtitle" t="doctors_section.subtitle" multiline />
+                </p>
               </div>
               <Button variant="outline" className="rounded-full" asChild>
                 <Link to="/$lang/doctors" params={{ lang }}>
@@ -297,9 +303,15 @@ function HomePage() {
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               <div>
-                <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("tests_section.badge")}</Badge>
-                <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("tests_section.title")}</h2>
-                <p className="mt-3 max-w-lg text-muted-foreground">{t("tests_section.subtitle")}</p>
+                <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+                  <ET k="tests_section.badge" t="tests_section.badge" />
+                </Badge>
+                <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+                  <ET k="tests_section.title" t="tests_section.title" />
+                </h2>
+                <p className="mt-3 max-w-lg text-muted-foreground">
+                  <ET k="tests_section.subtitle" t="tests_section.subtitle" multiline />
+                </p>
               </div>
               <Button variant="outline" className="rounded-full" asChild>
                 <Link to="/$lang/tests" params={{ lang }}>
