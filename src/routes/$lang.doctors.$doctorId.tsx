@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Calendar, Award, Phone, Send } from "lucide-react";
 import { getDoctorById } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
+import { CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
 
 export const Route = createFileRoute("/$lang/doctors/$doctorId")({
   head: ({ params }) => ({
@@ -82,13 +83,13 @@ function DoctorProfilePage() {
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" className="border-[#0088cc] text-[#0088cc] hover:bg-[#0088cc] hover:text-white" asChild>
-                    <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer">
+                    <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer">
                       <Send className="mr-2 h-5 w-5" />
                       {t("cta.telegram")}
                     </a>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <a href="tel:+998711234567">
+                    <a href={`tel:${CLINIC_PHONE_TEL}`}>
                       <Phone className="mr-2 h-5 w-5" />
                       {t("hero.cta_call")}
                     </a>

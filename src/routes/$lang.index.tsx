@@ -12,6 +12,7 @@ import {
 import { getDoctors, getTests, getServices } from "@/lib/server-functions";
 import { HeroSearch } from "@/components/HeroSearch";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
 import heroLab from "@/assets/hero-lab.png";
 
 export const Route = createFileRoute("/$lang/")({
@@ -130,7 +131,7 @@ function HomePage() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-12 rounded-full border-[#0088cc] bg-[#0088cc]/10 px-8 text-base text-[#0088cc] hover:bg-[#0088cc] hover:text-white" asChild>
-                <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer">
+                <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer">
                   <Send className="mr-2 h-5 w-5" />
                   {t("cta.telegram")}
                 </a>
@@ -147,9 +148,9 @@ function HomePage() {
             </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-muted-foreground md:justify-start">
-              <a href="tel:+998711234567" className="flex items-center gap-2 transition-colors hover:text-primary">
+              <a href={`tel:${CLINIC_PHONE_TEL}`} className="flex items-center gap-2 transition-colors hover:text-primary">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10"><Phone className="h-3.5 w-3.5 text-primary" /></div>
-                +998 71 123 45 67
+                {CLINIC_PHONE_DISPLAY}
               </a>
               <span className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10"><Clock className="h-3.5 w-3.5 text-primary" /></div>
@@ -366,7 +367,7 @@ function HomePage() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-primary-foreground/10 px-8 text-primary-foreground" asChild>
-              <a href="https://t.me/yashfaa_clinic" target="_blank" rel="noopener noreferrer">
+              <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer">
                 <Send className="mr-2 h-5 w-5" />
                 {t("cta.telegram")}
               </a>

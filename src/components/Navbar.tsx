@@ -5,6 +5,7 @@ import { Menu, X, Phone, Clock, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLang } from "@/hooks/useLang";
 import logoSvg from "@/assets/logo.svg";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -34,7 +35,7 @@ export function Navbar() {
       <div className="hidden border-b bg-primary px-4 py-1.5 text-primary-foreground md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between text-xs">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> +998 71 123 45 67</span>
+            <a href={`tel:${CLINIC_PHONE_TEL}`} className="flex items-center gap-1 hover:underline"><Phone className="h-3 w-3" /> {CLINIC_PHONE_DISPLAY}</a>
             <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {t("hero.working_hours")}</span>
           </div>
           <span>Toshkent, O'zbekiston</span>

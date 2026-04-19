@@ -9,6 +9,7 @@ import { Search, Clock, FlaskConical, Star, Zap, Phone } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTests, getCategories } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
 
 export const Route = createFileRoute("/$lang/tests")({
   head: ({ params }) => {
@@ -109,7 +110,7 @@ function TestsPage() {
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
-                      <a href="tel:+998711234567" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+                      <a href={`tel:${CLINIC_PHONE_TEL}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
                         <Phone className="h-4 w-4" /> {t("tests_section.contact_us")}
                       </a>
                     </div>
@@ -122,7 +123,7 @@ function TestsPage() {
         <div className="mt-12 rounded-xl bg-muted/50 p-6 text-center">
           <h3 className="text-lg font-semibold">{t("pages.price_info_title")}</h3>
           <p className="mt-1 text-sm text-muted-foreground">{t("pages.price_info_subtitle")}</p>
-          <a href="tel:+998711234567" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"><Phone className="h-5 w-5" /> +998 71 123 45 67</a>
+          <a href={`tel:${CLINIC_PHONE_TEL}`} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"><Phone className="h-5 w-5" /> {CLINIC_PHONE_DISPLAY}</a>
         </div>
       </div>
     </section>
