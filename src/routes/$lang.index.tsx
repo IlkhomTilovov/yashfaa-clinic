@@ -15,6 +15,7 @@ import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
 import { EditableText } from "@/components/EditableText";
+import { ET } from "@/components/ET";
 import heroLab from "@/assets/hero-lab.jpg";
 
 export const Route = createFileRoute("/$lang/")({
@@ -64,10 +65,10 @@ function HomePage() {
   const ctaSubtitle = get("cta.subtitle", t("cta.subtitle"));
 
   const serviceCards = [
-    { icon: FlaskConical, title: t("services_section.lab"), desc: t("services_section.lab_desc"), link: `/${lang}/tests` as const, color: "bg-blue-50 text-blue-600", hoverColor: "group-hover:bg-blue-600 group-hover:text-white" },
-    { icon: Stethoscope, title: t("services_section.diagnostics"), desc: t("services_section.diagnostics_desc"), link: `/${lang}/services` as const, color: "bg-emerald-50 text-emerald-600", hoverColor: "group-hover:bg-emerald-600 group-hover:text-white" },
-    { icon: Heart, title: t("services_section.cosmetology"), desc: t("services_section.cosmetology_desc"), link: `/${lang}/services` as const, color: "bg-rose-50 text-rose-600", hoverColor: "group-hover:bg-rose-600 group-hover:text-white" },
-    { icon: Calendar, title: t("services_section.reception"), desc: t("services_section.reception_desc"), link: `/${lang}/appointment` as const, color: "bg-amber-50 text-amber-600", hoverColor: "group-hover:bg-amber-600 group-hover:text-white" },
+    { icon: FlaskConical, kBase: "services_section.lab", title: t("services_section.lab"), desc: t("services_section.lab_desc"), link: `/${lang}/tests` as const, color: "bg-blue-50 text-blue-600", hoverColor: "group-hover:bg-blue-600 group-hover:text-white" },
+    { icon: Stethoscope, kBase: "services_section.diagnostics", title: t("services_section.diagnostics"), desc: t("services_section.diagnostics_desc"), link: `/${lang}/services` as const, color: "bg-emerald-50 text-emerald-600", hoverColor: "group-hover:bg-emerald-600 group-hover:text-white" },
+    { icon: Heart, kBase: "services_section.cosmetology", title: t("services_section.cosmetology"), desc: t("services_section.cosmetology_desc"), link: `/${lang}/services` as const, color: "bg-rose-50 text-rose-600", hoverColor: "group-hover:bg-rose-600 group-hover:text-white" },
+    { icon: Calendar, kBase: "services_section.reception", title: t("services_section.reception"), desc: t("services_section.reception_desc"), link: `/${lang}/appointment` as const, color: "bg-amber-50 text-amber-600", hoverColor: "group-hover:bg-amber-600 group-hover:text-white" },
   ];
 
   const statsData = [
@@ -78,16 +79,16 @@ function HomePage() {
   ];
 
   const advantagesData = [
-    { icon: Award, title: t("advantages.experienced_title"), desc: t("advantages.experienced_desc") },
-    { icon: Sparkles, title: t("advantages.modern_title"), desc: t("advantages.modern_desc") },
-    { icon: Zap, title: t("advantages.fast_title"), desc: t("advantages.fast_desc") },
-    { icon: ShieldCheck, title: t("advantages.reliable_title"), desc: t("advantages.reliable_desc") },
+    { icon: Award, kBase: "advantages.experienced", title: t("advantages.experienced_title"), desc: t("advantages.experienced_desc") },
+    { icon: Sparkles, kBase: "advantages.modern", title: t("advantages.modern_title"), desc: t("advantages.modern_desc") },
+    { icon: Zap, kBase: "advantages.fast", title: t("advantages.fast_title"), desc: t("advantages.fast_desc") },
+    { icon: ShieldCheck, kBase: "advantages.reliable", title: t("advantages.reliable_title"), desc: t("advantages.reliable_desc") },
   ];
 
   const testimonialsData = [
-    { text: lang === "ru" ? "Я очень довольна лечением в Yashfaa Clinic. Врачи внимательные и профессиональные. Результаты анализов были готовы быстро." : "Yashfaa Clinic'da davolanganimdan juda mamnunman. Shifokorlar e'tiborli va professional. Tahlil natijalari tez chiqdi.", name: "Dilnoza Karimova", role: t("testimonials.patient") },
-    { text: lang === "ru" ? "Искали педиатра для ребёнка. Здесь нашли отличного специалиста. Клиника чистая и современная." : "Bolam uchun pediatr qidirayotgan edik. Bu yerda juda yaxshi mutaxassis topdik. Klinika toza va zamonaviy.", name: "Sardor Alimov", role: t("testimonials.patient") },
-    { text: lang === "ru" ? "Лабораторный сервис на высшем уровне. Все анализы сдала в одном месте, результаты качественные." : "Laboratoriya xizmati a'lo darajada. Barcha tahlillarni bitta joyda topshirdim va natijalar sifatli chiqdi.", name: "Madina Rahimova", role: t("testimonials.patient") },
+    { kBase: "testimonials.t1", text: lang === "ru" ? "Я очень довольна лечением в Yashfaa Clinic. Врачи внимательные и профессиональные. Результаты анализов были готовы быстро." : "Yashfaa Clinic'da davolanganimdan juda mamnunman. Shifokorlar e'tiborli va professional. Tahlil natijalari tez chiqdi.", name: "Dilnoza Karimova", role: t("testimonials.patient") },
+    { kBase: "testimonials.t2", text: lang === "ru" ? "Искали педиатра для ребёнка. Здесь нашли отличного специалиста. Клиника чистая и современная." : "Bolam uchun pediatr qidirayotgan edik. Bu yerda juda yaxshi mutaxassis topdik. Klinika toza va zamonaviy.", name: "Sardor Alimov", role: t("testimonials.patient") },
+    { kBase: "testimonials.t3", text: lang === "ru" ? "Лабораторный сервис на высшем уровне. Все анализы сдала в одном месте, результаты качественные." : "Laboratoriya xizmati a'lo darajada. Barcha tahlillarni bitta joyda topshirdim va natijalar sifatli chiqdi.", name: "Madina Rahimova", role: t("testimonials.patient") },
   ];
 
   return (
