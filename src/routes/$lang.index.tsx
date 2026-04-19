@@ -14,7 +14,7 @@ import { HeroSearch } from "@/components/HeroSearch";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
-import heroLab from "@/assets/hero-lab.png";
+import heroLab from "@/assets/hero-lab.jpg";
 
 export const Route = createFileRoute("/$lang/")({
   head: ({ params }) => {
@@ -92,16 +92,26 @@ function HomePage() {
   return (
     <>
       {/* ─── HERO ─── */}
-      <section className="relative w-full overflow-hidden bg-gradient-to-b from-secondary/40 to-background">
+      <section
+        className="relative w-screen overflow-hidden"
+        style={{
+          height: "100vh",
+          backgroundImage: `url(${heroImage || heroLab})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/30" />
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
           <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
-          <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "radial-gradient(circle, var(--primary) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
         </div>
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 md:grid-cols-2 md:gap-12 md:py-20 lg:py-24">
+        <div className="relative mx-auto flex h-full max-w-7xl items-center px-4">
           {/* LEFT — Text */}
-          <div className="text-center md:text-left">
+          <div className="max-w-2xl text-center md:text-left">
             <Badge variant="secondary" className="mb-5 gap-1.5 rounded-full border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary backdrop-blur-sm">
               <ShieldCheck className="h-4 w-4" />
               {t("hero.badge")}
@@ -165,37 +175,6 @@ function HomePage() {
 
             <div className="mt-8">
               <HeroSearch doctors={allDoctors as any} services={allServices as any} tests={allTests as any} />
-            </div>
-          </div>
-
-          {/* RIGHT — Doctor image */}
-          <div className="relative hidden md:block">
-            <div className="relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-[2rem] border bg-card shadow-2xl shadow-primary/10">
-              <img
-                src={heroImage || heroLab}
-                alt={lang === "ru" ? "Врач Yashfaa Clinic" : "Yashfaa Clinic shifokori"}
-                className="h-full w-full object-cover"
-              />
-              {/* Floating rating card */}
-              <div className="absolute bottom-5 left-5 flex items-center gap-3 rounded-2xl border bg-card/95 px-4 py-3 shadow-lg backdrop-blur-sm">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50">
-                  <Star className="h-5 w-5 fill-amber-500 text-amber-500" />
-                </div>
-                <div>
-                  <p className="text-lg font-bold leading-none text-foreground">{get("stats.rating", "4.9")}</p>
-                  <p className="mt-1 text-[11px] text-muted-foreground">{lang === "ru" ? "из 1000+ отзывов" : "1000+ izohdan"}</p>
-                </div>
-              </div>
-              {/* Floating patients card */}
-              <div className="absolute right-5 top-5 flex items-center gap-3 rounded-2xl border bg-card/95 px-4 py-3 shadow-lg backdrop-blur-sm">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                  <Users className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-lg font-bold leading-none text-foreground">{get("stats.patients", "10,000+")}</p>
-                  <p className="mt-1 text-[11px] text-muted-foreground">{lang === "ru" ? "пациентов" : "bemor"}</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
