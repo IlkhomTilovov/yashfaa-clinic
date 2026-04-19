@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import logoSvg from "@/assets/logo.svg";
-import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_EMAIL, CLINIC_ADDRESS, CLINIC_TELEGRAM, CLINIC_INSTAGRAM, CLINIC_FACEBOOK } from "@/lib/contact";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_EMAIL, CLINIC_ADDRESS, CLINIC_TELEGRAM, CLINIC_INSTAGRAM, CLINIC_FACEBOOK, CLINIC_BRANCHES } from "@/lib/contact";
 
 export function Footer() {
   const lang = useLang();
@@ -49,9 +49,18 @@ export function Footer() {
           </div>
           <div>
             <h3 className="mb-3 font-semibold">{t("footer.working_hours")}</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> Dush–Juma: 8:00–20:00</li>
-              <li className="pl-6">Shanba: 9:00–16:00</li>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li>
+                <div className="flex items-center gap-2 font-medium text-foreground"><Clock className="h-4 w-4 text-primary" /> {lang === "ru" ? CLINIC_BRANCHES[0].name_ru : CLINIC_BRANCHES[0].name}</div>
+                <div className="pl-6">{lang === "ru" ? "Пн–Сб: 8:00–22:00" : "Dush–Shan: 8:00–22:00"}</div>
+                <div className="pl-6">{lang === "ru" ? "Вс: выходной" : "Yakshanba: dam olish"}</div>
+              </li>
+              <li>
+                <div className="flex items-center gap-2 font-medium text-foreground"><Clock className="h-4 w-4 text-primary" /> {lang === "ru" ? CLINIC_BRANCHES[1].name_ru : CLINIC_BRANCHES[1].name}</div>
+                <div className="pl-6">{lang === "ru" ? "Пн–Пт: 8:00–22:00" : "Dush–Juma: 8:00–22:00"}</div>
+                <div className="pl-6">{lang === "ru" ? "Сб: выходной" : "Shanba: dam olish"}</div>
+                <div className="pl-6">{lang === "ru" ? "Вс: 8:00–14:00" : "Yakshanba: 8:00–14:00"}</div>
+              </li>
             </ul>
           </div>
         </div>
