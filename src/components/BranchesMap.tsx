@@ -3,78 +3,105 @@ import { MapPin, Navigation, Phone } from "lucide-react";
 import { CLINIC_BRANCHES } from "@/lib/contact";
 import { useLang } from "@/hooks/useLang";
 
+declare global {
+  interface Window {
+    ymaps?: any;
+  }
+}
+
+const YMAPS_SRC = "https://api-maps.yandex.ru/2.1/?lang=ru_RU";
+
+function loadYandexMaps(): Promise<any> {
+  if (typeof window === "undefined") return Promise.reject("no window");
+  if (window.ymaps) return Promise.resolve(window.ymaps);
+
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector(`script[src="${YMAPS_SRC}"]`);
+    if (existing) {
+      existing.addEventListener("load", () => window.ymaps?.ready(() => resolve(window.ymaps)));
+      existing.addEventListener("error", reject);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = YMAPS_SRC;
+    script.async = true;
+    script.onload = () => window.ymaps?.ready(() => resolve(window.ymaps));
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
 export function BranchesMap() {
   const lang = useLang();
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [mapReady, setMapReady] = useState(false);
   const mapRef = useRef<any>(null);
-  const markersRef = useRef<any[]>([]);
+  const placemarksRef = useRef<any[]>([]);
 
   useEffect(() => {
     let cancelled = false;
 
     const init = async () => {
-      const L = (await import("leaflet")).default;
-      // @ts-ignore
-      await import("leaflet/dist/leaflet.css");
+      try {
+        const ymaps = await loadYandexMaps();
+        if (cancelled || !containerRef.current || mapRef.current) return;
 
-      if (cancelled || !containerRef.current || mapRef.current) return;
+        const center: [number, number] = [
+          (CLINIC_BRANCHES[0].lat + CLINIC_BRANCHES[1].lat) / 2,
+          (CLINIC_BRANCHES[0].lng + CLINIC_BRANCHES[1].lng) / 2,
+        ];
 
-      const center: [number, number] = [
-        (CLINIC_BRANCHES[0].lat + CLINIC_BRANCHES[1].lat) / 2,
-        (CLINIC_BRANCHES[0].lng + CLINIC_BRANCHES[1].lng) / 2,
-      ];
+        const map = new ymaps.Map(containerRef.current, {
+          center,
+          zoom: 12,
+          controls: ["zoomControl", "fullscreenControl", "typeSelector"],
+        });
 
-      const map = L.map(containerRef.current, {
-        center,
-        zoom: 11,
-        scrollWheelZoom: false,
-      });
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap",
-        maxZoom: 19,
-      }).addTo(map);
-
-      const icon = L.divIcon({
-        className: "",
-        html: `<div style="background:hsl(var(--primary));width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;"><div style="width:10px;height:10px;background:white;border-radius:50%;transform:rotate(45deg);"></div></div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-      });
-
-      CLINIC_BRANCHES.forEach((b, idx) => {
-        const marker = L.marker([b.lat, b.lng], { icon }).addTo(map);
         const isRu = lang === "ru";
-        marker.bindPopup(
-          `<div style="font-family:inherit;min-width:180px;"><strong style="font-size:14px;">${isRu ? b.name_ru : b.name}</strong><br/><span style="color:#666;font-size:12px;">${isRu ? b.address_ru : b.address}</span><br/><a href="tel:${b.phoneTel}" style="color:hsl(var(--primary));font-size:12px;font-weight:600;">${b.phone}</a></div>`
-        );
-        marker.on("click", () => setActiveIdx(idx));
-        markersRef.current.push(marker);
-      });
 
-      mapRef.current = map;
-      setMapReady(true);
+        CLINIC_BRANCHES.forEach((b, idx) => {
+          const placemark = new ymaps.Placemark(
+            [b.lat, b.lng],
+            {
+              hintContent: isRu ? b.name_ru : b.name,
+              balloonContentHeader: `<strong>${isRu ? b.name_ru : b.name}</strong>`,
+              balloonContentBody: `<div style="font-size:13px;color:#333;">${isRu ? b.address_ru : b.address}</div>`,
+              balloonContentFooter: `<a href="tel:${b.phoneTel}" style="color:#0066cc;font-weight:600;">${b.phone}</a>`,
+            },
+            {
+              preset: idx === 0 ? "islands#blueMedicalIcon" : "islands#redMedicalIcon",
+            }
+          );
+          placemark.events.add("click", () => setActiveIdx(idx));
+          map.geoObjects.add(placemark);
+          placemarksRef.current.push(placemark);
+        });
+
+        mapRef.current = map;
+        setMapReady(true);
+      } catch (err) {
+        console.error("Yandex Maps load failed:", err);
+      }
     };
 
     init();
     return () => {
       cancelled = true;
       if (mapRef.current) {
-        mapRef.current.remove();
+        mapRef.current.destroy();
         mapRef.current = null;
-        markersRef.current = [];
+        placemarksRef.current = [];
       }
     };
   }, [lang]);
 
   const focusBranch = (idx: number) => {
     setActiveIdx(idx);
-    if (mapRef.current && markersRef.current[idx]) {
+    if (mapRef.current && placemarksRef.current[idx]) {
       const b = CLINIC_BRANCHES[idx];
-      mapRef.current.flyTo([b.lat, b.lng], 15, { duration: 1 });
-      markersRef.current[idx].openPopup();
+      mapRef.current.setCenter([b.lat, b.lng], 16, { duration: 600 });
+      placemarksRef.current[idx].balloon.open();
     }
   };
 
@@ -106,7 +133,7 @@ export function BranchesMap() {
               </div>
             </div>
             <a
-              href={`https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}`}
+              href={`https://yandex.com/maps/?rtext=~${b.lat},${b.lng}&rtt=auto`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
@@ -117,10 +144,10 @@ export function BranchesMap() {
           </button>
         ))}
       </div>
-      <div className="overflow-hidden rounded-xl border bg-muted">
+      <div className="relative overflow-hidden rounded-xl border bg-muted">
         <div ref={containerRef} className="h-[400px] w-full md:h-[450px]" />
         {!mapReady && (
-          <div className="flex h-[400px] items-center justify-center text-sm text-muted-foreground md:h-[450px]">
+          <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
             {isRu ? "Загрузка карты..." : "Xarita yuklanmoqda..."}
           </div>
         )}
