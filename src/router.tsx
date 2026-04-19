@@ -1,5 +1,6 @@
 import { createRouter, useRouter } from "@tanstack/react-router";
 import { QueryClient } from "@tanstack/react-query";
+import { routerWithQueryClient } from "@tanstack/react-router-with-query";
 import { routeTree } from "./routeTree.gen";
 
 function DefaultErrorComponent({
@@ -81,5 +82,10 @@ export const getRouter = () => {
     defaultErrorComponent: DefaultErrorComponent,
   });
 
-  return router;
+  // Wrap router with Query SSR integration:
+  // - dehydrates QueryClient cache on the server
+  // - hydrates it on the client BEFORE the first render
+  // - provides QueryClientProvider automatically
+  // This eliminates flash of fallback content (FOUC) and hydration mismatches.
+  return routerWithQueryClient(router, queryClient);
 };
