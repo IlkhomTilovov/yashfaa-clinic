@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2, CLINIC_EMAIL, CLINIC_ADDRESS } from "@/lib/contact";
+import { BranchesMap } from "@/components/BranchesMap";
 
 export const Route = createFileRoute("/$lang/contact")({
   head: ({ params }) => {
@@ -23,6 +25,11 @@ export const Route = createFileRoute("/$lang/contact")({
 function ContactPage() {
   const { t } = useTranslation();
   useLang();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const contactInfo = [
     { icon: Phone, title: t("pages.phone"), lines: [CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2] },
@@ -49,11 +56,15 @@ function ContactPage() {
             </Card>
           ))}
         </div>
-        <Card className="mt-12 overflow-hidden">
-          <div className="aspect-[16/7]">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.8!2d69.2787!3d41.3111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE4JzQwLjAiTiA2OcKwMTYnNDMuMyJF!5e0!3m2!1sen!2s!4v1" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Yashfaa Clinic" />
-          </div>
-        </Card>
+
+        <div className="mt-12">
+          <h2 className="mb-6 text-2xl font-bold">{t("pages.our_branches") || "Bizning filiallarimiz"}</h2>
+          {mounted ? (
+            <BranchesMap />
+          ) : (
+            <div className="h-[450px] rounded-xl border bg-muted" />
+          )}
+        </div>
       </div>
     </section>
   );
