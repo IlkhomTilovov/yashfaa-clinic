@@ -12,6 +12,7 @@ import {
 import { getDoctors, getTests, getServices } from "@/lib/server-functions";
 import { HeroSearch } from "@/components/HeroSearch";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
+import { useSiteContent } from "@/hooks/useSiteContent";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
 import heroLab from "@/assets/hero-lab.png";
 
@@ -52,6 +53,14 @@ function HomePage() {
   const { doctors, tests, allDoctors, allServices, allTests } = Route.useLoaderData();
   const lang = useLang();
   const { t } = useTranslation();
+  const { get } = useSiteContent();
+
+  // Editable content (DB → fallback to i18n)
+  const heroTitle = get("hero.title", `${t("hero.title_1")} ${t("hero.title_2")}`);
+  const heroSubtitle = get("hero.subtitle", t("hero.subtitle"));
+  const heroImage = get("hero.image", "");
+  const ctaTitle = get("cta.title", t("cta.title"));
+  const ctaSubtitle = get("cta.subtitle", t("cta.subtitle"));
 
   const serviceCards = [
     { icon: FlaskConical, title: t("services_section.lab"), desc: t("services_section.lab_desc"), link: `/${lang}/tests` as const, color: "bg-blue-50 text-blue-600", hoverColor: "group-hover:bg-blue-600 group-hover:text-white" },
@@ -61,9 +70,9 @@ function HomePage() {
   ];
 
   const statsData = [
-    { icon: Users, value: "50+", label: t("stats.doctors") },
-    { icon: Activity, value: "10,000+", label: t("stats.patients") },
-    { icon: FlaskConical, value: "200+", label: t("stats.tests") },
+    { icon: Users, value: get("stats.doctors", "50+"), label: t("stats.doctors") },
+    { icon: Activity, value: get("stats.patients", "10,000+"), label: t("stats.patients") },
+    { icon: FlaskConical, value: get("stats.tests_count", "200+"), label: t("stats.tests") },
     { icon: Clock, value: "24/7", label: t("stats.availability") },
   ];
 
