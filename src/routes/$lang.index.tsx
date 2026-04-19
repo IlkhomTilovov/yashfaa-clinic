@@ -129,15 +129,21 @@ function HomePage() {
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:justify-start">
               <div className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700">
                 <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                {get("stats.rating", "4.9")} {lang === "ru" ? "рейтинг" : "reyting"}
+                <EditableText contentKey="stats.rating" fallback={get("stats.rating", "4.9")}>{get("stats.rating", "4.9")}</EditableText>
+                {" "}
+                <EditableText contentKey="stats.rating_label" fallback={get("stats.rating_label", lang === "ru" ? "рейтинг" : "reyting")}>{get("stats.rating_label", lang === "ru" ? "рейтинг" : "reyting")}</EditableText>
               </div>
               <div className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary">
                 <Users className="h-4 w-4" />
-                {get("stats.doctors", "50+")} {lang === "ru" ? "врачей" : "shifokor"}
+                <EditableText contentKey="stats.doctors" fallback={get("stats.doctors", "50+")}>{get("stats.doctors", "50+")}</EditableText>
+                {" "}
+                <EditableText contentKey="stats.doctors_label" fallback={get("stats.doctors_label", lang === "ru" ? "врачей" : "shifokor")}>{get("stats.doctors_label", lang === "ru" ? "врачей" : "shifokor")}</EditableText>
               </div>
               <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-700">
                 <CheckCircle className="h-4 w-4" />
-                {get("stats.patients", "10,000+")} {lang === "ru" ? "пациентов" : "bemor"}
+                <EditableText contentKey="stats.patients" fallback={get("stats.patients", "10,000+")}>{get("stats.patients", "10,000+")}</EditableText>
+                {" "}
+                <EditableText contentKey="stats.patients_label" fallback={get("stats.patients_label", lang === "ru" ? "пациентов" : "bemor")}>{get("stats.patients_label", lang === "ru" ? "пациентов" : "bemor")}</EditableText>
               </div>
             </div>
 
