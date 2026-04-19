@@ -14,6 +14,7 @@ import { HeroSearch } from "@/components/HeroSearch";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
+import { EditableText } from "@/components/EditableText";
 import heroLab from "@/assets/hero-lab.jpg";
 
 export const Route = createFileRoute("/$lang/")({
@@ -70,10 +71,10 @@ function HomePage() {
   ];
 
   const statsData = [
-    { icon: Users, value: get("stats.doctors", "50+"), label: t("stats.doctors") },
-    { icon: Activity, value: get("stats.patients", "10,000+"), label: t("stats.patients") },
-    { icon: FlaskConical, value: get("stats.tests_count", "200+"), label: t("stats.tests") },
-    { icon: Clock, value: "24/7", label: t("stats.availability") },
+    { icon: Users, value: get("stats.doctors", "50+"), label: t("stats.doctors"), contentKey: "stats.doctors" },
+    { icon: Activity, value: get("stats.patients", "10,000+"), label: t("stats.patients"), contentKey: "stats.patients" },
+    { icon: FlaskConical, value: get("stats.tests_count", "200+"), label: t("stats.tests"), contentKey: "stats.tests_count" },
+    { icon: Clock, value: "24/7", label: t("stats.availability"), contentKey: "stats.availability_value" },
   ];
 
   const advantagesData = [
@@ -117,9 +118,11 @@ function HomePage() {
               {t("hero.badge")}
             </Badge>
             <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-5xl lg:text-[3.25rem]">
-              {heroTitle}
+              <EditableText contentKey="hero.title" fallback={heroTitle}>{heroTitle}</EditableText>
             </h1>
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">{heroSubtitle}</p>
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
+              <EditableText contentKey="hero.subtitle" fallback={heroSubtitle} multiline>{heroSubtitle}</EditableText>
+            </p>
 
             {/* ─── Trust Badges ─── */}
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:justify-start">
@@ -187,7 +190,9 @@ function HomePage() {
             {statsData.map((s) => (
               <div key={s.label} className="flex flex-col items-center gap-2 text-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary"><s.icon className="h-6 w-6" /></div>
-                <span className="text-2xl font-extrabold text-foreground md:text-3xl">{s.value}</span>
+                <span className="text-2xl font-extrabold text-foreground md:text-3xl">
+                  <EditableText contentKey={s.contentKey} fallback={s.value}>{s.value}</EditableText>
+                </span>
                 <span className="text-xs text-muted-foreground md:text-sm">{s.label}</span>
               </div>
             ))}
@@ -371,8 +376,12 @@ function HomePage() {
       <section className="relative overflow-hidden bg-primary px-4 py-20 text-primary-foreground md:py-28">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
         <div className="relative mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold md:text-4xl">{ctaTitle}</h2>
-          <p className="mt-5 text-lg text-primary-foreground/80">{ctaSubtitle}</p>
+          <h2 className="text-3xl font-bold md:text-4xl">
+            <EditableText contentKey="cta.title" fallback={ctaTitle}>{ctaTitle}</EditableText>
+          </h2>
+          <p className="mt-5 text-lg text-primary-foreground/80">
+            <EditableText contentKey="cta.subtitle" fallback={ctaSubtitle} multiline>{ctaSubtitle}</EditableText>
+          </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Button size="lg" variant="secondary" className="rounded-full px-8 shadow-lg" asChild>
               <Link to="/$lang/appointment" params={{ lang }}>
