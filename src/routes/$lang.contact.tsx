@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
-import { CLINIC_PHONE_DISPLAY, CLINIC_EMAIL, CLINIC_ADDRESS } from "@/lib/contact";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2, CLINIC_EMAIL, CLINIC_ADDRESS } from "@/lib/contact";
 
 export const Route = createFileRoute("/$lang/contact")({
   head: ({ params }) => {
@@ -25,7 +25,7 @@ function ContactPage() {
   useLang();
 
   const contactInfo = [
-    { icon: Phone, title: t("pages.phone"), lines: [CLINIC_PHONE_DISPLAY] },
+    { icon: Phone, title: t("pages.phone"), lines: [CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2] },
     { icon: Mail, title: t("pages.email"), lines: [CLINIC_EMAIL] },
     { icon: MapPin, title: t("pages.address"), lines: [CLINIC_ADDRESS] },
     { icon: Clock, title: t("pages.schedule"), lines: ["Dush–Juma: 8:00–20:00", "Shanba: 9:00–16:00"] },
