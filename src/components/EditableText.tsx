@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type ElementType } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +11,7 @@ interface EditableTextProps {
   contentKey: string;
   fallback?: string;
   multiline?: boolean;
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
   className?: string;
   children?: React.ReactNode;
 }
@@ -70,15 +70,21 @@ export function EditableText({
         .maybeSingle();
 
       if (existing?.id) {
+        const updatePayload: Record<string, string> = { [field]: value };
         const { error } = await supabase
           .from("site_content")
-          .update({ [field]: value })
+          .update(updatePayload as any)
           .eq("id", existing.id);
         if (error) throw error;
       } else {
+        const insertPayload = {
+          key: contentKey,
+          value_type: "text",
+          [field]: value,
+        };
         const { error } = await supabase
           .from("site_content")
-          .insert({ key: contentKey, [field]: value, value_type: "text" });
+          .insert(insertPayload as any);
         if (error) throw error;
       }
 
