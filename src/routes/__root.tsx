@@ -6,6 +6,8 @@ import {
   Scripts,
   useMatches,
 } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 import appCss from "../styles.css?url";
 import "@/lib/i18n";
 
