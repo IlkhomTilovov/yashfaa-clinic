@@ -14,6 +14,7 @@ import {
   Briefcase,
   Settings,
   Layers,
+  FileText,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -35,6 +36,7 @@ const sidebarLinks = [
   { to: "/admin/category-types" as const, label: "Kategoriya turlari", icon: Layers },
   { to: "/admin/services" as const, label: "Xizmatlar", icon: Briefcase },
   { to: "/admin/appointments" as const, label: "Uchrashuvlar", icon: CalendarCheck },
+  { to: "/admin/content" as const, label: "Sayt mazmuni", icon: FileText },
   { to: "/admin/settings" as const, label: "Sozlamalar", icon: Settings },
 ];
 
@@ -108,11 +110,11 @@ function AdminLayout() {
             <SidebarLink key={link.label} link={link} onClick={() => setSidebarOpen(false)} />
           ))}
           <p className="mb-2 mt-5 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Boshqaruv</p>
-          {sidebarLinks.slice(1, 7).map((link) => (
+          {sidebarLinks.slice(1, 8).map((link) => (
             <SidebarLink key={link.label} link={link} onClick={() => setSidebarOpen(false)} />
           ))}
           <p className="mb-2 mt-5 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Tizim</p>
-          {sidebarLinks.slice(7).map((link) => (
+          {sidebarLinks.slice(8).map((link) => (
             <SidebarLink key={link.label} link={link} onClick={() => setSidebarOpen(false)} />
           ))}
         </nav>
