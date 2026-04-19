@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
-import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2, CLINIC_EMAIL, CLINIC_ADDRESS } from "@/lib/contact";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2, CLINIC_EMAIL, CLINIC_ADDRESS, CLINIC_BRANCHES } from "@/lib/contact";
+import { useLang as useLangHook } from "@/hooks/useLang";
 import { BranchesMap } from "@/components/BranchesMap";
 
 export const Route = createFileRoute("/$lang/contact")({
