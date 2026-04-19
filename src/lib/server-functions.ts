@@ -90,6 +90,20 @@ export const createAppointment = createServerFn({ method: "POST" })
     return { success: true };
   });
 
+export const getSiteContent = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = await getSupabase();
+  const { data, error } = await supabase
+    .from("site_content")
+    .select("key, value_uz, value_ru, value_type");
+  if (error) throw new Error(error.message);
+  // Return as a map keyed by `key` so the client can hydrate directly
+  const map: Record<string, { key: string; value_uz: string | null; value_ru: string | null; value_type: string }> = {};
+  for (const row of data ?? []) {
+    map[row.key] = row as any;
+  }
+  return map;
+});
+
 export const getServices = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = await getSupabase();
   const { data, error } = await supabase
