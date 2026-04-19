@@ -9,18 +9,19 @@ import { getDoctors } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { EditableText } from "@/components/EditableText";
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { buildMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/doctors/")({
   head: ({ params }) => {
     const isRu = params.lang === "ru";
-    return {
-      meta: [
-        { title: isRu ? "Врачи — Yashfaa Clinic" : "Shifokorlar — Yashfaa Clinic" },
-        { name: "description", content: isRu ? "Врачи Yashfaa Clinic — опытная команда специалистов." : "Yashfaa Clinic shifokorlari — tajribali mutaxassislar jamoasi." },
-        { rel: "alternate", hrefLang: "uz", href: "/uz/doctors" },
-        { rel: "alternate", hrefLang: "ru", href: "/ru/doctors" },
-      ],
-    };
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const title = isRu
+      ? "Опытные врачи в Ташкенте — Yashfaa Clinic"
+      : "Toshkentdagi malakali shifokorlar — Yashfaa Clinic";
+    const description = isRu
+      ? "Команда опытных врачей Yashfaa Clinic в Ташкенте. Терапия, диагностика, узкие специалисты. Онлайн запись на приём."
+      : "Yashfaa Clinic Toshkentdagi malakali shifokorlar jamoasi. Terapiya, diagnostika, tor mutaxassislar. Onlayn qabulga yozilish.";
+    return { meta: buildMeta({ title, description, pathWithoutLang: "/doctors", lang }) };
   },
   loader: () => getDoctors(),
   component: DoctorsPage,

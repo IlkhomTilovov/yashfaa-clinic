@@ -8,18 +8,19 @@ import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_DISPLAY_2, CLINIC_EMAIL, CLINIC_ADDR
 import { BranchesMap } from "@/components/BranchesMap";
 import { EditableText } from "@/components/EditableText";
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { buildMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/contact")({
   head: ({ params }) => {
     const isRu = params.lang === "ru";
-    return {
-      meta: [
-        { title: isRu ? "Контакты — Yashfaa Clinic" : "Aloqa — Yashfaa Clinic" },
-        { name: "description", content: isRu ? "Свяжитесь с Yashfaa Clinic. Адрес, телефон и время работы." : "Yashfaa Clinic bilan bog'laning. Manzil, telefon raqami va ish vaqti." },
-        { rel: "alternate", hrefLang: "uz", href: "/uz/contact" },
-        { rel: "alternate", hrefLang: "ru", href: "/ru/contact" },
-      ],
-    };
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const title = isRu
+      ? "Контакты Yashfaa Clinic — адрес и телефон в Ташкенте"
+      : "Yashfaa Clinic aloqa — Toshkentdagi manzil va telefon";
+    const description = isRu
+      ? "Свяжитесь с Yashfaa Clinic в Ташкенте: адреса филиалов, телефоны, время работы и онлайн запись на приём."
+      : "Yashfaa Clinic bilan Toshkentda bog'laning: filial manzillari, telefonlar, ish vaqti va onlayn qabulga yozilish.";
+    return { meta: buildMeta({ title, description, pathWithoutLang: "/contact", lang }) };
   },
   component: ContactPage,
 });

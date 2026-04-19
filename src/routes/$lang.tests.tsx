@@ -11,18 +11,19 @@ import { getTests, getCategories } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
 import { ET } from "@/components/ET";
+import { buildMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/tests")({
   head: ({ params }) => {
     const isRu = params.lang === "ru";
-    return {
-      meta: [
-        { title: isRu ? "Анализы — Yashfaa Clinic" : "Tahlillar — Yashfaa Clinic" },
-        { name: "description", content: isRu ? "Список лабораторных анализов Yashfaa Clinic." : "Yashfaa Clinic laboratoriya tahlillari ro'yxati." },
-        { rel: "alternate", hrefLang: "uz", href: "/uz/tests" },
-        { rel: "alternate", hrefLang: "ru", href: "/ru/tests" },
-      ],
-    };
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const title = isRu
+      ? "Лабораторные анализы в Ташкенте — Yashfaa Clinic"
+      : "Toshkentda laboratoriya tahlillari — Yashfaa Clinic";
+    const description = isRu
+      ? "Полный список лабораторных анализов Yashfaa Clinic: общий анализ крови, биохимия, гормоны, ПЦР. Быстрые результаты и онлайн запись."
+      : "Yashfaa Clinic to'liq laboratoriya tahlillari ro'yxati: umumiy qon, biokimyo, gormonlar, PCR. Tezkor natijalar va onlayn yozilish.";
+    return { meta: buildMeta({ title, description, pathWithoutLang: "/tests", lang }) };
   },
   loader: async () => {
     const [tests, categories] = await Promise.all([getTests(), getCategories()]);

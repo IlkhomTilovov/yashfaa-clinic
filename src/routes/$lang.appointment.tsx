@@ -11,18 +11,19 @@ import { Calendar, CheckCircle2, Loader2 } from "lucide-react";
 import { getDoctors, createAppointment } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { ET } from "@/components/ET";
+import { buildMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/appointment")({
   head: ({ params }) => {
     const isRu = params.lang === "ru";
-    return {
-      meta: [
-        { title: isRu ? "Запись на приём — Yashfaa Clinic" : "Qabulga yozilish — Yashfaa Clinic" },
-        { name: "description", content: isRu ? "Онлайн запись на приём в Yashfaa Clinic." : "Yashfaa Clinic onlayn qabulga yozilish." },
-        { rel: "alternate", hrefLang: "uz", href: "/uz/appointment" },
-        { rel: "alternate", hrefLang: "ru", href: "/ru/appointment" },
-      ],
-    };
+    const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
+    const title = isRu
+      ? "Онлайн запись на приём — Yashfaa Clinic в Ташкенте"
+      : "Onlayn qabulga yozilish — Toshkentdagi Yashfaa Clinic";
+    const description = isRu
+      ? "Запишитесь на приём к врачам Yashfaa Clinic онлайн за минуту. Удобное время, опытные специалисты, доступные цены в Ташкенте."
+      : "Yashfaa Clinic shifokorlariga onlayn qabulga bir daqiqada yoziling. Qulay vaqt, tajribali mutaxassislar, Toshkentda hamyonbop narxlar.";
+    return { meta: buildMeta({ title, description, pathWithoutLang: "/appointment", lang }) };
   },
   loader: () => getDoctors(),
   component: AppointmentPage,
