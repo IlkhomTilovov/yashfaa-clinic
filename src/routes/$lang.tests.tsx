@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getTests, getCategories } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
+import { ET } from "@/components/ET";
 
 export const Route = createFileRoute("/$lang/tests")({
   head: ({ params }) => {
@@ -69,8 +70,12 @@ function TestsPage() {
     <section className="px-4 py-16">
       <div className="mx-auto max-w-5xl">
         <div className="text-center">
-          <h1 className="text-3xl font-bold md:text-4xl">{t("pages.tests_title")}</h1>
-          <p className="mt-3 text-muted-foreground">{t("pages.tests_subtitle")}</p>
+          <h1 className="text-3xl font-bold md:text-4xl">
+            <ET k="tests.title" t="pages.tests_title" />
+          </h1>
+          <p className="mt-3 text-muted-foreground">
+            <ET k="tests.subtitle" t="pages.tests_subtitle" multiline />
+          </p>
         </div>
         <div className="mt-10 space-y-4">
           <div className="relative">
@@ -121,8 +126,12 @@ function TestsPage() {
           )}
         </div>
         <div className="mt-12 rounded-xl bg-muted/50 p-6 text-center">
-          <h3 className="text-lg font-semibold">{t("pages.price_info_title")}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">{t("pages.price_info_subtitle")}</p>
+          <h3 className="text-lg font-semibold">
+            <ET k="tests.price_info_title" t="pages.price_info_title" />
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            <ET k="tests.price_info_subtitle" t="pages.price_info_subtitle" multiline />
+          </p>
           <a href={`tel:${CLINIC_PHONE_TEL}`} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"><Phone className="h-5 w-5" /> {CLINIC_PHONE_DISPLAY}</a>
         </div>
       </div>
