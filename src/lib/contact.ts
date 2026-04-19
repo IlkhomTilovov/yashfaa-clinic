@@ -35,12 +35,12 @@ export const CLINIC_BRANCHES: Branch[] = [
   {
     name: "2-filial",
     name_ru: "Филиал №2",
-    address: "Toshkent sh., Yunusobod tumani",
-    address_ru: "г. Ташкент, Юнусабадский р-н",
+    address: "Toshkent sh., Feruza ko'chasi",
+    address_ru: "г. Ташкент, ул. Феруза",
     phone: CLINIC_PHONE_DISPLAY_2,
     phoneTel: CLINIC_PHONE_TEL_2,
-    lat: 41.3475,
-    lng: 69.2867,
+    lat: 41.354025,
+    lng: 69.356171,
   },
 ];
 
