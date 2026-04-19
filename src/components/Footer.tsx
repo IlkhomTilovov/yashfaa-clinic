@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import logoSvg from "@/assets/logo.svg";
-import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_EMAIL, CLINIC_ADDRESS, CLINIC_TELEGRAM, CLINIC_INSTAGRAM, CLINIC_FACEBOOK } from "@/lib/contact";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_EMAIL, CLINIC_ADDRESS, CLINIC_TELEGRAM, CLINIC_INSTAGRAM, CLINIC_FACEBOOK, CLINIC_BRANCHES } from "@/lib/contact";
 
 export function Footer() {
   const lang = useLang();
