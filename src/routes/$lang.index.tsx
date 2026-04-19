@@ -92,54 +92,50 @@ function HomePage() {
   return (
     <>
       {/* ─── HERO ─── */}
-      <section className="relative min-h-screen w-full overflow-visible">
-        <div className="absolute inset-0">
-          <img src={heroLab} alt="Yashfaa Clinic laboratoriya" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/30" />
-        </div>
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <section className="relative w-full overflow-hidden bg-gradient-to-b from-secondary/40 to-background">
+        <div className="pointer-events-none absolute inset-0">
           <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+          <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "radial-gradient(circle, var(--primary) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
         </div>
 
-        <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col-reverse items-center justify-center gap-6 px-4 py-12 md:flex-row md:gap-12 md:py-20 lg:py-24">
-          <div className="flex-1 text-center md:text-left">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 md:grid-cols-2 md:gap-12 md:py-20 lg:py-24">
+          {/* LEFT — Text */}
+          <div className="text-center md:text-left">
             <Badge variant="secondary" className="mb-5 gap-1.5 rounded-full border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary backdrop-blur-sm">
               <ShieldCheck className="h-4 w-4" />
               {t("hero.badge")}
             </Badge>
-            <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-5xl lg:text-[3.5rem]">
-              {t("hero.title_1")}{" "}
-              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{t("hero.title_2")}</span>
+            <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-5xl lg:text-[3.25rem]">
+              {heroTitle}
             </h1>
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">{t("hero.subtitle")}</p>
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">{heroSubtitle}</p>
 
             {/* ─── Trust Badges ─── */}
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:justify-start">
-              <div className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:justify-start">
+              <div className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700">
                 <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                4.9 {lang === "ru" ? "рейтинг" : "reyting"}
+                {get("stats.rating", "4.9")} {lang === "ru" ? "рейтинг" : "reyting"}
               </div>
-              <div className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+              <div className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary">
                 <Users className="h-4 w-4" />
-                10,000+ {lang === "ru" ? "пациентов" : "bemor"}
+                {get("stats.doctors", "50+")} {lang === "ru" ? "врачей" : "shifokor"}
               </div>
-              <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
+              <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-700">
                 <CheckCircle className="h-4 w-4" />
-                {lang === "ru" ? "Лицензия №12345" : "Litsenziya №12345"}
+                {get("stats.patients", "10,000+")} {lang === "ru" ? "пациентов" : "bemor"}
               </div>
             </div>
 
             {/* ─── CTA Buttons ─── */}
             <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
-              <Button size="lg" className="h-12 rounded-full px-8 text-base shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30" asChild>
+              <Button size="lg" className="h-12 rounded-2xl px-8 text-base shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/30" asChild>
                 <Link to="/$lang/appointment" params={{ lang }}>
                   <Calendar className="mr-2 h-5 w-5" />
                   {t("hero.cta_appointment")}
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 rounded-full border-[#0088cc] bg-[#0088cc]/10 px-8 text-base text-[#0088cc] hover:bg-[#0088cc] hover:text-white" asChild>
+              <Button size="lg" variant="outline" className="h-12 rounded-2xl border-[#0088cc] bg-[#0088cc]/10 px-8 text-base text-[#0088cc] hover:bg-[#0088cc] hover:text-white" asChild>
                 <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer">
                   <Send className="mr-2 h-5 w-5" />
                   {t("cta.telegram")}
@@ -171,7 +167,37 @@ function HomePage() {
               <HeroSearch doctors={allDoctors as any} services={allServices as any} tests={allTests as any} />
             </div>
           </div>
-          <div className="hidden flex-1 md:block" />
+
+          {/* RIGHT — Doctor image */}
+          <div className="relative hidden md:block">
+            <div className="relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-[2rem] border bg-card shadow-2xl shadow-primary/10">
+              <img
+                src={heroImage || heroLab}
+                alt={lang === "ru" ? "Врач Yashfaa Clinic" : "Yashfaa Clinic shifokori"}
+                className="h-full w-full object-cover"
+              />
+              {/* Floating rating card */}
+              <div className="absolute bottom-5 left-5 flex items-center gap-3 rounded-2xl border bg-card/95 px-4 py-3 shadow-lg backdrop-blur-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50">
+                  <Star className="h-5 w-5 fill-amber-500 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold leading-none text-foreground">{get("stats.rating", "4.9")}</p>
+                  <p className="mt-1 text-[11px] text-muted-foreground">{lang === "ru" ? "из 1000+ отзывов" : "1000+ izohdan"}</p>
+                </div>
+              </div>
+              {/* Floating patients card */}
+              <div className="absolute right-5 top-5 flex items-center gap-3 rounded-2xl border bg-card/95 px-4 py-3 shadow-lg backdrop-blur-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold leading-none text-foreground">{get("stats.patients", "10,000+")}</p>
+                  <p className="mt-1 text-[11px] text-muted-foreground">{lang === "ru" ? "пациентов" : "bemor"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
