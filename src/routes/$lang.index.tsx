@@ -205,9 +205,15 @@ function HomePage() {
       <section className="px-4 py-20 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="text-center">
-            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">{t("services_section.badge")}</Badge>
-            <h2 className="text-3xl font-bold text-foreground md:text-4xl">{t("services_section.title")}</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t("services_section.subtitle")}</p>
+            <Badge variant="outline" className="mb-3 rounded-full px-4 py-1">
+              <ET k="services_section.badge" t="services_section.badge" />
+            </Badge>
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+              <ET k="services_section.title" t="services_section.title" />
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              <ET k="services_section.subtitle" t="services_section.subtitle" multiline />
+            </p>
           </div>
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {serviceCards.map((s) => (
@@ -217,10 +223,14 @@ function HomePage() {
                     <div className={`mb-5 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors ${s.color} ${s.hoverColor}`}>
                       <s.icon className="h-8 w-8" />
                     </div>
-                    <h3 className="text-lg font-bold">{s.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                    <h3 className="text-lg font-bold">
+                      <ET k={`${s.kBase}.title`}>{s.title}</ET>
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      <ET k={`${s.kBase}.desc`} multiline>{s.desc}</ET>
+                    </p>
                     <span className="mt-4 flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                      {t("services_section.details")} <ArrowRight className="h-4 w-4" />
+                      <ET k="services_section.details" t="services_section.details" /> <ArrowRight className="h-4 w-4" />
                     </span>
                   </CardContent>
                 </Card>
