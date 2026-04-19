@@ -258,7 +258,7 @@ function HomePage() {
               </div>
               <Button variant="outline" className="rounded-full" asChild>
                 <Link to="/$lang/doctors" params={{ lang }}>
-                  {t("doctors_section.all_doctors")}
+                  <ET k="doctors_section.all_doctors" t="doctors_section.all_doctors" />
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -315,7 +315,7 @@ function HomePage() {
               </div>
               <Button variant="outline" className="rounded-full" asChild>
                 <Link to="/$lang/tests" params={{ lang }}>
-                  {t("tests_section.all_tests")}
+                  <ET k="tests_section.all_tests" t="tests_section.all_tests" />
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -431,13 +431,13 @@ function HomePage() {
             <Button size="lg" variant="secondary" className="rounded-full px-8 shadow-lg" asChild>
               <Link to="/$lang/appointment" params={{ lang }}>
                 <Calendar className="mr-2 h-5 w-5" />
-                {t("cta.appointment")}
+                <ET k="cta.appointment" t="cta.appointment" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-primary-foreground/10 px-8 text-primary-foreground" asChild>
               <a href={CLINIC_TELEGRAM} target="_blank" rel="noopener noreferrer">
                 <Send className="mr-2 h-5 w-5" />
-                {t("cta.telegram")}
+                <ET k="cta.telegram" t="cta.telegram" />
               </a>
             </Button>
           </div>
