@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Phone, Clock, MapPin, Star, Globe, Briefcase } from "lucide-react";
 import { getServices, getCategories, getDoctors } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
+import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
 
 export const Route = createFileRoute("/$lang/services/")({
   head: ({ params }) => {
@@ -134,8 +135,8 @@ function ServicesPage() {
         <div className="mt-12 rounded-xl bg-muted/50 p-6 text-center">
           <h3 className="text-lg font-semibold">{t("pages.price_info_title")}</h3>
           <p className="mt-1 text-sm text-muted-foreground">{t("pages.price_info_subtitle")}</p>
-          <a href="tel:+998711234567" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90">
-            <Phone className="h-5 w-5" /> +998 71 123 45 67
+          <a href={`tel:${CLINIC_PHONE_TEL}`} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+            <Phone className="h-5 w-5" /> {CLINIC_PHONE_DISPLAY}
           </a>
         </div>
       </div>

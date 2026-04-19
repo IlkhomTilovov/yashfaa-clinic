@@ -147,9 +147,9 @@ function HomePage() {
             </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-muted-foreground md:justify-start">
-              <a href="tel:+998711234567" className="flex items-center gap-2 transition-colors hover:text-primary">
+              <a href={`tel:${CLINIC_PHONE_TEL}`} className="flex items-center gap-2 transition-colors hover:text-primary">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10"><Phone className="h-3.5 w-3.5 text-primary" /></div>
-                +998 71 123 45 67
+                {CLINIC_PHONE_DISPLAY}
               </a>
               <span className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10"><Clock className="h-3.5 w-3.5 text-primary" /></div>
