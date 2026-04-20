@@ -64,6 +64,25 @@ export const getDoctorById = createServerFn({ method: "GET" })
     return doctor;
   });
 
+/**
+ * Returns services where this doctor is listed in `doctor_ids` array.
+ */
+export const getServicesByDoctor = createServerFn({ method: "GET" })
+  .inputValidator((input: { doctorId: string }) => {
+    return z.object({ doctorId: z.string().uuid() }).parse(input);
+  })
+  .handler(async ({ data }) => {
+    const supabase = await getSupabase();
+    const { data: services, error } = await supabase
+      .from("services")
+      .select("*, categories(name, name_uz, name_ru)")
+      .eq("is_active", true)
+      .contains("doctor_ids", [data.doctorId])
+      .order("name");
+    if (error) throw new Error(error.message);
+    return services ?? [];
+  });
+
 export const createAppointment = createServerFn({ method: "POST" })
   .inputValidator((input: {
     patient_name: string;
