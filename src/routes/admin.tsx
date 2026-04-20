@@ -83,7 +83,7 @@ function AdminLayout() {
     <div className="flex min-h-screen bg-muted/40">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r bg-card transition-transform duration-200 lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-[260px] flex-col border-r bg-card transition-transform duration-200 lg:sticky lg:top-0 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
