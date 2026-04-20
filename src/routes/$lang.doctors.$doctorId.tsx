@@ -88,7 +88,7 @@ export const Route = createFileRoute("/$lang/doctors/$doctorId")({
 });
 
 function DoctorProfilePage() {
-  const doctor = Route.useLoaderData() as any;
+  const { doctor, services } = Route.useLoaderData() as any;
   const lang = useLang();
   const { t } = useTranslation();
   if (!doctor) return null;
@@ -115,7 +115,7 @@ function DoctorProfilePage() {
                   </Badge>
                 )}
                 {(doctor.bio || doctor.bio_uz || doctor.bio_ru) && <p className="mt-4 text-muted-foreground">{getLocalizedField(doctor, "bio", lang)}</p>}
-                
+
                 {/* CTA Buttons */}
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Button size="lg" asChild>
@@ -140,6 +140,60 @@ function DoctorProfilePage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* ─── Doctor's services ─── */}
+        {services && services.length > 0 && (
+          <div className="mt-10">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Briefcase className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold md:text-2xl">
+                  {lang === "ru" ? "Услуги врача" : "Shifokor xizmatlari"}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {lang === "ru"
+                    ? `${services.length} услуг(и) предоставляет этот врач`
+                    : `${services.length} ta xizmat ushbu shifokor tomonidan taqdim etiladi`}
+                </p>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {services.map((s: any) => (
+                <Link
+                  key={s.id}
+                  to={"/$lang/services/$slug" as any}
+                  params={{ lang, slug: s.slug } as any}
+                  className="group"
+                >
+                  <Card className="h-full border transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-foreground group-hover:text-primary">
+                            {getLocalizedField(s, "name", lang)}
+                          </h3>
+                          {s.categories && (
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {getLocalizedField(s.categories, "name", lang) || s.categories.name}
+                            </p>
+                          )}
+                          {(s.description || s.description_uz || s.description_ru) && (
+                            <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                              {getLocalizedField(s, "description", lang)}
+                            </p>
+                          )}
+                        </div>
+                        <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
