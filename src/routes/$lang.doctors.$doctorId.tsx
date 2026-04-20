@@ -14,7 +14,7 @@ export const Route = createFileRoute("/$lang/doctors/$doctorId")({
   head: ({ params, loaderData }) => {
     const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
     const isRu = lang === "ru";
-    const doc: any = loaderData;
+    const doc: any = (loaderData as any)?.doctor;
     const name = doc ? pickLang(doc, "name", lang) : (isRu ? "Врач" : "Shifokor");
     const spec = doc ? pickLang(doc, "specialization", lang) : "";
     const bio = doc ? pickLang(doc, "bio", lang) : "";
@@ -52,8 +52,15 @@ export const Route = createFileRoute("/$lang/doctors/$doctorId")({
     return scripts ? { meta, scripts } : { meta };
   },
   loader: async ({ params }) => {
-    try { return await getDoctorById({ data: { id: params.doctorId } }); }
-    catch { throw notFound(); }
+    try {
+      const [doctor, services] = await Promise.all([
+        getDoctorById({ data: { id: params.doctorId } }),
+        getServicesByDoctor({ data: { doctorId: params.doctorId } }),
+      ]);
+      return { doctor, services };
+    } catch {
+      throw notFound();
+    }
   },
   component: DoctorProfilePage,
   errorComponent: ({ error, reset }) => {
