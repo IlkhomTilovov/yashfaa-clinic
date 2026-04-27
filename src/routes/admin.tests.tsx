@@ -239,21 +239,20 @@ function AdminTestsPage() {
 
   return (
     <div className="space-y-6">
-      <Button
-        onClick={openCreate}
-        className="fixed right-4 top-16 z-50 gap-2 shadow-lg lg:right-6"
-        aria-label="Yangi tahlil qo'shish"
-      >
-        <Plus className="h-4 w-4" />
-        <span className="hidden sm:inline">Yangi tahlil</span>
-        <span className="sm:hidden">Yangi</span>
-      </Button>
-
-      <div className="sticky top-14 z-20 -mx-4 border-b bg-background/95 px-4 py-4 pr-36 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:pr-48 lg:-mx-6 lg:px-6 lg:pr-48">
+      <div className="sticky top-14 z-50 -mx-4 flex min-h-32 items-center border-b bg-background/95 px-4 pr-36 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:pr-48 lg:-mx-6 lg:px-6 lg:pr-48">
         <div className="min-w-0">
           <h1 className="text-2xl font-bold">Tahlillar</h1>
           <p className="text-sm text-muted-foreground">{tests.length} ta tahlil</p>
         </div>
+        <Button
+          onClick={openCreate}
+          className="absolute right-4 top-1/2 z-10 -translate-y-1/2 gap-2 shadow-lg lg:right-6"
+          aria-label="Yangi tahlil qo'shish"
+        >
+          <Plus className="h-4 w-4" />
+          <span className="hidden sm:inline">Yangi tahlil</span>
+          <span className="sm:hidden">Yangi</span>
+        </Button>
       </div>
 
       {/* Filters */}
