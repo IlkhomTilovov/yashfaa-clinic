@@ -152,48 +152,15 @@ function AdminTestsPage() {
     return Object.keys(e).length === 0;
   };
 
-  const generateSlug = (name: string): string => {
-    const map: Record<string, string> = {
-      "ʻ": "", "'": "", "`": "", "ʼ": "",
-      "ў": "u", "ғ": "g", "қ": "q", "ҳ": "h",
-      "Ў": "u", "Ғ": "g", "Қ": "q", "Ҳ": "h",
-      "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
-      "ж": "j", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
-      "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
-      "ф": "f", "х": "x", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "sh",
-      "ъ": "", "ы": "i", "ь": "", "э": "e", "ю": "yu", "я": "ya",
-    };
-    let s = name.toLowerCase();
-    s = s.split("").map(ch => map[ch] ?? ch).join("");
-    s = s.replace(/[^a-z0-9\s-]/g, "")
-         .replace(/\s+/g, "-")
-         .replace(/-+/g, "-")
-         .replace(/^-|-$/g, "");
-    return s || `tahlil-${Date.now()}`;
-  };
-
-  const ensureUniqueSlug = async (base: string, currentId?: string): Promise<string> => {
-    let candidate = base;
-    let suffix = 1;
-    // try up to 50 variants
-    while (suffix < 50) {
-      const { data } = await supabase
-        .from("tests")
-        .select("id")
-        .eq("slug", candidate)
-        .maybeSingle();
-      if (!data || data.id === currentId) return candidate;
-      suffix += 1;
-      candidate = `${base}-${suffix}`;
-    }
-    return `${base}-${Date.now()}`;
-  };
-
   const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
-    const baseSlug = generateSlug(form.name_uz);
-    const slug = await ensureUniqueSlug(baseSlug, editing?.id);
+    const slug = form.name_uz
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9\u0400-\u04FF\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
     const payload: any = {
       name: form.name_uz,
       name_uz: form.name_uz,
@@ -239,21 +206,14 @@ function AdminTestsPage() {
 
   return (
     <div className="space-y-6">
-      <Button
-        onClick={openCreate}
-        className="fixed right-4 top-28 z-[80] gap-2 shadow-lg lg:right-6"
-        aria-label="Yangi tahlil qo'shish"
-      >
-        <Plus className="h-4 w-4" />
-        <span className="hidden sm:inline">Yangi tahlil</span>
-        <span className="sm:hidden">Yangi</span>
-      </Button>
-
-      <div className="sticky top-14 z-50 -mx-4 flex min-h-32 items-center border-b bg-background/95 px-4 pr-36 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:pr-48 lg:-mx-6 lg:px-6 lg:pr-48">
-        <div className="min-w-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
           <h1 className="text-2xl font-bold">Tahlillar</h1>
           <p className="text-sm text-muted-foreground">{tests.length} ta tahlil</p>
         </div>
+        <Button onClick={openCreate} className="gap-2 shadow-sm">
+          <Plus className="h-4 w-4" /> Yangi tahlil
+        </Button>
       </div>
 
       {/* Filters */}
