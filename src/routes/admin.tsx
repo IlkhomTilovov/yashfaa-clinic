@@ -143,14 +143,14 @@ function AdminLayout() {
       )}
 
       {/* Main */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-card/80 px-4 backdrop-blur-sm lg:px-6">
           <button className="rounded-md p-1.5 hover:bg-accent lg:hidden" onClick={() => setSidebarOpen(true)}>
             <Menu className="h-5 w-5" />
           </button>
           <h2 className="text-sm font-semibold text-muted-foreground">Yashfaa Clinic Boshqaruv</h2>
         </header>
-        <main className="flex-1 p-4 lg:p-6">
+        <main className="min-w-0 flex-1 overflow-x-hidden p-4 lg:p-6">
           <Outlet />
         </main>
       </div>
