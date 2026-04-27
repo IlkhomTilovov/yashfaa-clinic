@@ -239,12 +239,12 @@ function AdminTestsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="sticky top-0 z-20 -mx-4 -mt-4 flex flex-col gap-4 border-b bg-background/95 px-4 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:flex-row sm:items-center sm:justify-between lg:-mx-6 lg:-mt-6 lg:px-6">
-        <div>
+      <div className="sticky top-14 z-20 -mx-4 flex flex-wrap items-center justify-between gap-3 border-b bg-background/95 px-4 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:-mx-6 lg:px-6">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold">Tahlillar</h1>
           <p className="text-sm text-muted-foreground">{tests.length} ta tahlil</p>
         </div>
-        <Button onClick={openCreate} className="gap-2 shadow-sm">
+        <Button onClick={openCreate} className="gap-2 shadow-sm shrink-0">
           <Plus className="h-4 w-4" /> Yangi tahlil
         </Button>
       </div>
