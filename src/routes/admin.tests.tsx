@@ -154,7 +154,7 @@ function AdminTestsPage() {
 
   const generateSlug = (name: string): string => {
     const map: Record<string, string> = {
-      "ʻ": "", "'": "", "'": "", "`": "",
+      "ʻ": "", "'": "", "`": "", "ʼ": "",
       "ў": "u", "ғ": "g", "қ": "q", "ҳ": "h",
       "Ў": "u", "Ғ": "g", "Қ": "q", "Ҳ": "h",
       "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
