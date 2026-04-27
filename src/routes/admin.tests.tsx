@@ -239,7 +239,7 @@ function AdminTestsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="sticky top-0 z-20 -mx-4 -mt-4 flex flex-col gap-4 border-b bg-background/95 px-4 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:flex-row sm:items-center sm:justify-between lg:-mx-6 lg:-mt-6 lg:px-6">
         <div>
           <h1 className="text-2xl font-bold">Tahlillar</h1>
           <p className="text-sm text-muted-foreground">{tests.length} ta tahlil</p>
