@@ -152,15 +152,48 @@ function AdminTestsPage() {
     return Object.keys(e).length === 0;
   };
 
+  const generateSlug = (name: string): string => {
+    const map: Record<string, string> = {
+      "ʻ": "", "'": "", "'": "", "`": "",
+      "ў": "u", "ғ": "g", "қ": "q", "ҳ": "h",
+      "Ў": "u", "Ғ": "g", "Қ": "q", "Ҳ": "h",
+      "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
+      "ж": "j", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
+      "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
+      "ф": "f", "х": "x", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "sh",
+      "ъ": "", "ы": "i", "ь": "", "э": "e", "ю": "yu", "я": "ya",
+    };
+    let s = name.toLowerCase();
+    s = s.split("").map(ch => map[ch] ?? ch).join("");
+    s = s.replace(/[^a-z0-9\s-]/g, "")
+         .replace(/\s+/g, "-")
+         .replace(/-+/g, "-")
+         .replace(/^-|-$/g, "");
+    return s || `tahlil-${Date.now()}`;
+  };
+
+  const ensureUniqueSlug = async (base: string, currentId?: string): Promise<string> => {
+    let candidate = base;
+    let suffix = 1;
+    // try up to 50 variants
+    while (suffix < 50) {
+      const { data } = await supabase
+        .from("tests")
+        .select("id")
+        .eq("slug", candidate)
+        .maybeSingle();
+      if (!data || data.id === currentId) return candidate;
+      suffix += 1;
+      candidate = `${base}-${suffix}`;
+    }
+    return `${base}-${Date.now()}`;
+  };
+
   const handleSave = async () => {
     if (!validate()) return;
     setSaving(true);
-    const slug = form.name_uz
-      .toLowerCase()
-      .replace(/[^a-zA-Z0-9\u0400-\u04FF\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
+    const baseSlug = generateSlug(form.name_uz);
+    const slug = await ensureUniqueSlug(baseSlug, editing?.id);
     const payload: any = {
       name: form.name_uz,
       name_uz: form.name_uz,
