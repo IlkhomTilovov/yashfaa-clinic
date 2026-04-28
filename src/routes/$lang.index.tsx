@@ -194,7 +194,7 @@ function HomePage() {
               </a>
               <span className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10"><Clock className="h-3.5 w-3.5 text-primary" /></div>
-                {t("hero.working_hours")}
+                <ET k="hero.working_hours" t="hero.working_hours" />
               </span>
             </div>
 
