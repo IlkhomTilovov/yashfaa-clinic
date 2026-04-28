@@ -52,15 +52,15 @@ export const Route = createFileRoute("/$lang/doctors/$doctorId")({
     return scripts ? { meta, scripts } : { meta };
   },
   loader: async ({ params }) => {
+    let doctor: any = null;
     try {
-      const [doctor, services] = await Promise.all([
-        getDoctorById({ data: { id: params.doctorId } }),
-        getServicesByDoctor({ data: { doctorId: params.doctorId } }),
-      ]);
-      return { doctor, services };
+      doctor = await getDoctorById({ data: { id: params.doctorId } });
     } catch {
       throw notFound();
     }
+    if (!doctor) throw notFound();
+    const services = await getServicesByDoctor({ data: { doctorId: params.doctorId } }).catch(() => []);
+    return { doctor, services };
   },
   component: DoctorProfilePage,
   errorComponent: ({ error, reset }) => {

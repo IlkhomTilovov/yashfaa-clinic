@@ -59,9 +59,10 @@ export const getDoctorById = createServerFn({ method: "GET" })
       .from("doctors")
       .select("*")
       .eq("id", data.id)
-      .single();
+      .eq("is_active", true)
+      .maybeSingle();
     if (error) throw new Error(error.message);
-    return doctor;
+    return doctor; // null if not found or inactive
   });
 
 /**
