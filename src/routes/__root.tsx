@@ -91,6 +91,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
           }}
         />
         {/* End Google tag */}
+        {/* Event snippet for Контакт conversion page */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `function gtag_report_conversion(url) { var callback = function () { if (typeof(url) != 'undefined') { window.location = url; } }; gtag('event', 'conversion', { 'send_to': 'AW-18216369244/MKI3CIr1_7ocENz4nu5D', 'event_callback': callback }); return false; }`,
+          }}
+        />
+        {/* End Event snippet */}
       </head>
       <body>
         <noscript
