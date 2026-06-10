@@ -43,7 +43,7 @@ export const Route = createFileRoute("/$lang/appointment")({
   ),
 });
 
-const timeSlots = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
+const timeSlots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00"];
 
 const serviceOptions = {
   uz: ["Umumiy ko'rik", "Laboratoriya tahlili", "UZI diagnostikasi", "EKG tekshiruvi", "Kosmetologiya", "Maslahat"],
@@ -142,7 +142,19 @@ function AppointmentPage() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="date">{t("appointment_page.date")}</Label>
-                  <Input id="date" required type="date" min={today} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+                  <Input id="date" required type="date" min={today} value={form.date} onChange={(e) => {
+                    const v = e.target.value;
+                    if (v && new Date(v).getDay() === 0) {
+                      setError(lang === "ru" ? "Воскресенье — выходной день" : "Yakshanba — dam olish kuni");
+                      setForm({ ...form, date: "" });
+                      return;
+                    }
+                    setError("");
+                    setForm({ ...form, date: v });
+                  }} />
+                  <p className="text-xs text-muted-foreground">
+                    {lang === "ru" ? "Пн–Сб: 09:00–14:00 (воскресенье — выходной)" : "Dush–Shan: 09:00–14:00 (yakshanba — dam olish kuni)"}
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label>{t("appointment_page.time")}</Label>
