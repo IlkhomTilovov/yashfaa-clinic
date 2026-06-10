@@ -142,7 +142,19 @@ function AppointmentPage() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="date">{t("appointment_page.date")}</Label>
-                  <Input id="date" required type="date" min={today} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+                  <Input id="date" required type="date" min={today} value={form.date} onChange={(e) => {
+                    const v = e.target.value;
+                    if (v && new Date(v).getDay() === 0) {
+                      setError(lang === "ru" ? "Воскресенье — выходной день" : "Yakshanba — dam olish kuni");
+                      setForm({ ...form, date: "" });
+                      return;
+                    }
+                    setError("");
+                    setForm({ ...form, date: v });
+                  }} />
+                  <p className="text-xs text-muted-foreground">
+                    {lang === "ru" ? "Пн–Сб: 09:00–14:00 (воскресенье — выходной)" : "Dush–Shan: 09:00–14:00 (yakshanba — dam olish kuni)"}
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label>{t("appointment_page.time")}</Label>
