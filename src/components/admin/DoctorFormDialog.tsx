@@ -36,6 +36,7 @@ const SPECIALIZATIONS = [
   "Anesteziolog",
   "Radiolog",
   "Fizioterapevt",
+  "Hijoma",
 ];
 
 const LANGUAGES = ["O'zbek", "Rus", "Ingliz", "Turk", "Arab", "Koreys"];
