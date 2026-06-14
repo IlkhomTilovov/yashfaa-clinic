@@ -107,7 +107,24 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
   const [slugManual, setSlugManual] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState(false);
+  const [services, setServices] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Xizmatlar ro'yxatini DB dan yuklash
+  useEffect(() => {
+    if (!open) return;
+    (async () => {
+      const { data } = await supabase
+        .from("services")
+        .select("name, name_uz")
+        .eq("is_active", true)
+        .order("name");
+      const names = Array.from(
+        new Set((data ?? []).map((s: any) => s.name_uz || s.name).filter(Boolean))
+      );
+      setServices(names);
+    })();
+  }, [open]);
 
   // Auto-generate slug from name
   useEffect(() => {
