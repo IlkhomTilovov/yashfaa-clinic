@@ -141,10 +141,18 @@ function AppointmentPage() {
               </div>
               <div className="space-y-2">
                 <Label>{t("appointment_page.service_type")}</Label>
-                <Select value={form.service} onValueChange={(v) => setForm({ ...form, service: v })} required>
-                  <SelectTrigger><SelectValue placeholder={t("appointment_page.select_service")} /></SelectTrigger>
+                <Select value={form.service} onValueChange={(v) => setForm({ ...form, service: v })} required disabled={!form.doctor_id}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={
+                      !form.doctor_id
+                        ? (lang === "ru" ? "Сначала выберите врача" : "Avval shifokorni tanlang")
+                        : doctorServices.length === 0
+                          ? (lang === "ru" ? "У врача нет услуг" : "Shifokorda xizmatlar yo'q")
+                          : t("appointment_page.select_service")
+                    } />
+                  </SelectTrigger>
                   <SelectContent>
-                    {services.map((s: any) => {
+                    {doctorServices.map((s: any) => {
                       const name = getLocalizedField(s, "name", lang);
                       return <SelectItem key={s.id} value={name}>{name}</SelectItem>;
                     })}
