@@ -41,20 +41,7 @@ const SPECIALIZATIONS = [
 
 const LANGUAGES = ["O'zbek", "Rus", "Ingliz", "Turk", "Arab", "Koreys"];
 
-const SERVICES = [
-  "Konsultatsiya",
-  "Yurak tekshiruvi",
-  "EKG",
-  "UZI",
-  "Qon tahlili",
-  "Rentgen",
-  "MRT",
-  "KT",
-  "Fizioterapiya",
-  "Jarrohlik amaliyoti",
-  "Lazerli davolash",
-  "Endoskopiya",
-];
+// SERVICES endi `services` jadvalidan dinamik yuklanadi (pastdagi useEffect ga qarang).
 
 export interface DoctorFormData {
   name: string;
