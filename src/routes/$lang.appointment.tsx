@@ -92,6 +92,14 @@ function AppointmentPage() {
   }
 
   const today = new Date().toISOString().split("T")[0];
+  const selectedDoctor = doctors.find((d: any) => d.id === form.doctor_id);
+  const doctorServiceNames: string[] = selectedDoctor?.services_offered ?? [];
+  const doctorServices = doctorServiceNames.length
+    ? services.filter((s: any) => {
+        const nm = (s.name_uz || s.name || "").trim().toLowerCase();
+        return doctorServiceNames.some((n) => n.trim().toLowerCase() === nm);
+      })
+    : [];
 
   return (
     <section className="px-4 py-16">
@@ -122,7 +130,7 @@ function AppointmentPage() {
               </div>
               <div className="space-y-2">
                 <Label>{t("appointment_page.doctor")}</Label>
-                <Select value={form.doctor_id} onValueChange={(v) => setForm({ ...form, doctor_id: v })} required>
+                <Select value={form.doctor_id} onValueChange={(v) => setForm({ ...form, doctor_id: v, service: "" })} required>
                   <SelectTrigger><SelectValue placeholder={t("appointment_page.select_doctor")} /></SelectTrigger>
                   <SelectContent>
                     {doctors.map((d: any) => (
@@ -133,10 +141,18 @@ function AppointmentPage() {
               </div>
               <div className="space-y-2">
                 <Label>{t("appointment_page.service_type")}</Label>
-                <Select value={form.service} onValueChange={(v) => setForm({ ...form, service: v })} required>
-                  <SelectTrigger><SelectValue placeholder={t("appointment_page.select_service")} /></SelectTrigger>
+                <Select value={form.service} onValueChange={(v) => setForm({ ...form, service: v })} required disabled={!form.doctor_id}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={
+                      !form.doctor_id
+                        ? (lang === "ru" ? "Сначала выберите врача" : "Avval shifokorni tanlang")
+                        : doctorServices.length === 0
+                          ? (lang === "ru" ? "У врача нет услуг" : "Shifokorda xizmatlar yo'q")
+                          : t("appointment_page.select_service")
+                    } />
+                  </SelectTrigger>
                   <SelectContent>
-                    {services.map((s: any) => {
+                    {doctorServices.map((s: any) => {
                       const name = getLocalizedField(s, "name", lang);
                       return <SelectItem key={s.id} value={name}>{name}</SelectItem>;
                     })}
