@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, CheckCircle2, Loader2 } from "lucide-react";
-import { getDoctors, createAppointment } from "@/lib/server-functions";
+import { getDoctors, createAppointment, getCategories, getActiveServices } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { ET } from "@/components/ET";
 import { buildMeta } from "@/lib/seo";
@@ -25,7 +25,14 @@ export const Route = createFileRoute("/$lang/appointment")({
       : "Yashfaa Clinic shifokorlariga onlayn qabulga bir daqiqada yoziling. Qulay vaqt, tajribali mutaxassislar, Toshkentda hamyonbop narxlar.";
     return { meta: buildMeta({ title, description, pathWithoutLang: "/appointment", lang }) };
   },
-  loader: () => getDoctors(),
+  loader: async () => {
+    const [doctors, categories, services] = await Promise.all([
+      getDoctors(),
+      getCategories(),
+      getActiveServices(),
+    ]);
+    return { doctors, categories, services };
+  },
   component: AppointmentPage,
   errorComponent: ({ error, reset }) => {
     const router = useRouter();
@@ -44,11 +51,6 @@ export const Route = createFileRoute("/$lang/appointment")({
 });
 
 const timeSlots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00"];
-
-const serviceOptions = {
-  uz: ["Umumiy ko'rik", "Laboratoriya tahlili", "UZI diagnostikasi", "EKG tekshiruvi", "Kosmetologiya", "Maslahat"],
-  ru: ["Общий осмотр", "Лабораторный анализ", "УЗИ диагностика", "ЭКГ обследование", "Косметология", "Консультация"],
-};
 
 function AppointmentPage() {
   const doctors = Route.useLoaderData();
