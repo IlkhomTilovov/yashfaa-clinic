@@ -92,6 +92,14 @@ function AppointmentPage() {
   }
 
   const today = new Date().toISOString().split("T")[0];
+  const selectedDoctor = doctors.find((d: any) => d.id === form.doctor_id);
+  const doctorServiceNames: string[] = selectedDoctor?.services_offered ?? [];
+  const doctorServices = doctorServiceNames.length
+    ? services.filter((s: any) => {
+        const nm = (s.name_uz || s.name || "").trim().toLowerCase();
+        return doctorServiceNames.some((n) => n.trim().toLowerCase() === nm);
+      })
+    : [];
 
   return (
     <section className="px-4 py-16">
