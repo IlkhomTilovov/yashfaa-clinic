@@ -286,8 +286,8 @@ function HomePage() {
             </div>
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {doctors.map((doc: any) => (
-                <Link key={doc.id} to="/$lang/doctors/$doctorId" params={{ lang, doctorId: doc.id }}>
-                  <Card className="group h-full overflow-hidden border-0 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl">
+                <Card key={doc.id} className="group h-full overflow-hidden border-0 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl">
+                  <Link to="/$lang/doctors/$doctorId" params={{ lang, doctorId: doc.id }} className="block">
                     <div className="relative h-56 overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
                       {doc.image_url ? (
                         <img src={doc.image_url} alt={getLocalizedField(doc, "name", lang)} loading="lazy" className="h-full w-full object-cover transition-transform group-hover:scale-105" />
@@ -297,21 +297,23 @@ function HomePage() {
                         </div>
                       )}
                     </div>
-                    <CardContent className="p-5">
+                  </Link>
+                  <CardContent className="p-5">
+                    <Link to="/$lang/doctors/$doctorId" params={{ lang, doctorId: doc.id }}>
                       <h3 className="text-lg font-bold text-foreground">{getLocalizedField(doc, "name", lang)}</h3>
                       <p className="mt-1 text-sm text-primary">{getLocalizedField(doc, "specialization", lang)}</p>
                       {doc.experience_years && (
                         <p className="mt-2 text-xs text-muted-foreground">{doc.experience_years} {t("doctors_section.experience")}</p>
                       )}
-                      <div className="mt-3">
-                        <span className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                          <Calendar className="h-4 w-4" />
-                          {t("hero.cta_appointment")}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+                    </Link>
+                    <div className="mt-3">
+                      <Link to="/$lang/appointment" params={{ lang }} search={{ doctor_id: doc.id }} className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
+                        <Calendar className="h-4 w-4" />
+                        {t("hero.cta_appointment")}
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
