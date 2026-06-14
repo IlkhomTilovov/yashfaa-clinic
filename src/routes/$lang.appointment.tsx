@@ -130,7 +130,7 @@ function AppointmentPage() {
               </div>
               <div className="space-y-2">
                 <Label>{t("appointment_page.doctor")}</Label>
-                <Select value={form.doctor_id} onValueChange={(v) => setForm({ ...form, doctor_id: v })} required>
+                <Select value={form.doctor_id} onValueChange={(v) => setForm({ ...form, doctor_id: v, service: "" })} required>
                   <SelectTrigger><SelectValue placeholder={t("appointment_page.select_doctor")} /></SelectTrigger>
                   <SelectContent>
                     {doctors.map((d: any) => (
