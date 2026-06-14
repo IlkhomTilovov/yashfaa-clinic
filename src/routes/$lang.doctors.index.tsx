@@ -64,8 +64,8 @@ function DoctorsPage() {
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {doctors.map((doc: any) => (
-            <Link key={doc.id} to="/$lang/doctors/$doctorId" params={{ lang, doctorId: doc.id }}>
-              <Card className="group h-full overflow-hidden transition-shadow hover:shadow-lg">
+            <Card key={doc.id} className="group h-full overflow-hidden transition-shadow hover:shadow-lg">
+              <Link to="/$lang/doctors/$doctorId" params={{ lang, doctorId: doc.id }} className="block">
                 <div className="relative aspect-square overflow-hidden">
                   <img src={doc.image_url || "/placeholder.svg"} alt={getLocalizedField(doc, "name", lang)} className="h-full w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
                   {doc.experience_years && (
@@ -74,16 +74,18 @@ function DoctorsPage() {
                     </Badge>
                   )}
                 </div>
-                <CardContent className="p-5">
+              </Link>
+              <CardContent className="p-5">
+                <Link to="/$lang/doctors/$doctorId" params={{ lang, doctorId: doc.id }}>
                   <h3 className="font-semibold">{getLocalizedField(doc, "name", lang)}</h3>
                   <p className="mt-1 text-sm text-primary">{getLocalizedField(doc, "specialization", lang)}</p>
-                  <span className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors group-hover:bg-primary/90">
-                    <Calendar className="h-4 w-4" />
-                    {t("hero.cta_appointment")}
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
+                </Link>
+                <Link to="/$lang/appointment" params={{ lang }} search={{ doctor_id: doc.id }} className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+                  <Calendar className="h-4 w-4" />
+                  {t("hero.cta_appointment")}
+                </Link>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

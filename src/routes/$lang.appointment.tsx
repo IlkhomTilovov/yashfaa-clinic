@@ -1,6 +1,6 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,9 @@ import { ET } from "@/components/ET";
 import { buildMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/appointment")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    doctor_id: typeof search.doctor_id === "string" ? search.doctor_id : undefined,
+  }),
   head: ({ params }) => {
     const isRu = params.lang === "ru";
     const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
@@ -79,7 +82,14 @@ function AppointmentPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const search = Route.useSearch();
   const [form, setForm] = useState({ patient_name: "", phone: "", doctor_id: "", service: "", date: "", time: "" });
+
+  useEffect(() => {
+    if (search.doctor_id && doctors.some((d: any) => d.id === search.doctor_id)) {
+      setForm((f) => (f.doctor_id === search.doctor_id ? f : { ...f, doctor_id: search.doctor_id!, service: "", time: "" }));
+    }
+  }, [search.doctor_id, doctors]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

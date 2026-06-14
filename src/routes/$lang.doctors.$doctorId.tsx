@@ -119,7 +119,7 @@ function DoctorProfilePage() {
                 {/* CTA Buttons */}
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Button size="lg" asChild>
-                    <Link to={"/$lang/appointment" as any} params={{ lang } as any}>
+                    <Link to={"/$lang/appointment" as any} params={{ lang } as any} search={{ doctor_id: doctor.id } as any}>
                       <Calendar className="mr-2 h-5 w-5" />{t("hero.cta_appointment")}
                     </Link>
                   </Button>
