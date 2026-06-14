@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, CheckCircle2, Loader2 } from "lucide-react";
-import { getDoctors, createAppointment } from "@/lib/server-functions";
+import { getDoctors, createAppointment, getCategories, getActiveServices } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { ET } from "@/components/ET";
 import { buildMeta } from "@/lib/seo";
@@ -25,7 +25,14 @@ export const Route = createFileRoute("/$lang/appointment")({
       : "Yashfaa Clinic shifokorlariga onlayn qabulga bir daqiqada yoziling. Qulay vaqt, tajribali mutaxassislar, Toshkentda hamyonbop narxlar.";
     return { meta: buildMeta({ title, description, pathWithoutLang: "/appointment", lang }) };
   },
-  loader: () => getDoctors(),
+  loader: async () => {
+    const [doctors, categories, services] = await Promise.all([
+      getDoctors(),
+      getCategories(),
+      getActiveServices(),
+    ]);
+    return { doctors, categories, services };
+  },
   component: AppointmentPage,
   errorComponent: ({ error, reset }) => {
     const router = useRouter();
@@ -45,18 +52,14 @@ export const Route = createFileRoute("/$lang/appointment")({
 
 const timeSlots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00"];
 
-const serviceOptions = {
-  uz: ["Umumiy ko'rik", "Laboratoriya tahlili", "UZI diagnostikasi", "EKG tekshiruvi", "Kosmetologiya", "Maslahat"],
-  ru: ["Общий осмотр", "Лабораторный анализ", "УЗИ диагностика", "ЭКГ обследование", "Косметология", "Консультация"],
-};
-
 function AppointmentPage() {
-  const doctors = Route.useLoaderData();
+  const { doctors, categories, services } = Route.useLoaderData();
   const lang = useLang();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [categoryId, setCategoryId] = useState<string>("");
   const [form, setForm] = useState({ patient_name: "", phone: "", doctor_id: "", service: "", date: "", time: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,7 +93,9 @@ function AppointmentPage() {
   }
 
   const today = new Date().toISOString().split("T")[0];
-  const currentServiceOptions = serviceOptions[lang] || serviceOptions.uz;
+  const filteredServices = categoryId
+    ? services.filter((s: any) => s.category_id === categoryId)
+    : services;
 
   return (
     <section className="px-4 py-16">
@@ -131,11 +136,25 @@ function AppointmentPage() {
                 </Select>
               </div>
               <div className="space-y-2">
+                <Label>{lang === "ru" ? "Направление" : "Yo'nalish"}</Label>
+                <Select value={categoryId} onValueChange={(v) => { setCategoryId(v); setForm({ ...form, service: "" }); }}>
+                  <SelectTrigger><SelectValue placeholder={lang === "ru" ? "Выберите направление" : "Yo'nalishni tanlang"} /></SelectTrigger>
+                  <SelectContent>
+                    {categories.map((c: any) => (
+                      <SelectItem key={c.id} value={c.id}>{getLocalizedField(c, "name", lang)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
                 <Label>{t("appointment_page.service_type")}</Label>
                 <Select value={form.service} onValueChange={(v) => setForm({ ...form, service: v })} required>
-                  <SelectTrigger><SelectValue placeholder={t("appointment_page.select_service")} /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={filteredServices.length === 0 ? (lang === "ru" ? "Нет услуг в этом направлении" : "Bu yo'nalishda xizmat yo'q") : t("appointment_page.select_service")} /></SelectTrigger>
                   <SelectContent>
-                    {currentServiceOptions.map((s: string) => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
+                    {filteredServices.map((s: any) => {
+                      const name = getLocalizedField(s, "name", lang);
+                      return <SelectItem key={s.id} value={name}>{name}</SelectItem>;
+                    })}
                   </SelectContent>
                 </Select>
               </div>
