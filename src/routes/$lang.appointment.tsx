@@ -92,9 +92,6 @@ function AppointmentPage() {
   }
 
   const today = new Date().toISOString().split("T")[0];
-  const filteredServices = categoryId
-    ? services.filter((s: any) => s.category_id === categoryId)
-    : services;
 
   return (
     <section className="px-4 py-16">
