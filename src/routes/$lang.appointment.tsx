@@ -120,6 +120,13 @@ function AppointmentPage() {
         return doctorServiceNames.some((n) => n.trim().toLowerCase() === nm);
       })
     : [];
+  const doctorSchedule = parseSchedule(selectedDoctor?.schedule);
+  const timeSlots = selectedDoctor ? generateTimeSlots(doctorSchedule.start, doctorSchedule.end) : [];
+  const scheduleHint = selectedDoctor
+    ? (lang === "ru"
+        ? `Пн–Сб: ${doctorSchedule.start}–${doctorSchedule.end} (воскресенье — выходной)`
+        : `Dush–Shan: ${doctorSchedule.start}–${doctorSchedule.end} (yakshanba — dam olish kuni)`)
+    : (lang === "ru" ? "Сначала выберите врача" : "Avval shifokorni tanlang");
 
   return (
     <section className="px-4 py-16">
