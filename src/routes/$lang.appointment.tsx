@@ -93,7 +93,9 @@ function AppointmentPage() {
   }
 
   const today = new Date().toISOString().split("T")[0];
-  const currentServiceOptions = serviceOptions[lang] || serviceOptions.uz;
+  const filteredServices = categoryId
+    ? services.filter((s: any) => s.category_id === categoryId)
+    : services;
 
   return (
     <section className="px-4 py-16">
@@ -134,11 +136,25 @@ function AppointmentPage() {
                 </Select>
               </div>
               <div className="space-y-2">
+                <Label>{lang === "ru" ? "Направление" : "Yo'nalish"}</Label>
+                <Select value={categoryId} onValueChange={(v) => { setCategoryId(v); setForm({ ...form, service: "" }); }}>
+                  <SelectTrigger><SelectValue placeholder={lang === "ru" ? "Выберите направление" : "Yo'nalishni tanlang"} /></SelectTrigger>
+                  <SelectContent>
+                    {categories.map((c: any) => (
+                      <SelectItem key={c.id} value={c.id}>{getLocalizedField(c, "name", lang)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
                 <Label>{t("appointment_page.service_type")}</Label>
                 <Select value={form.service} onValueChange={(v) => setForm({ ...form, service: v })} required>
-                  <SelectTrigger><SelectValue placeholder={t("appointment_page.select_service")} /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={filteredServices.length === 0 ? (lang === "ru" ? "Нет услуг в этом направлении" : "Bu yo'nalishda xizmat yo'q") : t("appointment_page.select_service")} /></SelectTrigger>
                   <SelectContent>
-                    {currentServiceOptions.map((s: string) => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
+                    {filteredServices.map((s: any) => {
+                      const name = getLocalizedField(s, "name", lang);
+                      return <SelectItem key={s.id} value={name}>{name}</SelectItem>;
+                    })}
                   </SelectContent>
                 </Select>
               </div>
