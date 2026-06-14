@@ -14,6 +14,9 @@ import { ET } from "@/components/ET";
 import { buildMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/appointment")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    doctor_id: typeof search.doctor_id === "string" ? search.doctor_id : undefined,
+  }),
   head: ({ params }) => {
     const isRu = params.lang === "ru";
     const lang = (params.lang === "ru" ? "ru" : "uz") as "uz" | "ru";
