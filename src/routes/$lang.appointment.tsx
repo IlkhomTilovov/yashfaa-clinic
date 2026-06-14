@@ -82,7 +82,14 @@ function AppointmentPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const search = Route.useSearch();
   const [form, setForm] = useState({ patient_name: "", phone: "", doctor_id: "", service: "", date: "", time: "" });
+
+  useEffect(() => {
+    if (search.doctor_id && doctors.some((d: any) => d.id === search.doctor_id)) {
+      setForm((f) => (f.doctor_id === search.doctor_id ? f : { ...f, doctor_id: search.doctor_id!, service: "", time: "" }));
+    }
+  }, [search.doctor_id, doctors]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
