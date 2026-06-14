@@ -199,14 +199,18 @@ function AppointmentPage() {
                     setError("");
                     setForm({ ...form, date: v });
                   }} />
-                  <p className="text-xs text-muted-foreground">
-                    {lang === "ru" ? "Пн–Сб: 09:00–14:00 (воскресенье — выходной)" : "Dush–Shan: 09:00–14:00 (yakshanba — dam olish kuni)"}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{scheduleHint}</p>
                 </div>
                 <div className="space-y-2">
                   <Label>{t("appointment_page.time")}</Label>
-                  <Select value={form.time} onValueChange={(v) => setForm({ ...form, time: v })} required>
-                    <SelectTrigger><SelectValue placeholder={t("appointment_page.select_time")} /></SelectTrigger>
+                  <Select value={form.time} onValueChange={(v) => setForm({ ...form, time: v })} required disabled={!selectedDoctor}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={
+                        !selectedDoctor
+                          ? (lang === "ru" ? "Сначала выберите врача" : "Avval shifokorni tanlang")
+                          : t("appointment_page.select_time")
+                      } />
+                    </SelectTrigger>
                     <SelectContent>{timeSlots.map((tm) => (<SelectItem key={tm} value={tm}>{tm}</SelectItem>))}</SelectContent>
                   </Select>
                 </div>
