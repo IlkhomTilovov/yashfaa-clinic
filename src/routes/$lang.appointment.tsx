@@ -53,13 +53,12 @@ export const Route = createFileRoute("/$lang/appointment")({
 const timeSlots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00"];
 
 function AppointmentPage() {
-  const { doctors, categories, services } = Route.useLoaderData();
+  const { doctors, services } = Route.useLoaderData();
   const lang = useLang();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [categoryId, setCategoryId] = useState<string>("");
   const [form, setForm] = useState({ patient_name: "", phone: "", doctor_id: "", service: "", date: "", time: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
