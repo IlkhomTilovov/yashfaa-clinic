@@ -50,7 +50,27 @@ export const Route = createFileRoute("/$lang/appointment")({
   ),
 });
 
-const timeSlots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00"];
+const DEFAULT_START = "09:00";
+const DEFAULT_END = "14:00";
+
+function generateTimeSlots(start: string, end: string, stepMin = 30): string[] {
+  const toMin = (s: string) => {
+    const [h, m] = s.split(":").map(Number);
+    return h * 60 + (m || 0);
+  };
+  const fmt = (n: number) => `${String(Math.floor(n / 60)).padStart(2, "0")}:${String(n % 60).padStart(2, "0")}`;
+  const s = toMin(start);
+  const e = toMin(end);
+  if (isNaN(s) || isNaN(e) || e <= s) return [];
+  const out: string[] = [];
+  for (let t = s; t <= e; t += stepMin) out.push(fmt(t));
+  return out;
+}
+
+function parseSchedule(schedule?: string | null): { start: string; end: string } {
+  const m = (schedule || "").match(/(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})/);
+  return { start: m?.[1] ?? DEFAULT_START, end: m?.[2] ?? DEFAULT_END };
+}
 
 function AppointmentPage() {
   const { doctors, services } = Route.useLoaderData();
@@ -100,6 +120,13 @@ function AppointmentPage() {
         return doctorServiceNames.some((n) => n.trim().toLowerCase() === nm);
       })
     : [];
+  const doctorSchedule = parseSchedule(selectedDoctor?.schedule);
+  const timeSlots = selectedDoctor ? generateTimeSlots(doctorSchedule.start, doctorSchedule.end) : [];
+  const scheduleHint = selectedDoctor
+    ? (lang === "ru"
+        ? `Пн–Сб: ${doctorSchedule.start}–${doctorSchedule.end} (воскресенье — выходной)`
+        : `Dush–Shan: ${doctorSchedule.start}–${doctorSchedule.end} (yakshanba — dam olish kuni)`)
+    : (lang === "ru" ? "Сначала выберите врача" : "Avval shifokorni tanlang");
 
   return (
     <section className="px-4 py-16">
@@ -130,7 +157,7 @@ function AppointmentPage() {
               </div>
               <div className="space-y-2">
                 <Label>{t("appointment_page.doctor")}</Label>
-                <Select value={form.doctor_id} onValueChange={(v) => setForm({ ...form, doctor_id: v, service: "" })} required>
+                <Select value={form.doctor_id} onValueChange={(v) => setForm({ ...form, doctor_id: v, service: "", time: "" })} required>
                   <SelectTrigger><SelectValue placeholder={t("appointment_page.select_doctor")} /></SelectTrigger>
                   <SelectContent>
                     {doctors.map((d: any) => (
@@ -172,14 +199,18 @@ function AppointmentPage() {
                     setError("");
                     setForm({ ...form, date: v });
                   }} />
-                  <p className="text-xs text-muted-foreground">
-                    {lang === "ru" ? "Пн–Сб: 09:00–14:00 (воскресенье — выходной)" : "Dush–Shan: 09:00–14:00 (yakshanba — dam olish kuni)"}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{scheduleHint}</p>
                 </div>
                 <div className="space-y-2">
                   <Label>{t("appointment_page.time")}</Label>
-                  <Select value={form.time} onValueChange={(v) => setForm({ ...form, time: v })} required>
-                    <SelectTrigger><SelectValue placeholder={t("appointment_page.select_time")} /></SelectTrigger>
+                  <Select value={form.time} onValueChange={(v) => setForm({ ...form, time: v })} required disabled={!selectedDoctor}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={
+                        !selectedDoctor
+                          ? (lang === "ru" ? "Сначала выберите врача" : "Avval shifokorni tanlang")
+                          : t("appointment_page.select_time")
+                      } />
+                    </SelectTrigger>
                     <SelectContent>{timeSlots.map((tm) => (<SelectItem key={tm} value={tm}>{tm}</SelectItem>))}</SelectContent>
                   </Select>
                 </div>
