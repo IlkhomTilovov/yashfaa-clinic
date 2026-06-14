@@ -408,7 +408,7 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
             <div className="space-y-2">
               <Label className="text-sm">Xizmatlar / Yo'nalishlar</Label>
               <div className="flex flex-wrap gap-2">
-                {SERVICES.map((svc) => {
+                {services.map((svc) => {
                   const selected = form.services_offered.includes(svc);
                   return (
                     <Badge
