@@ -134,6 +134,17 @@ export const getServices = createServerFn({ method: "GET" }).handler(async () =>
   return data;
 });
 
+export const getActiveServices = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = await getSupabase();
+  const { data, error } = await supabase
+    .from("services")
+    .select("id, name, name_uz, name_ru, slug, category_id")
+    .eq("is_active", true)
+    .order("name");
+  if (error) throw new Error(error.message);
+  return data ?? [];
+});
+
 export const getServiceBySlug = createServerFn({ method: "GET" })
   .inputValidator((input: { slug: string }) => {
     const parsed = z.object({ slug: z.string().min(1) }).parse(input);
