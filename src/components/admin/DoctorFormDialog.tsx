@@ -370,12 +370,30 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-sm">Qabul vaqti / Ish jadvali</Label>
-                <Input
-                  value={form.schedule}
-                  onChange={(e) => setForm({ ...form, schedule: e.target.value })}
-                  placeholder="Dushanba–Juma 09:00–18:00"
-                />
+                <Label className="text-sm">Ish vaqti (boshlanish — tugash)</Label>
+                {(() => {
+                  const m = (form.schedule || "").match(/(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})/);
+                  const startTime = m?.[1] ?? "09:00";
+                  const endTime = m?.[2] ?? "14:00";
+                  const daysMatch = (form.schedule || "").replace(/\d{1,2}:\d{2}\s*[–-]\s*\d{1,2}:\d{2}/, "").trim();
+                  const days = daysMatch || "Dushanba–Shanba";
+                  const compose = (s: string, e: string) => `${days} ${s}–${e}`;
+                  return (
+                    <div className="grid grid-cols-2 gap-2">
+                      <Input
+                        type="time"
+                        value={startTime}
+                        onChange={(ev) => setForm({ ...form, schedule: compose(ev.target.value, endTime) })}
+                      />
+                      <Input
+                        type="time"
+                        value={endTime}
+                        onChange={(ev) => setForm({ ...form, schedule: compose(startTime, ev.target.value) })}
+                      />
+                    </div>
+                  );
+                })()}
+                <p className="text-xs text-muted-foreground">Joriy: {form.schedule || "—"}</p>
               </div>
             </div>
 
