@@ -41,20 +41,7 @@ const SPECIALIZATIONS = [
 
 const LANGUAGES = ["O'zbek", "Rus", "Ingliz", "Turk", "Arab", "Koreys"];
 
-const SERVICES = [
-  "Konsultatsiya",
-  "Yurak tekshiruvi",
-  "EKG",
-  "UZI",
-  "Qon tahlili",
-  "Rentgen",
-  "MRT",
-  "KT",
-  "Fizioterapiya",
-  "Jarrohlik amaliyoti",
-  "Lazerli davolash",
-  "Endoskopiya",
-];
+// SERVICES endi `services` jadvalidan dinamik yuklanadi (pastdagi useEffect ga qarang).
 
 export interface DoctorFormData {
   name: string;
@@ -120,7 +107,24 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
   const [slugManual, setSlugManual] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState(false);
+  const [services, setServices] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Xizmatlar ro'yxatini DB dan yuklash
+  useEffect(() => {
+    if (!open) return;
+    (async () => {
+      const { data } = await supabase
+        .from("services")
+        .select("name, name_uz")
+        .eq("is_active", true)
+        .order("name");
+      const names = Array.from(
+        new Set((data ?? []).map((s: any) => s.name_uz || s.name).filter(Boolean))
+      );
+      setServices(names);
+    })();
+  }, [open]);
 
   // Auto-generate slug from name
   useEffect(() => {
@@ -404,7 +408,7 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
             <div className="space-y-2">
               <Label className="text-sm">Xizmatlar / Yo'nalishlar</Label>
               <div className="flex flex-wrap gap-2">
-                {SERVICES.map((svc) => {
+                {services.map((svc) => {
                   const selected = form.services_offered.includes(svc);
                   return (
                     <Badge
