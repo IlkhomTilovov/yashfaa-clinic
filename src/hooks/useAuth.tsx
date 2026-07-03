@@ -27,10 +27,7 @@ export function useAuth() {
       let isAdmin = false;
 
       if (user) {
-        const { data, error } = await supabase.rpc("has_role", {
-          _user_id: user.id,
-          _role: "admin",
-        });
+        const { data, error } = await supabase.rpc("is_admin");
 
         if (error) {
           console.error("Failed to resolve admin role", error);

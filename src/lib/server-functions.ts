@@ -7,10 +7,16 @@ async function getSupabase() {
   return supabase;
 }
 
+// Sanitized error helper: log full detail server-side, return generic message to clients
+function fail(context: string, error: unknown): never {
+  console.error(`[server-fn:${context}]`, error);
+  throw new Error("Kutilmagan xatolik yuz berdi. Iltimos, keyinroq urinib ko'ring.");
+}
+
 export const getCategories = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = await getSupabase();
   const { data, error } = await supabase.from("categories").select("*").order("name");
-  if (error) throw new Error(error.message);
+  if (error) fail("getCategories", error);
   return data;
 });
 
@@ -20,7 +26,7 @@ export const getTests = createServerFn({ method: "GET" }).handler(async () => {
     .from("tests")
     .select("*, categories(name)")
     .order("name");
-  if (error) throw new Error(error.message);
+  if (error) fail("getTests", error);
   return data;
 });
 
@@ -37,14 +43,14 @@ export const getTestBySlug = createServerFn({ method: "GET" })
       .eq("slug", data.slug)
       .eq("is_active", true)
       .single();
-    if (error) throw new Error(error.message);
+    if (error) fail("getTestBySlug", error);
     return test;
   });
 
 export const getDoctors = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = await getSupabase();
   const { data, error } = await supabase.from("doctors").select("*").order("name");
-  if (error) throw new Error(error.message);
+  if (error) fail("getDoctors", error);
   return data;
 });
 
@@ -61,7 +67,7 @@ export const getDoctorById = createServerFn({ method: "GET" })
       .eq("id", data.id)
       .eq("is_active", true)
       .maybeSingle();
-    if (error) throw new Error(error.message);
+    if (error) fail("getDoctorById", error);
     return doctor; // null if not found or inactive
   });
 
@@ -80,7 +86,7 @@ export const getServicesByDoctor = createServerFn({ method: "GET" })
       .eq("is_active", true)
       .contains("doctor_ids", [data.doctorId])
       .order("name");
-    if (error) throw new Error(error.message);
+    if (error) fail("getServicesByDoctor", error);
     return services ?? [];
   });
 
@@ -106,7 +112,7 @@ export const createAppointment = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const supabase = await getSupabase();
     const { error } = await supabase.from("appointments").insert(data);
-    if (error) throw new Error(error.message);
+    if (error) fail("createAppointment", error);
     return { success: true };
   });
 
@@ -115,7 +121,7 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
   const { data, error } = await supabase
     .from("site_content")
     .select("key, value_uz, value_ru, value_type");
-  if (error) throw new Error(error.message);
+  if (error) fail("getSiteContent", error);
   // Return as a map keyed by `key` so the client can hydrate directly
   const map: Record<string, { key: string; value_uz: string | null; value_ru: string | null; value_type: string }> = {};
   for (const row of data ?? []) {
@@ -130,7 +136,7 @@ export const getServices = createServerFn({ method: "GET" }).handler(async () =>
     .from("services")
     .select("*, categories(name)")
     .order("name");
-  if (error) throw new Error(error.message);
+  if (error) fail("getServices", error);
   return data;
 });
 
@@ -141,7 +147,7 @@ export const getActiveServices = createServerFn({ method: "GET" }).handler(async
     .select("id, name, name_uz, name_ru, slug, category_id")
     .eq("is_active", true)
     .order("name");
-  if (error) throw new Error(error.message);
+  if (error) fail("getActiveServices", error);
   return data ?? [];
 });
 
@@ -158,7 +164,7 @@ export const getServiceBySlug = createServerFn({ method: "GET" })
       .eq("slug", data.slug)
       .eq("is_active", true)
       .maybeSingle();
-    if (error) throw new Error(error.message);
-    if (!service) throw new Error("Service not found");
+    if (error) fail("getServiceBySlug", error);
+    if (!service) throw new Error("Xizmat topilmadi");
     return service;
   });

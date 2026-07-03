@@ -53,7 +53,7 @@ export const Route = createFileRoute("/$lang/services/$slug")({
       <div className="px-4 py-16 text-center">
         <Briefcase className="mx-auto h-12 w-12 text-muted-foreground/30" />
         <h2 className="mt-4 text-2xl font-bold">{t("detail.service_not_found")}</h2>
-        <p className="mt-2 text-muted-foreground">{error.message}</p>
+        <p className="mt-2 text-muted-foreground">Ma'lumotni yuklashda xatolik yuz berdi. Iltimos, sahifani yangilang.</p>
         <div className="mt-6 flex justify-center gap-3">
           <Button variant="outline" onClick={() => window.history.back()}><ArrowLeft className="mr-2 h-4 w-4" />{t("detail.back_services")}</Button>
           <Button onClick={() => { router.invalidate(); reset(); }}>{t("common.retry")}</Button>
