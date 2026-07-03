@@ -36,7 +36,7 @@ export const Route = createFileRoute("/$lang/tests")({
     return (
       <div className="px-4 py-16 text-center">
         <h2 className="text-2xl font-bold">{t("common.error")}</h2>
-        <p className="mt-2 text-muted-foreground">{error.message}</p>
+        <p className="mt-2 text-muted-foreground">Ma{error.message}#39;lumotni yuklashda xatolik. Iltimos, sahifani yangilang.</p>
         <Button className="mt-4" onClick={() => { router.invalidate(); reset(); }}>{t("common.retry")}</Button>
       </div>
     );
