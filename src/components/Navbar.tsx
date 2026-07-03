@@ -7,6 +7,7 @@ import { useLang } from "@/hooks/useLang";
 import logoSvg from "@/assets/logo.svg";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
 import { ET } from "@/components/ET";
+import { reportConversion } from "@/lib/gtag";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -36,7 +37,7 @@ export function Navbar() {
       <div className="hidden border-b bg-primary px-4 py-1.5 text-primary-foreground md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between text-xs">
           <div className="flex items-center gap-4">
-            <a href={`tel:${CLINIC_PHONE_TEL}`} className="flex items-center gap-1 hover:underline"><Phone className="h-3 w-3" /> {CLINIC_PHONE_DISPLAY}</a>
+            <a href={`tel:${CLINIC_PHONE_TEL}`} onClick={() => reportConversion()} className="flex items-center gap-1 hover:underline"><Phone className="h-3 w-3" /> {CLINIC_PHONE_DISPLAY}</a>
             <span className="flex items-center gap-1"><Clock className="h-3 w-3" />
               <ET k="hero.working_hours" t="hero.working_hours" />
             </span>
@@ -89,7 +90,7 @@ export function Navbar() {
             </button>
           </div>
           <Button asChild>
-            <Link to={`/${lang}/appointment` as any}>
+            <Link to={`/${lang}/appointment` as any} onClick={() => reportConversion()}>
               <ET k="nav.appointment_btn" t="nav.appointment" />
             </Link>
           </Button>
@@ -117,7 +118,7 @@ export function Navbar() {
               </button>
             </div>
             <Button asChild className="mt-2">
-              <Link to={`/${lang}/appointment` as any} onClick={() => setMobileOpen(false)}>
+              <Link to={`/${lang}/appointment` as any} onClick={() => { reportConversion(); setMobileOpen(false); }}>
                 <ET k="nav.appointment_btn" t="nav.appointment" />
               </Link>
             </Button>

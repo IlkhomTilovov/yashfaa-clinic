@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Phone, Calendar, Send } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import { CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
+import { reportConversion } from "@/lib/gtag";
 
 export function FloatingCTA() {
   const lang = useLang();
@@ -26,6 +27,7 @@ export function FloatingCTA() {
         <div className="flex items-center gap-2">
           <a
             href={`tel:${CLINIC_PHONE_TEL}`}
+            onClick={() => reportConversion()}
             className="flex items-center justify-center gap-1.5 rounded-lg border border-border px-3 py-3 text-sm font-semibold text-foreground"
           >
             <Phone className="h-4 w-4" />
@@ -33,6 +35,7 @@ export function FloatingCTA() {
           <Link
             to="/$lang/appointment"
             params={{ lang }}
+            onClick={() => reportConversion()}
             className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-md"
           >
             <Calendar className="h-4 w-4" />
