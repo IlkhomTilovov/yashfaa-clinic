@@ -14,6 +14,7 @@ import { HeroSearch } from "@/components/HeroSearch";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
+import { reportConversion } from "@/lib/gtag";
 import { EditableText } from "@/components/EditableText";
 import { EditableImage } from "@/components/EditableImage";
 import { ET } from "@/components/ET";
@@ -165,7 +166,7 @@ function HomePage() {
             {/* ─── CTA Buttons ─── */}
             <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
               <Button size="lg" className="h-12 rounded-2xl px-8 text-base shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/30" asChild>
-                <Link to="/$lang/appointment" params={{ lang }}>
+                <Link to="/$lang/appointment" params={{ lang }} onClick={() => reportConversion()}>
                   <Calendar className="mr-2 h-5 w-5" />
                   {t("hero.cta_appointment")}
                 </Link>
@@ -188,7 +189,7 @@ function HomePage() {
             </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-muted-foreground md:justify-start">
-              <a href={`tel:${CLINIC_PHONE_TEL}`} className="flex items-center gap-2 transition-colors hover:text-primary">
+              <a href={`tel:${CLINIC_PHONE_TEL}`} onClick={() => reportConversion()} className="flex items-center gap-2 transition-colors hover:text-primary">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10"><Phone className="h-3.5 w-3.5 text-primary" /></div>
                 {CLINIC_PHONE_DISPLAY}
               </a>
@@ -307,7 +308,7 @@ function HomePage() {
                       )}
                     </Link>
                     <div className="mt-3">
-                      <Link to="/$lang/appointment" params={{ lang }} search={{ doctor_id: doc.id }} className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
+                      <Link to="/$lang/appointment" params={{ lang }} search={{ doctor_id: doc.id }} onClick={() => reportConversion()} className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
                         <Calendar className="h-4 w-4" />
                         {t("hero.cta_appointment")}
                       </Link>
@@ -452,7 +453,7 @@ function HomePage() {
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Button size="lg" variant="secondary" className="rounded-full px-8 shadow-lg" asChild>
-              <Link to="/$lang/appointment" params={{ lang }}>
+              <Link to="/$lang/appointment" params={{ lang }} onClick={() => reportConversion()}>
                 <Calendar className="mr-2 h-5 w-5" />
                 <ET k="cta.appointment" t="cta.appointment" />
               </Link>

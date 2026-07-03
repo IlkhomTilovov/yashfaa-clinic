@@ -48,7 +48,7 @@ export function Footer() {
               <li><Link to={`/${lang}/services` as any} className="hover:text-primary">{t("nav.services")}</Link></li>
               <li><Link to={`/${lang}/doctors` as any} className="hover:text-primary">{t("nav.doctors")}</Link></li>
               <li><Link to={`/${lang}/tests` as any} className="hover:text-primary">{t("nav.tests")}</Link></li>
-              <li><Link to={`/${lang}/appointment` as any} className="hover:text-primary">{t("nav.appointment")}</Link></li>
+              <li><Link to={`/${lang}/appointment` as any} onClick={() => reportConversion()} className="hover:text-primary">{t("nav.appointment")}</Link></li>
             </ul>
           </div>
           <div>
@@ -58,7 +58,7 @@ export function Footer() {
               </EditableText>
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href={`tel:${CLINIC_PHONE_TEL}`} className="flex items-center gap-2 hover:text-primary"><Phone className="h-4 w-4 text-primary" /> {CLINIC_PHONE_DISPLAY}</a></li>
+              <li><a href={`tel:${CLINIC_PHONE_TEL}`} onClick={() => reportConversion()} className="flex items-center gap-2 hover:text-primary"><Phone className="h-4 w-4 text-primary" /> {CLINIC_PHONE_DISPLAY}</a></li>
               <li><a href={`mailto:${CLINIC_EMAIL}`} className="flex items-center gap-2 hover:text-primary"><Mail className="h-4 w-4 text-primary" /><span>{CLINIC_EMAIL}</span></a></li>
               <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /> {CLINIC_ADDRESS}</li>
             </ul>

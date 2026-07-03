@@ -11,6 +11,7 @@ import { getTests, getCategories } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
 import { ET } from "@/components/ET";
+import { reportConversion } from "@/lib/gtag";
 import { buildMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/tests")({
@@ -116,7 +117,7 @@ function TestsPage() {
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
-                      <a href={`tel:${CLINIC_PHONE_TEL}`} onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+                      <a href={`tel:${CLINIC_PHONE_TEL}`} onClick={(e) => { e.stopPropagation(); reportConversion(); }} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
                         <Phone className="h-4 w-4" /> {t("tests_section.contact_us")}
                       </a>
                     </div>
@@ -133,7 +134,7 @@ function TestsPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             <ET k="tests.price_info_subtitle" t="pages.price_info_subtitle" multiline />
           </p>
-          <a href={`tel:${CLINIC_PHONE_TEL}`} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"><Phone className="h-5 w-5" /> {CLINIC_PHONE_DISPLAY}</a>
+          <a href={`tel:${CLINIC_PHONE_TEL}`} onClick={() => reportConversion()} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"><Phone className="h-5 w-5" /> {CLINIC_PHONE_DISPLAY}</a>
         </div>
       </div>
     </section>
