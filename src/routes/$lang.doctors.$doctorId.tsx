@@ -8,6 +8,7 @@ import { ArrowLeft, Calendar, Award, Phone, Send, Briefcase, ArrowRight } from "
 import { getDoctorById, getServicesByDoctor } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_TEL, CLINIC_TELEGRAM } from "@/lib/contact";
+import { reportConversion } from "@/lib/gtag";
 import { buildMeta, jsonLdScript, pickLang, truncate, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/doctors/$doctorId")({
@@ -119,7 +120,7 @@ function DoctorProfilePage() {
                 {/* CTA Buttons */}
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Button size="lg" asChild>
-                    <Link to={"/$lang/appointment" as any} params={{ lang } as any} search={{ doctor_id: doctor.id } as any}>
+                    <Link to={"/$lang/appointment" as any} params={{ lang } as any} search={{ doctor_id: doctor.id } as any} onClick={() => reportConversion()}>
                       <Calendar className="mr-2 h-5 w-5" />{t("hero.cta_appointment")}
                     </Link>
                   </Button>
@@ -130,7 +131,7 @@ function DoctorProfilePage() {
                     </a>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <a href={`tel:${CLINIC_PHONE_TEL}`}>
+                    <a href={`tel:${CLINIC_PHONE_TEL}`} onClick={() => reportConversion()}>
                       <Phone className="mr-2 h-5 w-5" />
                       {t("hero.cta_call")}
                     </a>

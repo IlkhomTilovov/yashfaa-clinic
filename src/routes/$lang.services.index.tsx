@@ -8,6 +8,7 @@ import { Phone, Clock, MapPin, Star, Globe, Briefcase } from "lucide-react";
 import { getServices, getCategories, getDoctors } from "@/lib/server-functions";
 import { useLang, getLocalizedField } from "@/hooks/useLang";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL } from "@/lib/contact";
+import { reportConversion } from "@/lib/gtag";
 import { EditableText } from "@/components/EditableText";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { buildMeta } from "@/lib/seo";
@@ -154,7 +155,7 @@ function ServicesPage() {
               {get("services.price_info_subtitle", t("pages.price_info_subtitle"))}
             </EditableText>
           </p>
-          <a href={`tel:${CLINIC_PHONE_TEL}`} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+          <a href={`tel:${CLINIC_PHONE_TEL}`} onClick={() => reportConversion()} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90">
             <Phone className="h-5 w-5" /> {CLINIC_PHONE_DISPLAY}
           </a>
         </div>
