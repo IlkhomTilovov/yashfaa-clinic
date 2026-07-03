@@ -6,6 +6,7 @@ import { useSiteContent } from "@/hooks/useSiteContent";
 import { EditableText } from "@/components/EditableText";
 import logoSvg from "@/assets/logo.svg";
 import { CLINIC_PHONE_DISPLAY, CLINIC_PHONE_TEL, CLINIC_EMAIL, CLINIC_ADDRESS, CLINIC_TELEGRAM, CLINIC_INSTAGRAM, CLINIC_FACEBOOK, CLINIC_BRANCHES } from "@/lib/contact";
+import { reportConversion } from "@/lib/gtag";
 
 export function Footer() {
   const lang = useLang();
