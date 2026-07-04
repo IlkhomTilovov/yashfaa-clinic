@@ -1,0 +1,1 @@
+GRANT SELECT (phone) ON public.doctors TO authenticated;
