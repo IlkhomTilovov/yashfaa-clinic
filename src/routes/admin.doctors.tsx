@@ -47,7 +47,8 @@ function AdminDoctorsPage() {
 
   const fetchDoctors = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("doctors").select("*").order("name");
+    const { data, error } = await (supabase as any).rpc("admin_get_doctors");
+    if (error) toast.error("Xatolik: " + error.message);
     setDoctors((data ?? []) as Doctor[]);
     setLoading(false);
   }, []);

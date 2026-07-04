@@ -520,6 +520,39 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_get_doctors: {
+        Args: never
+        Returns: {
+          bio: string | null
+          bio_ru: string | null
+          bio_uz: string | null
+          branch: string | null
+          consultation_price: number | null
+          created_at: string
+          experience_years: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          languages: string[] | null
+          name: string
+          name_ru: string | null
+          name_uz: string | null
+          online_available: boolean
+          phone: string | null
+          schedule: string | null
+          services_offered: string[] | null
+          slug: string | null
+          specialization: string
+          specialization_ru: string | null
+          specialization_uz: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "doctors"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
