@@ -47,9 +47,13 @@ export const getTestBySlug = createServerFn({ method: "GET" })
     return test;
   });
 
+// Public doctor columns — excludes `phone` (column-level restricted for anon)
+const PUBLIC_DOCTOR_COLUMNS =
+  "id, name, name_uz, name_ru, specialization, specialization_uz, specialization_ru, image_url, bio, bio_uz, bio_ru, created_at, experience_years, is_active, branch, schedule, consultation_price, languages, services_offered, slug, online_available";
+
 export const getDoctors = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = await getSupabase();
-  const { data, error } = await supabase.from("doctors").select("*").order("name");
+  const { data, error } = await supabase.from("doctors").select(PUBLIC_DOCTOR_COLUMNS).order("name");
   if (error) fail("getDoctors", error);
   return data;
 });
@@ -63,7 +67,7 @@ export const getDoctorById = createServerFn({ method: "GET" })
     const supabase = await getSupabase();
     const { data: doctor, error } = await supabase
       .from("doctors")
-      .select("*")
+      .select(PUBLIC_DOCTOR_COLUMNS)
       .eq("id", data.id)
       .eq("is_active", true)
       .maybeSingle();
