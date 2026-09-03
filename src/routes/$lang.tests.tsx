@@ -27,7 +27,10 @@ export const Route = createFileRoute("/$lang/tests")({
     return { meta: buildMeta({ title, description, pathWithoutLang: "/tests", lang }) };
   },
   loader: async () => {
-    const [tests, categories] = await Promise.all([getTests(), getCategories()]);
+    const [tests, categories] = await Promise.all([
+      getTests().catch(() => []),
+      getCategories().catch(() => []),
+    ]);
     return { tests, categories };
   },
   component: TestsPage,
