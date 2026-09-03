@@ -51,13 +51,18 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
-  // SSR prefetch site_content so editable text is hydrated correctly on first paint
+  // SSR prefetch site_content so editable text is hydrated correctly on first paint.
+  // Never let a backend outage break SSR — fall back to defaults instead of a 500.
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData({
-      queryKey: ["site_content"],
-      queryFn: () => getSiteContent(),
-      staleTime: 5 * 60_000,
-    });
+    try {
+      await context.queryClient.ensureQueryData({
+        queryKey: ["site_content"],
+        queryFn: () => getSiteContent(),
+        staleTime: 5 * 60_000,
+      });
+    } catch (err) {
+      console.error("[root loader] site_content prefetch failed", err);
+    }
   },
   shellComponent: RootShell,
   component: RootComponent,
