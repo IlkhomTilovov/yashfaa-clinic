@@ -23,7 +23,7 @@ export const Route = createFileRoute("/$lang/doctors/")({
       : "Yashfaa Clinic Toshkentdagi malakali shifokorlar jamoasi. Terapiya, diagnostika, tor mutaxassislar. Onlayn qabulga yozilish.";
     return { meta: buildMeta({ title, description, pathWithoutLang: "/doctors", lang }) };
   },
-  loader: () => getDoctors(),
+  loader: () => getDoctors().catch(() => []),
   component: DoctorsPage,
   errorComponent: ({ error, reset }) => {
     const router = useRouter();

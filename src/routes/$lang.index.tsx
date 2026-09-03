@@ -53,7 +53,12 @@ export const Route = createFileRoute("/$lang/")({
     };
   },
   loader: async () => {
-    const [doctors, tests, services] = await Promise.all([getDoctors(), getTests(), getServices()]);
+    // Backend vaqtincha ishlamay qolsa ham sahifa ochilishi kerak (500 emas)
+    const [doctors, tests, services] = await Promise.all([
+      getDoctors().catch(() => []),
+      getTests().catch(() => []),
+      getServices().catch(() => []),
+    ]);
     return {
       doctors: (doctors ?? []).filter((d: any) => d.is_active).slice(0, 4),
       tests: (tests ?? []).filter((t: any) => t.is_active).slice(0, 6),

@@ -26,7 +26,11 @@ export const Route = createFileRoute("/$lang/services/")({
     return { meta: buildMeta({ title, description, pathWithoutLang: "/services", lang }) };
   },
   loader: async () => {
-    const [services, categories, doctors] = await Promise.all([getServices(), getCategories(), getDoctors()]);
+    const [services, categories, doctors] = await Promise.all([
+      getServices().catch(() => []),
+      getCategories().catch(() => []),
+      getDoctors().catch(() => []),
+    ]);
     return { services, categories, doctors };
   },
   component: ServicesPage,
