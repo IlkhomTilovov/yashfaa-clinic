@@ -1,0 +1,84 @@
+name: Deploy App (VPS)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "package.json"
+      - "bun.lockb"
+      - "vite.config.ts"
+      - "tsconfig.json"
+      - "deploy/app/**"
+      - ".github/workflows/deploy-app.yml"
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+
+      # Build a self-contained Node server (not the Cloudflare Worker
+      # build) — the app's own VPS runs this under PM2.
+      - name: Build
+        env:
+          NITRO_PRESET: node-server
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: bun run build
+
+      - name: Package build
+        run: |
+          cp deploy/app/ecosystem.config.cjs .output/ecosystem.config.cjs
+          tar -czf app.tar.gz -C .output .
+
+      - name: Upload to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "app.tar.gz"
+          target: "/opt/yashfaa/app"
+
+      - name: Release and restart
+        uses: appleboy/ssh-action@v1
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: DB_PASSWORD,SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY
+          script: |
+            set -e
+            cd /opt/yashfaa/app
+            rm -rf release
+            mkdir -p release
+            tar -xzf app.tar.gz -C release
+            rm -f app.tar.gz
+
+            cat > release/.env <<EOF
+            NODE_ENV=production
+            PORT=3000
+            DATABASE_URL=postgres://yashfaa:${DB_PASSWORD}@localhost:5433/yashfaa
+            SUPABASE_URL=${SUPABASE_URL}
+            SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY}
+            EOF
+
+            rm -rf current
+            mv release current
+
+            command -v pm2 >/dev/null || npm install -g pm2
+            cd current
+            pm2 startOrReload ecosystem.config.cjs --update-env
+            pm2 save
