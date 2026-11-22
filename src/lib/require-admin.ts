@@ -1,11 +1,8 @@
 // Server-function middleware that gates admin-only server functions.
-// Identity still comes from Supabase Auth (phase 1 keeps Auth on Supabase —
-// only the data layer moved to our own Postgres); the admin ROLE check now
-// reads `user_roles` from our own database instead of Supabase RLS/RPC.
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { and, eq } from "drizzle-orm";
-import { getUserIdFromAuthHeader } from "@/lib/supabase-identity";
+import { getUserIdFromAuthHeader } from "@/lib/auth-identity";
 import { getDb } from "@/lib/db/client";
 import { userRoles } from "@/lib/db/schema";
 

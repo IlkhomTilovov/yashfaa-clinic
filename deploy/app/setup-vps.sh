@@ -28,7 +28,7 @@ command -v pm2 >/dev/null || npm install -g pm2
 command -v nginx >/dev/null || apt-get install -y nginx
 command -v certbot >/dev/null || apt-get install -y certbot python3-certbot-nginx
 
-mkdir -p /opt/yashfaa/app
+mkdir -p /opt/yashfaa/app/shared/uploads
 
 # Install the Nginx site config (HTTP only at this point).
 cp "$REPO_DIR/deploy/nginx/$DOMAIN.conf" "/etc/nginx/sites-available/$DOMAIN.conf"
@@ -45,4 +45,8 @@ certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN"
 # as root on first use — this invocation already runs as root).
 pm2 startup systemd -u "$(whoami)" --hp "$HOME"
 
-echo "Done. Deploy the app with the 'Deploy App (VPS)' GitHub Actions workflow."
+echo "Done. Next steps:"
+echo "  1. Deploy the app once via the 'Deploy App (VPS)' GitHub Actions workflow."
+echo "  2. Bootstrap the first admin login (needs bun + this repo's deps installed, and DATABASE_URL set):"
+echo "     DATABASE_URL=postgres://yashfaa:<DB_PASSWORD>@localhost:5433/yashfaa \\"
+echo "       bun run scripts/create-admin.ts admin@yashfaa-clinic.uz '<a-strong-password>'"

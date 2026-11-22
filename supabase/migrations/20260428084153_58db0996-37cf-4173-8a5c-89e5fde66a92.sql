@@ -1,1 +1,0 @@
-UPDATE public.doctors SET name_uz = NULL WHERE id = '149a4990-1e97-435b-9413-0489ecb0a60b';

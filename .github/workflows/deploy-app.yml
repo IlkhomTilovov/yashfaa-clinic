@@ -25,13 +25,10 @@ jobs:
           bun-version: latest
       - run: bun install --frozen-lockfile
 
-      # Build a self-contained Node server (not the Cloudflare Worker
-      # build) — the app's own VPS runs this under PM2.
+      # Builds a self-contained Node server (vite.config.ts targets the
+      # node-server nitro preset directly) — the app's own VPS runs this
+      # under PM2.
       - name: Build
-        env:
-          NITRO_PRESET: node-server
-          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
         run: bun run build
 
       - name: Package build
@@ -52,13 +49,11 @@ jobs:
         uses: appleboy/ssh-action@v1
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          envs: DB_PASSWORD,SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY
+          envs: DB_PASSWORD
           script: |
             set -e
             cd /opt/yashfaa/app
@@ -67,12 +62,13 @@ jobs:
             tar -xzf app.tar.gz -C release
             rm -f app.tar.gz
 
+            mkdir -p shared/uploads
+
             cat > release/.env <<EOF
             NODE_ENV=production
             PORT=3000
             DATABASE_URL=postgres://yashfaa:${DB_PASSWORD}@localhost:5433/yashfaa
-            SUPABASE_URL=${SUPABASE_URL}
-            SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY}
+            UPLOADS_DIR=/opt/yashfaa/app/shared/uploads
             EOF
 
             rm -rf current

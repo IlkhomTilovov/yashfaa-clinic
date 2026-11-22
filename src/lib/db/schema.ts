@@ -170,8 +170,30 @@ export const siteContent = pgTable("site_content", {
   keyUnique: uniqueIndex("site_content_key_key").on(table.key),
 }));
 
-// `user_id` stores the Supabase Auth user id (plain uuid, no FK — Auth stays
-// on Supabase in phase 1, so there is no local `users` table to reference yet).
+// Self-hosted admin accounts — replaces Supabase Auth. `user_roles.user_id`
+// (below) still has no FK to this table (kept loose, as it always was) so
+// adding this table needs no change to existing role rows.
+export const adminUsers = pgTable("admin_users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull(),
+  password_hash: text("password_hash").notNull(),
+  created_at: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
+}, (table) => ({
+  emailUnique: uniqueIndex("admin_users_email_key").on(table.email),
+}));
+
+// Opaque bearer tokens (the row's own id) issued on login; deleting the row
+// logs the session out. No JWT/secret involved — the token only ever means
+// anything by being looked up here.
+export const adminSessions = pgTable("admin_sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  user_id: uuid("user_id").notNull().references(() => adminUsers.id, { onDelete: "cascade" }),
+  expires_at: timestamp("expires_at", { withTimezone: true, mode: "string" }).notNull(),
+  created_at: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
+});
+
+// `user_id` stores the admin_users id (plain uuid, no FK for backward
+// compatibility with rows created back when Auth was on Supabase).
 export const profiles = pgTable("profiles", {
   id: uuid("id").primaryKey().defaultRandom(),
   user_id: uuid("user_id").notNull(),

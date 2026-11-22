@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { adminUploadImage } from "@/lib/upload-server-functions";
 import { adminGetSiteContentRows, adminUpdateSiteContentRow } from "@/lib/admin-server-functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -101,17 +101,16 @@ function AdminContentPage() {
   const handleImageUpload = async (key: string, file: File) => {
     setUploadingKey(key);
     try {
-      const ext = file.name.split(".").pop();
-      const path = `${key.replace(/\./g, "-")}-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("site-images").upload(path, file, { upsert: true });
-      if (upErr) throw upErr;
-      const { data: pub } = supabase.storage.from("site-images").getPublicUrl(path);
-      update(key, "value_uz", pub.publicUrl);
-      update(key, "value_ru", pub.publicUrl);
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("bucket", "site-images");
+      const { url } = await adminUploadImage({ data: fd });
+      update(key, "value_uz", url);
+      update(key, "value_ru", url);
       // Persist immediately
       const row = rows.find((r) => r.key === key);
       if (row) {
-        await adminUpdateSiteContentRow({ data: { id: row.id, value_uz: pub.publicUrl, value_ru: pub.publicUrl } });
+        await adminUpdateSiteContentRow({ data: { id: row.id, value_uz: url, value_ru: url } });
       }
       toast.success("Rasm yuklandi");
     } catch (e: any) {

@@ -1,7 +1,7 @@
 // Admin-only CRUD server functions — replace direct `supabase.from(...)` calls
 // made from the browser in src/routes/admin.*.tsx. Every export here is
 // gated by `requireAdmin` (role check against our own Postgres `user_roles`
-// table); identity still comes from the caller's Supabase session token.
+// table); identity comes from the caller's admin session token.
 //
 // Unlike the public functions in server-functions.ts, errors here are NOT
 // sanitized — admin pages show `error.message` directly (same as the old

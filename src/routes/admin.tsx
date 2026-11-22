@@ -47,7 +47,7 @@ function AdminLayout() {
 
   const matches = useMatches();
   const currentPath = matches[matches.length - 1]?.fullPath ?? "";
-  const isPublicAdminRoute = currentPath === "/admin/login" || currentPath === "/admin/setup";
+  const isPublicAdminRoute = currentPath === "/admin/login";
 
   useEffect(() => {
     if (!loading && !isPublicAdminRoute && (!user || !isAdmin)) {

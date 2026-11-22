@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { adminUploadImage } from "@/lib/upload-server-functions";
 import { adminUpsertSiteContentByKey } from "@/lib/admin-server-functions";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImageIcon, Loader2, Trash2 } from "lucide-react";
@@ -22,7 +22,7 @@ interface EditableImageProps {
 
 /**
  * Floating control overlay for admins to replace an image stored in site_content.
- * Uploads file to Supabase Storage, then saves the public URL to site_content.value_uz.
+ * Uploads the file to local disk via adminUploadImage, then saves the public URL to site_content.value_uz.
  * Render this INSIDE a `relative` parent that holds the visible image.
  */
 export function EditableImage({
@@ -59,15 +59,12 @@ export function EditableImage({
     }
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop() || "jpg";
-      const path = `${folder}/${contentKey.replace(/\./g, "-")}-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from(bucket).upload(path, file, {
-        cacheControl: "3600",
-        upsert: true,
-      });
-      if (upErr) throw upErr;
-      const { data: pub } = supabase.storage.from(bucket).getPublicUrl(path);
-      await saveUrl(pub.publicUrl);
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("bucket", bucket);
+      fd.append("folder", folder);
+      const { url } = await adminUploadImage({ data: fd });
+      await saveUrl(url);
       toast.success("Rasm yangilandi");
     } catch (e: any) {
       toast.error("Xatolik: " + e.message);

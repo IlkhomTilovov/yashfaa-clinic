@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SetupRouteImport } from './routes/setup'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -19,7 +18,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as LangIndexRouteImport } from './routes/$lang.index'
 import { Route as AdminTestsRouteImport } from './routes/admin.tests'
-import { Route as AdminSetupRouteImport } from './routes/admin.setup'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
@@ -41,11 +39,6 @@ import { Route as LangDoctorsDoctorIdRouteImport } from './routes/$lang.doctors.
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupRoute = SetupRouteImport.update({
-  id: '/setup',
-  path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -86,11 +79,6 @@ const LangIndexRoute = LangIndexRouteImport.update({
 const AdminTestsRoute = AdminTestsRouteImport.update({
   id: '/tests',
   path: '/tests',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminSetupRoute = AdminSetupRouteImport.update({
-  id: '/setup',
-  path: '/setup',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
@@ -185,7 +173,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/setup': typeof SetupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
@@ -199,7 +186,6 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/$lang/': typeof LangIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -213,7 +199,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/setup': typeof SetupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
@@ -226,7 +211,6 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/$lang': typeof LangIndexRoute
   '/admin': typeof AdminIndexRoute
@@ -243,7 +227,6 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/setup': typeof SetupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/$lang/appointment': typeof LangAppointmentRoute
   '/$lang/contact': typeof LangContactRoute
@@ -257,7 +240,6 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
-  '/admin/setup': typeof AdminSetupRoute
   '/admin/tests': typeof AdminTestsRoute
   '/$lang/': typeof LangIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -275,7 +257,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/robots.txt'
-    | '/setup'
     | '/sitemap.xml'
     | '/$lang/appointment'
     | '/$lang/contact'
@@ -289,7 +270,6 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/services'
     | '/admin/settings'
-    | '/admin/setup'
     | '/admin/tests'
     | '/$lang/'
     | '/admin/'
@@ -303,7 +283,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/robots.txt'
-    | '/setup'
     | '/sitemap.xml'
     | '/$lang/appointment'
     | '/$lang/contact'
@@ -316,7 +295,6 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/services'
     | '/admin/settings'
-    | '/admin/setup'
     | '/admin/tests'
     | '/$lang'
     | '/admin'
@@ -332,7 +310,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/robots.txt'
-    | '/setup'
     | '/sitemap.xml'
     | '/$lang/appointment'
     | '/$lang/contact'
@@ -346,7 +323,6 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/services'
     | '/admin/settings'
-    | '/admin/setup'
     | '/admin/tests'
     | '/$lang/'
     | '/admin/'
@@ -363,7 +339,6 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
-  SetupRoute: typeof SetupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -374,13 +349,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup': {
-      id: '/setup'
-      path: '/setup'
-      fullPath: '/setup'
-      preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -437,13 +405,6 @@ declare module '@tanstack/react-router' {
       path: '/tests'
       fullPath: '/admin/tests'
       preLoaderRoute: typeof AdminTestsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/setup': {
-      id: '/admin/setup'
-      path: '/setup'
-      fullPath: '/admin/setup'
-      preLoaderRoute: typeof AdminSetupRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/settings': {
@@ -615,7 +576,6 @@ interface AdminRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminServicesRoute: typeof AdminServicesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
-  AdminSetupRoute: typeof AdminSetupRoute
   AdminTestsRoute: typeof AdminTestsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -629,7 +589,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminServicesRoute: AdminServicesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
-  AdminSetupRoute: AdminSetupRoute,
   AdminTestsRoute: AdminTestsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -642,7 +601,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
-  SetupRoute: SetupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,11 +1,15 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { login, logout, getCurrentUser } from "@/lib/auth-server-functions";
 import { checkIsAdmin } from "@/lib/check-admin";
-import type { User, Session } from "@supabase/supabase-js";
+import { getStoredToken, setStoredToken } from "@/lib/auth/client-token";
+
+interface AuthUser {
+  id: string;
+  email: string;
+}
 
 interface AuthState {
-  user: User | null;
-  session: Session | null;
+  user: AuthUser | null;
   isAdmin: boolean;
   loading: boolean;
 }
@@ -13,64 +17,70 @@ interface AuthState {
 export function useAuth() {
   const [state, setState] = useState<AuthState>({
     user: null,
-    session: null,
     isAdmin: false,
     loading: true,
   });
   const requestIdRef = useRef(0);
 
-  useEffect(() => {
-    let isMounted = true;
+  const refresh = useCallback(async () => {
+    const requestId = ++requestIdRef.current;
 
-    const resolveAuthState = async (session: Session | null) => {
-      const requestId = ++requestIdRef.current;
-      const user = session?.user ?? null;
-      let isAdmin = false;
-
-      if (user) {
-        try {
-          isAdmin = await checkIsAdmin();
-        } catch (error) {
-          console.error("Failed to resolve admin role", error);
-        }
+    if (!getStoredToken()) {
+      if (requestId === requestIdRef.current) {
+        setState({ user: null, isAdmin: false, loading: false });
       }
+      return;
+    }
 
-      if (!isMounted || requestId !== requestIdRef.current) {
+    try {
+      const user = await getCurrentUser();
+      if (requestId !== requestIdRef.current) return;
+
+      if (!user) {
+        setState({ user: null, isAdmin: false, loading: false });
         return;
       }
 
-      setState({ user, session, isAdmin, loading: false });
-    };
+      let isAdmin = false;
+      try {
+        isAdmin = await checkIsAdmin();
+      } catch (error) {
+        console.error("Failed to resolve admin role", error);
+      }
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      void resolveAuthState(session);
-    });
-
-    void supabase.auth
-      .getSession()
-      .then(({ data: { session } }) => resolveAuthState(session))
-      .catch(() => {
-        if (isMounted) {
-          setState({ user: null, session: null, isAdmin: false, loading: false });
-        }
-      });
-
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
-    };
+      if (requestId !== requestIdRef.current) return;
+      setState({ user, isAdmin, loading: false });
+    } catch (error) {
+      console.error("Failed to resolve session", error);
+      if (requestId === requestIdRef.current) {
+        setState({ user: null, isAdmin: false, loading: false });
+      }
+    }
   }, []);
 
-  const signIn = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-  }, []);
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      const result = await login({ data: { email, password } });
+      if (!result.success) {
+        throw new Error("Email yoki parol noto'g'ri");
+      }
+      setStoredToken(result.token);
+      await refresh();
+    },
+    [refresh]
+  );
 
   const signOut = useCallback(async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    try {
+      await logout();
+    } finally {
+      setStoredToken(null);
+      setState({ user: null, isAdmin: false, loading: false });
+    }
   }, []);
 
   return { ...state, signIn, signOut };

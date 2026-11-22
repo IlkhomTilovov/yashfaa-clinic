@@ -16,9 +16,9 @@ dist-ssr
 .nitro
 *.local
 
-# Wrangler / Cloudflare
-.wrangler/
-.dev.vars
+# Local admin image uploads (dev only — on the VPS these live outside the
+# repo, under UPLOADS_DIR)
+/uploads/
 
 # Database dumps/backups — contain patient data, never commit these
 *.backup

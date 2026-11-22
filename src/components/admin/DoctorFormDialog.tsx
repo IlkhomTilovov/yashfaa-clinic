@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { adminUploadImage, adminDeleteUploadedImage } from "@/lib/upload-server-functions";
 import { getActiveServices } from "@/lib/server-functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -144,34 +144,23 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
     }
 
     setUploading(true);
-    const ext = file.name.split(".").pop() || "jpg";
-    const fileName = `${crypto.randomUUID()}.${ext}`;
-
-    const { error } = await supabase.storage
-      .from("doctor-images")
-      .upload(fileName, file, { cacheControl: "3600", upsert: false });
-
-    if (error) {
-      toast.error("Rasm yuklanmadi: " + error.message);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("bucket", "doctor-images");
+      const { url } = await adminUploadImage({ data: fd });
+      setForm({ ...form, image_url: url });
+      toast.success("Rasm yuklandi");
+    } catch (e: any) {
+      toast.error("Rasm yuklanmadi: " + e.message);
+    } finally {
       setUploading(false);
-      return;
     }
-
-    const { data: urlData } = supabase.storage
-      .from("doctor-images")
-      .getPublicUrl(fileName);
-
-    setForm({ ...form, image_url: urlData.publicUrl });
-    setUploading(false);
-    toast.success("Rasm yuklandi");
   };
 
   const handleRemoveImage = async () => {
-    if (form.image_url?.includes("doctor-images")) {
-      const path = form.image_url.split("/doctor-images/")[1];
-      if (path) {
-        await supabase.storage.from("doctor-images").remove([path]);
-      }
+    if (form.image_url?.startsWith("/uploads/doctor-images/")) {
+      await adminDeleteUploadedImage({ data: { url: form.image_url } });
     }
     setForm({ ...form, image_url: "" });
     if (fileInputRef.current) fileInputRef.current.value = "";
