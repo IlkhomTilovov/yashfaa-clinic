@@ -7,10 +7,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-yashfaa}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      # Bind to all interfaces so Cloudflare Hyperdrive can reach it.
-      # Lock this down with a firewall (ufw/iptables) to Cloudflare's IP
-      # ranges, and keep POSTGRES_PASSWORD strong — this port is public.
-      - "5432:5432"
+      # Host port 5433 (not 5432 — this VPS already runs another Postgres
+      # natively on 5432). Exposed on all interfaces so the app can reach
+      # it; lock this down with the firewall (ufw/iptables) and keep
+      # POSTGRES_PASSWORD strong — this port is public.
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:

@@ -51,6 +51,10 @@ jobs:
             POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}
             EOF
             docker compose up -d
+            for i in $(seq 1 30); do
+              docker compose ps --format json | grep -q '"Health":"healthy"' && break
+              sleep 2
+            done
             docker compose ps
 
       # 2. Apply new Drizzle migrations from this runner, over the network,
@@ -61,5 +65,5 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Run migrations
         env:
-          DATABASE_URL: postgres://yashfaa:${{ secrets.DB_PASSWORD }}@${{ secrets.VPS_HOST }}:5432/yashfaa
+          DATABASE_URL: postgres://yashfaa:${{ secrets.DB_PASSWORD }}@${{ secrets.VPS_HOST }}:5433/yashfaa
         run: bun run db:migrate
