@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  adminListServices,
+  adminListCategoriesMinimal,
+  adminListActiveDoctorsForSelect,
+  adminUpsertService,
+  adminDeleteService,
+} from "@/lib/admin-server-functions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -109,15 +115,20 @@ function AdminServicesPage() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [s, c, d] = await Promise.all([
-      supabase.from("services").select("*, categories(name)").order("name"),
-      supabase.from("categories").select("id, name").order("name"),
-      supabase.from("doctors").select("id, name, specialization").eq("is_active", true).order("name"),
-    ]);
-    setServices((s.data ?? []) as Service[]);
-    setCategories(c.data ?? []);
-    setDoctors((d.data ?? []) as Doctor[]);
-    setLoading(false);
+    try {
+      const [s, c, d] = await Promise.all([
+        adminListServices(),
+        adminListCategoriesMinimal(),
+        adminListActiveDoctorsForSelect(),
+      ]);
+      setServices(s as Service[]);
+      setCategories(c);
+      setDoctors(d as Doctor[]);
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
@@ -199,24 +210,26 @@ function AdminServicesPage() {
       is_online: form.is_online,
       is_active: form.is_active,
     };
-    const { error } = editing
-      ? await supabase.from("services").update(payload).eq("id", editing.id)
-      : await supabase.from("services").insert(payload);
-
-    if (error) toast.error("Xatolik: " + error.message);
-    else {
+    try {
+      await adminUpsertService({ data: editing ? { id: editing.id, ...payload } : payload });
       toast.success(editing ? "Xizmat yangilandi" : "Xizmat qo'shildi");
       setDialogOpen(false);
       fetchData();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
     }
     setSaving(false);
   };
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    const { error } = await supabase.from("services").delete().eq("id", deleteId);
-    if (error) toast.error("Xatolik: " + error.message);
-    else { toast.success("Xizmat o'chirildi"); fetchData(); }
+    try {
+      await adminDeleteService({ data: { id: deleteId } });
+      toast.success("Xizmat o'chirildi");
+      fetchData();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    }
     setDeleteId(null);
   };
 

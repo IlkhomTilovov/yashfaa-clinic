@@ -14,7 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { adminGetDashboardStats } from "@/lib/admin-server-functions";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboard,
@@ -55,28 +55,13 @@ function AdminDashboard() {
 
   useEffect(() => {
     async function fetchData() {
-      const today = new Date().toISOString().split("T")[0];
-
-      const [d, t, c, a, s, ta, recent] = await Promise.all([
-        supabase.from("doctors").select("id", { count: "exact", head: true }),
-        supabase.from("tests").select("id", { count: "exact", head: true }),
-        supabase.from("categories").select("id", { count: "exact", head: true }),
-        supabase.from("appointments").select("id", { count: "exact", head: true }),
-        supabase.from("services").select("id", { count: "exact", head: true }),
-        supabase.from("appointments").select("id", { count: "exact", head: true }).eq("date", today),
-        supabase.from("appointments").select("*, doctors(name)").order("created_at", { ascending: false }).limit(5),
-      ]);
-
-      setStats({
-        doctors: d.count ?? 0,
-        tests: t.count ?? 0,
-        categories: c.count ?? 0,
-        appointments: a.count ?? 0,
-        services: s.count ?? 0,
-        todayAppointments: ta.count ?? 0,
-      });
-      setRecentAppointments((recent.data ?? []) as RecentAppointment[]);
-      setLoading(false);
+      try {
+        const { stats: s, recentAppointments: recent } = await adminGetDashboardStats();
+        setStats(s);
+        setRecentAppointments(recent as RecentAppointment[]);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);

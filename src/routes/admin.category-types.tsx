@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  adminListCategoryTypes,
+  adminUpsertCategoryType,
+  adminDeleteCategoryType,
+} from "@/lib/admin-server-functions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,9 +63,14 @@ function AdminCategoryTypesPage() {
 
   const fetchTypes = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("category_types").select("*").order("created_at");
-    setTypes((data ?? []) as CategoryType[]);
-    setLoading(false);
+    try {
+      const data = await adminListCategoryTypes();
+      setTypes(data as CategoryType[]);
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchTypes(); }, [fetchTypes]);
@@ -106,24 +115,26 @@ function AdminCategoryTypesPage() {
       slug: form.slug.trim(),
       icon: form.icon || null,
     };
-    const { error } = editing
-      ? await supabase.from("category_types").update(payload).eq("id", editing.id)
-      : await supabase.from("category_types").insert(payload);
-
-    if (error) toast.error("Xatolik: " + error.message);
-    else {
+    try {
+      await adminUpsertCategoryType({ data: editing ? { id: editing.id, ...payload } : payload });
       toast.success(editing ? "Tur yangilandi" : "Yangi tur qo'shildi");
       setDialogOpen(false);
       fetchTypes();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
     }
     setSaving(false);
   };
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    const { error } = await supabase.from("category_types").delete().eq("id", deleteId);
-    if (error) toast.error("Xatolik: " + error.message);
-    else { toast.success("Tur o'chirildi"); fetchTypes(); }
+    try {
+      await adminDeleteCategoryType({ data: { id: deleteId } });
+      toast.success("Tur o'chirildi");
+      fetchTypes();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    }
     setDeleteId(null);
   };
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { getActiveServices } from "@/lib/server-functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -114,13 +115,9 @@ export function DoctorFormDialog({ open, onOpenChange, form, setForm, editing, s
   useEffect(() => {
     if (!open) return;
     (async () => {
-      const { data } = await supabase
-        .from("services")
-        .select("name, name_uz")
-        .eq("is_active", true)
-        .order("name");
+      const data = await getActiveServices();
       const names = Array.from(
-        new Set((data ?? []).map((s: any) => s.name_uz || s.name).filter(Boolean))
+        new Set((data ?? []).map((s) => s.name_uz || s.name).filter(Boolean))
       );
       setServices(names);
     })();

@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { eq } from "drizzle-orm";
 import { SITE_URL } from "@/lib/seo";
+import { getDb } from "@/lib/db/client";
+import { services, doctors, tests } from "@/lib/db/schema";
 
 /**
- * Dynamic sitemap.xml — auto-generated from Supabase content.
+ * Dynamic sitemap.xml — auto-generated from the database.
  * Includes static pages (home, services, doctors, tests, contact, appointment)
  * plus every active service, doctor, and test in both `uz` and `ru`.
  *
@@ -12,12 +15,11 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const { supabase } = await import("@/integrations/supabase/client");
-
-        const [{ data: services }, { data: doctors }, { data: tests }] = await Promise.all([
-          supabase.from("services").select("slug").eq("is_active", true),
-          supabase.from("doctors").select("id, slug").eq("is_active", true),
-          supabase.from("tests").select("slug").eq("is_active", true),
+        const db = await getDb();
+        const [servicesRows, doctorsRows, testsRows] = await Promise.all([
+          db.select({ slug: services.slug }).from(services).where(eq(services.is_active, true)),
+          db.select({ id: doctors.id, slug: doctors.slug }).from(doctors).where(eq(doctors.is_active, true)),
+          db.select({ slug: tests.slug }).from(tests).where(eq(tests.is_active, true)),
         ]);
 
         const langs: Array<"uz" | "ru"> = ["uz", "ru"];
@@ -41,13 +43,13 @@ export const Route = createFileRoute("/sitemap.xml")({
           pushBoth(p, p === "" ? "1.0" : "0.8", p === "" ? "weekly" : "monthly");
         }
 
-        for (const s of services ?? []) {
+        for (const s of servicesRows) {
           if (s.slug) pushBoth(`/services/${s.slug}`, "0.7", "monthly");
         }
-        for (const t of tests ?? []) {
+        for (const t of testsRows) {
           if (t.slug) pushBoth(`/tahlil/${t.slug}`, "0.7", "monthly");
         }
-        for (const d of doctors ?? []) {
+        for (const d of doctorsRows) {
           // doctor route uses :doctorId param (id, not slug)
           if (d.id) pushBoth(`/doctors/${d.id}`, "0.6", "monthly");
         }

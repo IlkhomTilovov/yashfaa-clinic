@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { adminGetDoctorsAdmin, adminUpsertDoctor, adminDeleteDoctor } from "@/lib/admin-server-functions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,10 +47,14 @@ function AdminDoctorsPage() {
 
   const fetchDoctors = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await (supabase as any).rpc("admin_get_doctors");
-    if (error) toast.error("Xatolik: " + error.message);
-    setDoctors((data ?? []) as Doctor[]);
-    setLoading(false);
+    try {
+      const data = await adminGetDoctorsAdmin();
+      setDoctors(data as Doctor[]);
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchDoctors(); }, [fetchDoctors]);
@@ -108,28 +112,25 @@ function AdminDoctorsPage() {
       is_active: form.is_active,
       phone: form.phone || null,
     };
-    const { error } = editing
-      ? await supabase.from("doctors").update(payload).eq("id", editing.id)
-      : await supabase.from("doctors").insert(payload);
-
-    if (error) {
-      toast.error("Xatolik: " + error.message);
-    } else {
+    try {
+      await adminUpsertDoctor({ data: editing ? { id: editing.id, ...payload } : payload });
       toast.success(editing ? "Shifokor yangilandi" : "Shifokor qo'shildi");
       setDialogOpen(false);
       fetchDoctors();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
     }
     setSaving(false);
   };
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    const { error } = await supabase.from("doctors").delete().eq("id", deleteId);
-    if (error) {
-      toast.error("Xatolik: " + error.message);
-    } else {
+    try {
+      await adminDeleteDoctor({ data: { id: deleteId } });
       toast.success("Shifokor o'chirildi");
       fetchDoctors();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
     }
     setDeleteId(null);
   };

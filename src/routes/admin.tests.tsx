@@ -1,6 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  adminListTests,
+  adminListCategoriesMinimal,
+  adminUpsertTest,
+  adminDeleteTest,
+} from "@/lib/admin-server-functions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,13 +98,15 @@ function AdminTestsPage() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [t, c] = await Promise.all([
-      supabase.from("tests").select("*, categories(name)").order("name"),
-      supabase.from("categories").select("id, name").order("name"),
-    ]);
-    setTests((t.data ?? []) as Test[]);
-    setCategories(c.data ?? []);
-    setLoading(false);
+    try {
+      const [t, c] = await Promise.all([adminListTests(), adminListCategoriesMinimal()]);
+      setTests(t as Test[]);
+      setCategories(c);
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
@@ -180,25 +187,26 @@ function AdminTestsPage() {
       is_active: form.is_active,
       slug,
     };
-    const { error } = editing
-      ? await supabase.from("tests").update(payload).eq("id", editing.id)
-      : await supabase.from("tests").insert(payload);
-
-    if (error) {
-      toast.error("Xatolik: " + error.message);
-    } else {
+    try {
+      await adminUpsertTest({ data: editing ? { id: editing.id, ...payload } : payload });
       toast.success(editing ? "Tahlil yangilandi" : "Tahlil qo'shildi");
       setDialogOpen(false);
       fetchData();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
     }
     setSaving(false);
   };
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    const { error } = await supabase.from("tests").delete().eq("id", deleteId);
-    if (error) toast.error("Xatolik: " + error.message);
-    else { toast.success("Tahlil o'chirildi"); fetchData(); }
+    try {
+      await adminDeleteTest({ data: { id: deleteId } });
+      toast.success("Tahlil o'chirildi");
+      fetchData();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    }
     setDeleteId(null);
   };
 

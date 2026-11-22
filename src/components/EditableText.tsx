@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, type ElementType } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/hooks/useLang";
-import { supabase } from "@/integrations/supabase/client";
+import { adminUpsertSiteContentByKey } from "@/lib/admin-server-functions";
 import { useQueryClient } from "@tanstack/react-query";
 import { Pencil, Check, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -62,31 +62,9 @@ export function EditableText({
     setSaving(true);
     try {
       const field = lang === "ru" ? "value_ru" : "value_uz";
-      // Try update; if no row, insert
-      const { data: existing } = await supabase
-        .from("site_content")
-        .select("id")
-        .eq("key", contentKey)
-        .maybeSingle();
-
-      if (existing?.id) {
-        const updatePayload: Record<string, string> = { [field]: value };
-        const { error } = await supabase
-          .from("site_content")
-          .update(updatePayload as any)
-          .eq("id", existing.id);
-        if (error) throw error;
-      } else {
-        const insertPayload = {
-          key: contentKey,
-          value_type: "text",
-          [field]: value,
-        };
-        const { error } = await supabase
-          .from("site_content")
-          .insert(insertPayload as any);
-        if (error) throw error;
-      }
+      await adminUpsertSiteContentByKey({
+        data: { key: contentKey, patch: { [field]: value } },
+      });
 
       await qc.invalidateQueries({ queryKey: ["site_content"] });
       toast.success("Saqlandi");

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { adminUpsertSiteContentByKey } from "@/lib/admin-server-functions";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImageIcon, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -40,24 +41,9 @@ export function EditableImage({
   if (!isAdmin) return <>{children}</>;
 
   const saveUrl = async (url: string) => {
-    const { data: existing } = await supabase
-      .from("site_content")
-      .select("id")
-      .eq("key", contentKey)
-      .maybeSingle();
-
-    if (existing?.id) {
-      const { error } = await supabase
-        .from("site_content")
-        .update({ value_uz: url, value_ru: url, value_type: "image" })
-        .eq("id", existing.id);
-      if (error) throw error;
-    } else {
-      const { error } = await supabase
-        .from("site_content")
-        .insert({ key: contentKey, value_uz: url, value_ru: url, value_type: "image" });
-      if (error) throw error;
-    }
+    await adminUpsertSiteContentByKey({
+      data: { key: contentKey, patch: { value_uz: url, value_ru: url, value_type: "image" } },
+    });
     await qc.invalidateQueries({ queryKey: ["site_content"] });
   };
 

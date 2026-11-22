@@ -20,6 +20,11 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Database dumps/backups — contain patient data, never commit these
+*.backup
+*.dump
+*.sql.gz
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

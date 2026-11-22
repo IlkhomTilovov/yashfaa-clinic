@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { adminGetClinicSettings, adminUpdateClinicSettings } from "@/lib/admin-server-functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,7 +43,7 @@ function AdminSettingsPage() {
 
   const fetchSettings = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("clinic_settings").select("*").limit(1).single();
+    const data = await adminGetClinicSettings().catch(() => null);
     if (data) {
       const s = data as ClinicSettings;
       setSettings(s);
@@ -66,19 +66,24 @@ function AdminSettingsPage() {
   const handleSave = async () => {
     if (!settings) return;
     setSaving(true);
-    const { error } = await supabase.from("clinic_settings").update({
-      clinic_name: form.clinic_name,
-      logo_url: form.logo_url || null,
-      phone: form.phone || null,
-      address: form.address || null,
-      telegram: form.telegram || null,
-      working_hours: form.working_hours || null,
-      instagram: form.instagram || null,
-      facebook: form.facebook || null,
-    }).eq("id", settings.id);
-
-    if (error) toast.error("Xatolik: " + error.message);
-    else toast.success("Sozlamalar saqlandi");
+    try {
+      await adminUpdateClinicSettings({
+        data: {
+          id: settings.id,
+          clinic_name: form.clinic_name,
+          logo_url: form.logo_url || null,
+          phone: form.phone || null,
+          address: form.address || null,
+          telegram: form.telegram || null,
+          working_hours: form.working_hours || null,
+          instagram: form.instagram || null,
+          facebook: form.facebook || null,
+        },
+      });
+      toast.success("Sozlamalar saqlandi");
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    }
     setSaving(false);
   };
 

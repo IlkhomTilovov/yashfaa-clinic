@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  adminListAppointments,
+  adminUpdateAppointmentStatus,
+  adminDeleteAppointment,
+} from "@/lib/admin-server-functions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,12 +58,14 @@ function AdminAppointmentsPage() {
 
   const fetchAppointments = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("appointments")
-      .select("*, doctors(name)")
-      .order("created_at", { ascending: false });
-    setAppointments((data as Appointment[]) ?? []);
-    setLoading(false);
+    try {
+      const data = await adminListAppointments();
+      setAppointments(data as Appointment[]);
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -94,19 +100,24 @@ function AdminAppointmentsPage() {
   }, [appointments]);
 
   const handleStatusChange = async (id: string, status: string) => {
-    const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
-    if (error) toast.error("Xatolik: " + error.message);
-    else {
+    try {
+      await adminUpdateAppointmentStatus({ data: { id, status } });
       toast.success("Status yangilandi");
       fetchAppointments();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
     }
   };
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    const { error } = await supabase.from("appointments").delete().eq("id", deleteId);
-    if (error) toast.error("Xatolik: " + error.message);
-    else { toast.success("Uchrashuv o'chirildi"); fetchAppointments(); }
+    try {
+      await adminDeleteAppointment({ data: { id: deleteId } });
+      toast.success("Uchrashuv o'chirildi");
+      fetchAppointments();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    }
     setDeleteId(null);
   };
 

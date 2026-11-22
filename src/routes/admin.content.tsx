@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminGetSiteContentRows, adminUpdateSiteContentRow } from "@/lib/admin-server-functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,10 +68,14 @@ function AdminContentPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase.from("site_content").select("*").order("key");
-    if (error) toast.error("Xatolik: " + error.message);
-    else setRows((data ?? []) as Row[]);
-    setLoading(false);
+    try {
+      const data = await adminGetSiteContentRows();
+      setRows(data as Row[]);
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -83,11 +88,7 @@ function AdminContentPage() {
     setSaving(true);
     try {
       for (const r of rows) {
-        const { error } = await supabase
-          .from("site_content")
-          .update({ value_uz: r.value_uz, value_ru: r.value_ru })
-          .eq("id", r.id);
-        if (error) throw error;
+        await adminUpdateSiteContentRow({ data: { id: r.id, value_uz: r.value_uz, value_ru: r.value_ru } });
       }
       toast.success("Sayt mazmuni saqlandi");
     } catch (e: any) {
@@ -110,10 +111,7 @@ function AdminContentPage() {
       // Persist immediately
       const row = rows.find((r) => r.key === key);
       if (row) {
-        await supabase
-          .from("site_content")
-          .update({ value_uz: pub.publicUrl, value_ru: pub.publicUrl })
-          .eq("id", row.id);
+        await adminUpdateSiteContentRow({ data: { id: row.id, value_uz: pub.publicUrl, value_ru: pub.publicUrl } });
       }
       toast.success("Rasm yuklandi");
     } catch (e: any) {

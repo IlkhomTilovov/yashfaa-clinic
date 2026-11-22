@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { checkIsAdmin } from "@/lib/check-admin";
 import type { User, Session } from "@supabase/supabase-js";
 
 interface AuthState {
@@ -27,12 +28,10 @@ export function useAuth() {
       let isAdmin = false;
 
       if (user) {
-        const { data, error } = await supabase.rpc("is_admin");
-
-        if (error) {
+        try {
+          isAdmin = await checkIsAdmin();
+        } catch (error) {
           console.error("Failed to resolve admin role", error);
-        } else {
-          isAdmin = !!data;
         }
       }
 

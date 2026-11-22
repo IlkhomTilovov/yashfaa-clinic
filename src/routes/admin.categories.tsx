@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  adminListCategories,
+  adminListCategoryTypes,
+  adminFindCategoryTypeBySlug,
+  adminCreateCategoryType,
+  adminUpsertCategory,
+  adminDeleteCategory,
+} from "@/lib/admin-server-functions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -109,13 +116,15 @@ function AdminCategoriesPage() {
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
-    const [catRes, typesRes] = await Promise.all([
-      supabase.from("categories").select("*").order("sort_order").order("name"),
-      supabase.from("category_types").select("*").order("created_at"),
-    ]);
-    setCategories((catRes.data ?? []) as Category[]);
-    setCategoryTypes((typesRes.data ?? []) as CategoryTypeItem[]);
-    setLoading(false);
+    try {
+      const [cats, types] = await Promise.all([adminListCategories(), adminListCategoryTypes()]);
+      setCategories(cats as Category[]);
+      setCategoryTypes(types as CategoryTypeItem[]);
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
@@ -179,29 +188,22 @@ function AdminCategoriesPage() {
       const newSlug = generateSlug(form.custom_type.trim());
       
       // Check if type with same slug already exists
-      const { data: existing } = await supabase
-        .from("category_types")
-        .select("id, slug")
-        .eq("slug", newSlug)
-        .maybeSingle();
-      
+      const existing = await adminFindCategoryTypeBySlug({ data: { slug: newSlug } });
+
       if (existing) {
         typeId = existing.id;
         typeSlug = existing.slug;
       } else {
-        const { data: newType, error: typeError } = await supabase
-          .from("category_types")
-          .insert({ name: form.custom_type.trim(), slug: newSlug })
-          .select("id, slug")
-          .single();
-        if (typeError) {
+        try {
+          const newType = await adminCreateCategoryType({ data: { name: form.custom_type.trim(), slug: newSlug } });
+          typeId = newType.id;
+          typeSlug = newType.slug;
+        } catch (typeError: any) {
           console.error("[categories] type insert error:", typeError);
           toast.error("Yangi tur qo'shishda xatolik: " + typeError.message);
           setSaving(false);
           return;
         }
-        typeId = newType.id;
-        typeSlug = newType.slug;
       }
     } else {
       const selectedType = categoryTypes.find(ct => ct.id === form.type_id);
@@ -224,24 +226,26 @@ function AdminCategoriesPage() {
       is_active: form.is_active,
       parent_id: form.parent_id || null,
     };
-    const { error } = editing
-      ? await supabase.from("categories").update(payload).eq("id", editing.id)
-      : await supabase.from("categories").insert(payload);
-
-    if (error) toast.error("Xatolik: " + error.message);
-    else {
+    try {
+      await adminUpsertCategory({ data: editing ? { id: editing.id, ...payload } : payload });
       toast.success(editing ? "Kategoriya yangilandi" : "Kategoriya qo'shildi");
       setDialogOpen(false);
       fetchCategories();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
     }
     setSaving(false);
   };
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    const { error } = await supabase.from("categories").delete().eq("id", deleteId);
-    if (error) toast.error("Xatolik: " + error.message);
-    else { toast.success("Kategoriya o'chirildi"); fetchCategories(); }
+    try {
+      await adminDeleteCategory({ data: { id: deleteId } });
+      toast.success("Kategoriya o'chirildi");
+      fetchCategories();
+    } catch (err: any) {
+      toast.error("Xatolik: " + err.message);
+    }
     setDeleteId(null);
   };
 
